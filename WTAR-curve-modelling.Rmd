@@ -186,13 +186,20 @@ dat = dat %>%
 # lcmm insists on access to a numeric subject variable:
 dat = dat %>% 
   mutate(subject_id = factor(subject_id)) %>% 
-  mutate(subject_id_num = as.integer(subject_id)) %>% 
-  select(subject_id, subject_id_num, everything())
+  mutate(subject_id_num = as.integer(subject_id))
 
 # for lcmm we standardise the age to avoid problems with polynomial effects, 
 # as per Proust-Lima et al. (2017). Note that we are using the grand mean age at 
 # assessment, rather than averaging across some landmark age for each subject:
 dat$age_std = (dat$age - mean(dat$age))/10
+
+dat = dat %>% 
+  select(subject_id_num, np_group, group,	sex, symptom_onset_age,	diagnosis_age,
+         education, age, age_std, group, cognitive_status, 
+         cognitive_status_lead, ever_demented, WTAR, MoCA, global_z, 
+         attention_domain, executive_domain, visuo_domain,
+         learning_memory_domain,	language_domain, H_Y,	Part_III)
+         
 
 # store a cached version of the dataset for optional access on subsequent runs 
 # of generating this document:
@@ -203,7 +210,6 @@ dat %>% write_csv(file = 'data/dat_wtar.csv')
 # Regardless of whether IMPORT_LIVE_DATA has been set to TRUE, we import from 
 # a cached, static dataset rather to ensure consistency:
 dat = read_csv(file = 'data/dat_wtar.csv') %>% 
-  mutate(subject_id = factor(subject_id)) %>% 
   mutate(cognitive_status = factor(cognitive_status, 
                                    levels = c('Normal', 'MCI', 'Dementia')),
          cognitive_status_lead = factor(cognitive_status_lead, 
@@ -293,13 +299,12 @@ cubic_WTAR_model_table =
 # sessions rather than across one value per subject):
 mean_age = mean(dat$age) 
 new_data = 
-  data.frame(study = 'NZBRI',
-             age = seq(from = 50, to = 90, by = 0.5)) %>% 
+  data.frame(age = seq(from = 50, to = 90, by = 0.5)) %>% 
   mutate(age_std = (age - mean_age)/10)
 
-pred_cubic_WTAR_nzbri <- predictY(cubic_WTAR_1, newdata = new_data, 
+pred_cubic_WTAR <- predictY(cubic_WTAR_1, newdata = new_data, 
                        var.time = 'age_std', draws = TRUE)
-pred_cubic_WTAR_nzbri = cbind(new_data, pred_cubic_WTAR_nzbri$pred)
+pred_cubic_WTAR = cbind(new_data, pred_cubic_WTAR$pred)
 ```
 
 
@@ -316,12 +321,12 @@ dat %>%
                   levels = c('Control', 'PD non-dementing', 'PD dementing'))) %>% 
   ggplot(aes(x = age)) +
   facet_grid(wtar_panel ~ .) +
-  geom_ribbon(data = pred_cubic_WTAR_nzbri,
+  geom_ribbon(data = pred_cubic_WTAR,
               aes(ymin = lower.Ypred, ymax = upper.Ypred), fill = 'darkblue', 
               colour = NA, alpha = 0.3) +  
-  geom_line(data = pred_cubic_WTAR_nzbri, aes(y = Ypred),
+  geom_line(data = pred_cubic_WTAR, aes(y = Ypred),
             colour = 'darkblue', size = 0.25) +
-  geom_line(aes(y = WTAR, colour = cognitive_status_lead, group = subject_id), 
+  geom_line(aes(y = WTAR, colour = cognitive_status_lead, group = subject_id_num), 
             alpha = 1.0, size = 0.25) +
   geom_point(aes(y = WTAR, colour = cognitive_status), size = 0.35) +
   scale_colour_manual(values = cog_colours, name = 'Cognitive status') + 
