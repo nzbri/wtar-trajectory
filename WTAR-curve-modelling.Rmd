@@ -91,6 +91,8 @@ orange_blue = c('#D55E00', '#0072B2')
 blue_orange = c('#599BC2', '#E08F6B')
 blue_orange_sat = c('#0072B2', '#D55E00')
 
+fig_1_width = 17;   fig_1_height = 20
+
 ```
 
 ```{r import-packages}
@@ -106,6 +108,7 @@ library(lubridate)   # for date intervals
 library(magrittr)    # for the %<>% operator
 library(ggplot2)     # for visualisation
 library(scales)      # improved labelling in ggplot
+library(cowplot)     # combine multiple separate plots in one figure
 library(lcmm)        # latent class models
 library(huxtable)    # tables that work in Word output
 
@@ -201,9 +204,18 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
                                    levels = c('Normal', 'MCI', 'Dementia')),
          cognitive_status_lead = factor(cognitive_status_lead, 
                                         levels = c('Normal', 'MCI', 'Dementia'))) %>% 
+  # divide subjects into three panels in the figure:
+  mutate(panel_label = 
+           case_when(group == 'Control'     ~ 'Control',
+                     ever_demented == FALSE ~ 'PD non-dementia',
+                     TRUE                   ~ 'PD dementia'),
+         panel_label = 
+           factor(panel_label, 
+                  levels = c('Control', 'PD non-dementia', 'PD dementia'))) %>% 
   # do this to avoid an issue with lcmm not correctly detecting numeric
-  # column types in a tibble
+  # column types in a tibble:
   as.data.frame()
+
 ```
 
 # Introduction
@@ -295,44 +307,86 @@ pred_cubic_WTAR = cbind(new_data, pred_cubic_WTAR$pred)
 ```
 
 
-```{r figure-1, fig.align='center', fig.cap="Longitudinal WTAR score trajectories for each individual. The participants are divided into Controls, non-dementing Parkinson's, and people with Parkinson's who went on to develop dementia. The same latent class trajectory (filled ribbon) is shown in each panel, indicating that the overall pattern of stable scores applied relatively well to all three groups.", fig.height=12/2.54, fig.width=15/2.54}
+```{r figure-1, fig.align='center', fig.cap="Longitudinal WTAR score trajectories for each individual. The participants are divided into Controls, non-dementing Parkinson's, and people with Parkinson's who went on to develop dementia. The same latent class trajectory (filled ribbon) is shown in each panel, indicating that the overall pattern of stable scores applied relatively well to all three groups.", fig.width=fig_1_width/2.54, fig.height=fig_1_height/2.54}
+
+# z-score trajectories of all PD subjects, incl non-converters:
+figure_1a = dat %>% 
+  ggplot(aes(x = age, y = global_z)) +
+  facet_grid(panel_label ~ .) +
+#  facet_grid(np_group ~ .) +
+  geom_line(aes(group = subject_id_num, colour = cognitive_status), 
+            alpha = 0.6, size = 0.25, show.legend = FALSE) +
+  # setting stroke = 0.1 gives nice sharp shapes:
+  geom_point(aes(fill = cognitive_status,
+                 colour = cognitive_status, # minimal border stroke
+                 shape = cognitive_status), size = 1.0, stroke = 0.1) +
+  scale_colour_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
+  scale_x_continuous(labels = scales::label_number(suffix = ' years')) +
+  labs(title = 'A. Global cognitive z-score trajectory by age',
+       x = NULL, y = NULL) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        axis.ticks = element_line(colour = '#E8E8E8', size = 0.25),
+        axis.text = element_text(size = 8),
+        panel.grid.major.y = element_line(size = 0.25),
+        panel.grid.major.x = element_line(size = 0.5, linetype = 'dotted'),
+        panel.grid.minor = element_blank(),
+        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
+        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        legend.position = c(0.10, 0.15), # 0.64 puts it in the top panel
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(2,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 7),
+        legend.text = element_text(size = 7))
+
 
 # WTAR changes over time
-dat %>% 
-  mutate(wtar_panel = 
-           case_when(group == 'Control'     ~ 'Control',
-                     ever_demented == FALSE ~ 'PD non-dementing',
-                                       TRUE ~ 'PD dementing'),
-         wtar_panel = 
-           factor(wtar_panel, 
-                  levels = c('Control', 'PD non-dementing', 'PD dementing'))) %>% 
+figure_1b = dat %>% 
   ggplot(aes(x = age)) +
-  facet_grid(wtar_panel ~ .) +
+  facet_grid(panel_label ~ .) +
   geom_ribbon(data = pred_cubic_WTAR,
               aes(ymin = lower.Ypred, ymax = upper.Ypred), fill = 'darkblue', 
               colour = NA, alpha = 0.3) +  
   geom_line(data = pred_cubic_WTAR, aes(y = Ypred),
             colour = 'darkblue', size = 0.25) +
   geom_line(aes(y = WTAR, colour = cognitive_status_lead, group = subject_id_num), 
-            alpha = 1.0, size = 0.25) +
-  geom_point(aes(y = WTAR, colour = cognitive_status), size = 0.35) +
+            alpha = 0.6, size = 0.25) +
+  # setting stroke = 0.1 gives nice sharp shapes:
+  geom_point(aes(y = WTAR, fill = cognitive_status,
+                 colour = cognitive_status, # minimal border stroke
+                 shape = cognitive_status), size = 1.0, stroke = 0.1) +
+  #geom_point(aes(y = WTAR, colour = cognitive_status), size = 0.35) +
   scale_colour_manual(values = cog_colours, name = 'Cognitive status') + 
-  scale_x_continuous(labels = scales::label_number(suffix = ' yrs')) +
-  labs(title = 'WTAR score as a function of age',
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
+  scale_x_continuous(labels = scales::label_number(suffix = ' years')) +
+  labs(title = 'B. WTAR score trajectory by age',
        x = NULL, y = NULL) +
   theme_bw() +
   theme(plot.title = element_text(face = 'bold', size = 10),
         axis.text = element_text(size = 8),
-        axis.ticks = element_line(colour = '#C0C0C0', size = 0.5),
+        axis.ticks = element_line(colour = '#E8E8E8', size = 0.25),
+        panel.grid.major.y = element_line(size = 0.25),
+        panel.grid.major.x = element_line(size = 0.5, linetype = 'dotted'),
         panel.grid.minor = element_blank(),
-        strip.text = element_text(face = 'bold'),
+        strip.text = element_text(face = 'plain', colour = 'black'),
         strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
         panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
-        legend.pos = c(0.1, 0.1),
+        legend.pos = 'none',
         legend.spacing.y = unit(1,'mm'), # spacing between title & items
         legend.key.size = unit(4,'mm'), # spacing between items
         legend.title = element_text(face = 'bold', size = 8),
         legend.text = element_text(size = 8))
+
+figure_1 = cowplot::plot_grid(figure_1a, figure_1b, nrow = 2, axis = 'l',
+                              align = 'v', rel_heights = c(1.0, 1.0))
+
+figure_1
+
+ggsave('wtar-figure-1.pdf', width = fig_1_width, height = fig_1_height,
+       units = 'cm')
 
 ```
 
