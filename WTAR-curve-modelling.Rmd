@@ -97,30 +97,17 @@ blue_orange_sat = c('#0072B2', '#D55E00')
 # An NZBRI-only in-house package for importing the latest live data:
 if (IMPORT_LIVE_DATA) {
   library(chchpd) # initial install via devtools::install_github('nzbri/chchpd')
-  #devtools::load_all('~/GitHub/chchpd/.')
 }
 
 # tidyverse libraries:
 library(readr)       # to read/write locally cached .csv data files
 library(dplyr)       # for data manipulation
-library(tidyr)       # for 'fill' and other data manipulation
 library(lubridate)   # for date intervals
-library(stringr)     # string functions
 library(magrittr)    # for the %<>% operator
 library(ggplot2)     # for visualisation
-library(ggbeeswarm)  # for geom_quasirandom()
 library(scales)      # improved labelling in ggplot
-library(directlabels)# what it says on the tin
-library(cowplot)     # combine multiple separate plots in one figure
-library(ggmosaic)    # for mosaic plots in ggplot
 library(lcmm)        # latent class models
-library(survival)    # does what it says
-library(survminer)   # p-values for survival analyses
-library(ggfortify)   # to autoplot survival fit
 library(huxtable)    # tables that work in Word output
-library(stargazer)   # pretty regession model tables
-library(knitr)       # for kable() pretty tables
-library(kableExtra)  # extend kable()
 
 ```
 
