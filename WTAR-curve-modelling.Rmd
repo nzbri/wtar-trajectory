@@ -1,0 +1,356 @@
+---
+title: "The Wechsler Test of Adult Reading is a stable measure of premorbid cognitive function in Parkinson's"
+shorttitle: "Parkinson's premorbid functioning"
+
+author: 
+  - name          : "Kyla-Louise Horne, PhD"
+    affiliation   : "1"
+  - name          : "Daniel J. Myall, PhD"
+    affiliation   : "1"
+  - name          : "Reza Shoorangiz, PhD"
+    affiliation   : "1,2,3"
+  - name          : "Tim J. Anderson, MD, FRACP"
+    affiliation   : "1,2,4"
+  - name          : "John C. Dalrymple-Alford, PhD"
+    affiliation   : "1,2,5"
+  - name          : "Michael R. MacAskill, PhD"
+    affiliation   : "1,2"
+    corresponding : yes    # Define only one corresponding author
+    address       : "66 Stewart St, Christchurch 8011, New Zealand"
+    email         : "michael.macaskill@nzbri.org"
+affiliation:
+  - id            : "1"
+    institution   : "New Zealand Brain Research Institute, 66 Stewart St, Christchurch, New Zealand"
+  - id            : "2"
+    institution   : "Department of Medicine, University of Otago, Christchurch; Christchurch, New Zealand"
+  - id            : "3"
+    institution   : "Department of Electrical and Computer Engineering, University of Canterbury, Christchurch, New Zealand"
+  - id            : "4"
+    institution   : "Department of Neurology, Christchurch Hospital, Christchurch, New Zealand"
+  - id            : "5"
+    institution   : "School of Psychology, Speech, and Hearing, University of Canterbury, Christchurch, New Zealand"
+
+abstract: |
+  A measure of premorbid cognitive function can be a useful adjunct in 
+  determining the current cognitive status of people with Parkinson's disease. 
+  The Wechsler Test of Adult Reading (WTAR) is a commonly-used test of premorbid
+  functioning although its scores are known to decline in Alzheimer's disease. 
+  It has not been formally demonstrated that WTAR scores do in fact remain 
+  stable in spite of the cognitive deterioration that occurs in Parkinson's. We 
+  assessed the longitudinal trajectories of WTAR scores in people with 
+  Parkinson's and a Control group of older adults.
+  
+keywords          : "Parkinson disease, cognitive impairment, dementia, neuropsychology"
+wordcount         : "Abstract: xxx, main body: xxx"
+
+link-citations: true
+csl: format/sage-vancouver.csl
+bibliography: format/wtar-references.bib
+
+floatsintext      : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_word
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+
+options(knitr.kable.NA = '')
+```
+
+```{r define-variables}
+################################################################################
+### 1. To save time taken by re-importing live data online everytime this  
+###    document is generated, set the following variable to be FALSE. This will 
+###    instead import static values from a locally-cached file.
+### 2. Eventually, an anonymised cached version of the dataset(s) will be 
+###    distributed publicly with these files, so that external (non-NZBRI) users
+###    can also generate and alter the document, without needing the live data 
+###    import functions provided by the in-house `chchpd` package.
+### 3. We also can choose not to re-compute the latent class models on each run,
+###    and instead use cached model objects to save re-computing them each time.
+################################################################################
+IMPORT_LIVE_DATA = FALSE
+
+RUN_NEW_MODELS   = FALSE
+################################################################################
+
+# define colour scheme values for normal, MCI, and dementia:
+cog_colours <- c('#339900', '#FF9326', '#D92121')
+
+# colour schemes for two categories (e.g. male/female):
+orange_blue = c('#D55E00', '#0072B2')
+blue_orange = c('#599BC2', '#E08F6B')
+blue_orange_sat = c('#0072B2', '#D55E00')
+
+```
+
+```{r import-packages}
+# An NZBRI-only in-house package for importing the latest live data:
+if (IMPORT_LIVE_DATA) {
+  library(chchpd) # initial install via devtools::install_github('nzbri/chchpd')
+  #devtools::load_all('~/GitHub/chchpd/.')
+}
+
+# tidyverse libraries:
+library(readr)       # to read/write locally cached .csv data files
+library(dplyr)       # for data manipulation
+library(tidyr)       # for 'fill' and other data manipulation
+library(lubridate)   # for date intervals
+library(stringr)     # string functions
+library(magrittr)    # for the %<>% operator
+library(ggplot2)     # for visualisation
+library(ggbeeswarm)  # for geom_quasirandom()
+library(scales)      # improved labelling in ggplot
+library(directlabels)# what it says on the tin
+library(cowplot)     # combine multiple separate plots in one figure
+library(ggmosaic)    # for mosaic plots in ggplot
+library(lcmm)        # latent class models
+library(survival)    # does what it says
+library(survminer)   # p-values for survival analyses
+library(ggfortify)   # to autoplot survival fit
+library(huxtable)    # tables that work in Word output
+library(stargazer)   # pretty regession model tables
+library(knitr)       # for kable() pretty tables
+library(kableExtra)  # extend kable()
+
+```
+
+```{r import-data}
+# evaluated only if the chchpd package has been imported, to 
+# access live data sources.
+ 
+if (IMPORT_LIVE_DATA) { # put this here for when not knitting
+
+participants = chchpd::import_participants(anon_id = FALSE) %>% 
+    rename(group = participant_group)
+
+sessions = chchpd::import_sessions() %>% 
+  # the PDD follow-up sessions were mostly not coded as part of the 
+  # Progression study, so gather sessions from both:
+  filter(study %in% c('Follow-up', 'PDD Followup')) %>% 
+  # but some sessions *were* entered in both studies, so remove any duplicates:
+  group_by(session_id) %>% 
+  filter(row_number() == 1)
+
+np = chchpd::import_neuropsyc()
+updrs = chchpd::import_motor_scores()
+
+}
+```
+
+```{r collate-dataset}
+if (IMPORT_LIVE_DATA) {
+
+dat = right_join(participants, sessions, by = 'subject_id') %>%
+  left_join(np, by = 'session_id') %>% 
+  left_join(updrs, by = 'session_id')
+
+dat = dat %>%
+  filter(np_group %in% c('Control', 'PD'), # exclude atypical cases
+         !is.na(cognitive_status),         # remove not-yet classified sessions
+         !is.na(WTAR)) %>%                
+  mutate(group = factor(group, levels = c('Control', 'PD'))) %>% 
+  mutate(cognitive_status = factor(cognitive_status, 
+                                   levels = c('N', 'MCI', 'D'),
+                                   labels = c('Normal', 'MCI', 'Dementia'))) %>% 
+  group_by(subject_id) %>% 
+  arrange(years_from_baseline) %>%
+  mutate(assessment_num = row_number()) %>% 
+  mutate(n_sessions = max(assessment_num)) %>% 
+  filter(n_sessions > 1) %>% # exclude cases without follow-up
+  mutate(ever_demented = 'Dementia' %in% cognitive_status) %>% 
+  # to make line colours match the destination point rather than the origin 
+	# point, need to use a diagnosis variable that leads the current diagnosis
+	# for each person by one step:
+	mutate(cognitive_status_lead = lead(cognitive_status)) %>% 
+	# this makes the last value for each person NA, which can cause issues. 
+	# fill() replaces them with the latest previous diagnosis:
+  fill(cognitive_status_lead) %>% 
+  mutate(sampling_interval = 
+           years_from_baseline - lag(years_from_baseline)) %>% 
+  # should be much the same but here to be explicit:
+  mutate(wtar_interval = 
+           interval(start = lag(session_date), end = session_date)/years(1)) %>% 
+  ungroup()
+
+
+# lcmm insists on access to a numeric subject variable:
+dat = dat %>% 
+  mutate(subject_id = factor(subject_id)) %>% 
+  mutate(subject_id_num = as.integer(subject_id)) %>% 
+  select(subject_id, subject_id_num, everything())
+
+# for lcmm we standardise the age to avoid problems with polynomial effects, 
+# as per Proust-Lima et al. (2017). Note that we are using the grand mean age at 
+# assessment, rather than averaging across some landmark age for each subject:
+dat$age_std = (dat$age - mean(dat$age))/10
+
+# store a cached version of the dataset for optional access on subsequent runs 
+# of generating this document:
+dat %>% write_csv(file = 'data/dat_wtar.csv')
+
+}
+
+# Regardless of whether IMPORT_LIVE_DATA has been set to TRUE, we import from 
+# a cached, static dataset rather to ensure consistency:
+dat = read_csv(file = 'data/dat_wtar.csv') %>% 
+  mutate(subject_id = factor(subject_id)) %>% 
+  mutate(cognitive_status = factor(cognitive_status, 
+                                   levels = c('Normal', 'MCI', 'Dementia')),
+         cognitive_status_lead = factor(cognitive_status_lead, 
+                                        levels = c('Normal', 'MCI', 'Dementia'))) %>% 
+  # do this to avoid an issue with lcmm not correctly detecting numeric
+  # column types in a tibble
+  as.data.frame()
+```
+
+# Introduction
+
+Brief Reports: Brief reports are short original clinical or basic science reports related to any aspect of movement disorders. Important but negative results are best considered as Brief Reports. Structured Abstracts up to 150 words, text up to 1700 words, tables and figures up to 2. References should be limited to 40. The word count must appear on the title page.
+
+# Methods
+
+## Latent class trajectory modelling
+
+We fitted latent class trajectory models using the $hlme$ function from the $lcmm$ package [@proust-lima_estimation_2017] (version 1.9.2), running in the R statistical environment [@R-Core-Team_R_2021] (version 4.0.2). The dependent variable was MoCA score, modelled within each subject as a polynomial (cubic) function of age. The model was unaware of any other variables (such as categorical MCI or dementia diagnoses). We fitted five separate models, with the specified number of latent classes increasing from 1 to 5. The model with just one latent class was used to provide starting values for the subsequent models with multiple classes. For each of the multi-class models, an estimation function was run 100 times using an automatic grid search to estimate the parameters while avoiding local minima ***?or maxima? Check with Daniel & Reza on the phrasing of this process.***. Parameters corresponding to the best log-likelihood were used as initial values for the final estimation of the parameters [@proust-lima_estimation_2017]. Selection of the optimal model was on the basis of selecting the one with the lowest BIC value.  
+
+## Reproducibility
+
+The code and anonymised dataset extracts sufficient to reproduce the analyses and generate this manuscript are publicly available at https://github.com/nzbri/moca-trajectory.
+
+- Assess our achievement against one of these guidelines for reporting latent trajectory studies: [@lennon_framework_2018; @van_de_schoot_grolts-checklist_2017]
+
+# Results
+
+```{r wtar-modelling, echo=FALSE}
+
+if (RUN_NEW_MODELS) {
+
+# currently have to coerce data to a dataframe (done above), as tibbles lead to 
+# a bug with the subject id column not being accepted by lcmm as numeric.
+ 
+# run models with 1-5 classes, each with 100 random starts,
+# using the 1-class model to set initial start values:
+cubic_WTAR_1 <- lcmm::hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                       random = ~1 + poly(age_std, degree = 3, raw = TRUE),
+                       subject = 'subject_id_num', ng = 1, 
+                       data = dat)
+saveRDS(cubic_WTAR_1, 'models/cubic_WTAR_1.RDS') # cache to disk
+
+cubic_WTAR_2 <- 
+  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
+             hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                  random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
+                  nwg = TRUE, ng = 2, 
+                  mixture = ~ poly(age_std, degree = 3, raw = TRUE),
+                  subject = 'subject_id_num', data = dat))
+saveRDS(cubic_WTAR_2, 'models/cubic_WTAR_2.RDS')
+
+cubic_WTAR_3 <- 
+  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
+             hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                  random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
+                  nwg = TRUE, ng = 3, 
+                  mixture = ~ poly(age_std, degree = 3, raw = TRUE),
+                  subject = 'subject_id_num', data = dat))
+saveRDS(cubic_WTAR_3, 'models/cubic_WTAR_3.RDS')
+
+cubic_WTAR_4 <- 
+  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
+             hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                  random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
+                  nwg = TRUE, ng = 4, 
+                  mixture = ~ poly(age_std, degree = 3, raw = TRUE),
+                  subject = 'subject_id_num', data = dat))
+saveRDS(cubic_WTAR_4, 'models/cubic_WTAR_4.RDS')
+
+} else { # use previously-computed models:
+# cubic models:
+cubic_WTAR_1 = readRDS('models/cubic_WTAR_1.RDS')
+cubic_WTAR_2 = readRDS('models/cubic_WTAR_2.RDS')
+cubic_WTAR_3 = readRDS('models/cubic_WTAR_3.RDS')
+cubic_WTAR_4 = readRDS('models/cubic_WTAR_4.RDS')
+
+}
+
+cubic_WTAR_model_table = 
+  summarytable(cubic_WTAR_1, cubic_WTAR_2, cubic_WTAR_3, cubic_WTAR_4,
+               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
+                         'entropy', '%class')) %>% 
+  as.data.frame()
+
+# create some a vector of ages to predict against, but first:
+# need to calculate this based on the real data (we choose to mean across all
+# sessions rather than across one value per subject):
+mean_age = mean(dat$age) 
+new_data = 
+  data.frame(study = 'NZBRI',
+             age = seq(from = 50, to = 90, by = 0.5)) %>% 
+  mutate(age_std = (age - mean_age)/10)
+
+pred_cubic_WTAR_nzbri <- predictY(cubic_WTAR_1, newdata = new_data, 
+                       var.time = 'age_std', draws = TRUE)
+pred_cubic_WTAR_nzbri = cbind(new_data, pred_cubic_WTAR_nzbri$pred)
+```
+
+
+```{r figure-1, fig.align='center', fig.cap="Longitudinal WTAR score trajectories for each individual. The participants are divided into Controls, non-dementing Parkinson's, and people with Parkinson's who went on to develop dementia. The same latent class trajectory (filled ribbon) is shown in each panel, indicating that the overall pattern of stable scores applied relatively well to all three groups.", fig.height=12/2.54, fig.width=15/2.54}
+
+# WTAR changes over time
+dat %>% 
+  mutate(wtar_panel = 
+           case_when(group == 'Control'     ~ 'Control',
+                     ever_demented == FALSE ~ 'PD non-dementing',
+                                       TRUE ~ 'PD dementing'),
+         wtar_panel = 
+           factor(wtar_panel, 
+                  levels = c('Control', 'PD non-dementing', 'PD dementing'))) %>% 
+  ggplot(aes(x = age)) +
+  facet_grid(wtar_panel ~ .) +
+  geom_ribbon(data = pred_cubic_WTAR_nzbri,
+              aes(ymin = lower.Ypred, ymax = upper.Ypred), fill = 'darkblue', 
+              colour = NA, alpha = 0.3) +  
+  geom_line(data = pred_cubic_WTAR_nzbri, aes(y = Ypred),
+            colour = 'darkblue', size = 0.25) +
+  geom_line(aes(y = WTAR, colour = cognitive_status_lead, group = subject_id), 
+            alpha = 1.0, size = 0.25) +
+  geom_point(aes(y = WTAR, colour = cognitive_status), size = 0.35) +
+  scale_colour_manual(values = cog_colours, name = 'Cognitive status') + 
+  scale_x_continuous(labels = scales::label_number(suffix = ' yrs')) +
+  labs(title = 'WTAR score as a function of age',
+       x = NULL, y = NULL) +
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        axis.text = element_text(size = 8),
+        axis.ticks = element_line(colour = '#C0C0C0', size = 0.5),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(face = 'bold'),
+        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
+        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        legend.pos = c(0.1, 0.1),
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(4,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 8),
+        legend.text = element_text(size = 8))
+
+```
+
+# Discussion
+
+
+
+# References
+
+
+
+
+
