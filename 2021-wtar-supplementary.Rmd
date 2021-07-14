@@ -1,0 +1,46 @@
+# WTAR Trajectory Supplementary Material 
+
+```{r fig-A1-wtar-interval-histogram, fig.cap='Frequencies of the interval between successive WTAR assessments.', fig.width = 12/2.54, fig.height = 10/2.54}
+dat %>%  
+  filter(!is.na(wtar_interval)) %>% # no interval in first session
+  ggplot(aes(x = wtar_interval)) +
+  labs(title = 'Interval in years between successive WTAR assessments',
+       x = NULL, y = NULL) +
+  scale_x_continuous(breaks = seq(from = 0, to = 10, by = 2),
+                     labels = scales::number_format(accuracy = 1, 
+                                                    suffix = ' years')) +
+  geom_histogram(binwidth = 0.1, colour = 'white', size = 0.2) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        panel.border = element_blank())
+
+```
+
+```{r fig-A2-wtar-sd-vs-z-sd, fig.cap='Within-subject SDs of WTAR vs global z.', fig.width = 12/2.54, fig.height = 10/2.54}
+dat %>%  
+  group_by(group, subject_id_num) %>% 
+  summarise(wtar_sd = sd(WTAR),
+            z_sd = sd(global_z)) %>% 
+  ggplot(aes(x = z_sd, y = wtar_sd)) +
+  labs(title = 'Variability in WTAR vs Global Z-score',
+       subtitle = 'Within-subject standard deviations',
+       x = 'SD Global cognitive z-score', y = 'SD WTAR') +
+  geom_smooth(method = 'lm') +
+  geom_point(aes(fill = group), shape = 21, stroke = 0.2) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        plot.subtitle = element_text(size = 9),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        panel.border = element_blank())
+
+```
+
+(ref:tab-S1-caption) Comparison of hlme models with 1 to `r max_classes_linear` latent trajectory classes.
+
+```{r tab_A1-model-table}
+
+linear_WTAR_model_table %>% 
+  apa_table(caption = 'Comparison of hlme models with 1 to 4 latent trajectory classes.')
+
+```

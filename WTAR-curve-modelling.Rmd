@@ -4,10 +4,10 @@ title: The Wechsler Test of Adult Reading is a stable measure of premorbid cogni
 author:
 - name: Kyla-Louise Horne, PhD
   affiliation: '1'
-- name: Daniel J. Myall, PhD
-  affiliation: '1'
 - name: Reza Shoorangiz, PhD
   affiliation: '1,2,3'
+- name: Daniel J. Myall, PhD
+  affiliation: '1'
 - name: Tim J. Anderson, MD, FRACP
   affiliation: '1,2,4'
 - name: John C. Dalrymple-Alford, PhD
@@ -80,10 +80,10 @@ options(knitr.kable.NA = '')
 ### 3. We also can choose not to re-compute the latent class models on each run,
 ###    and instead use cached model objects to save re-computing them each time.
 ################################################################################
-IMPORT_LIVE_DATA = TRUE
+IMPORT_LIVE_DATA = FALSE
 
-RUN_NEW_CUBIC_MODELS   = TRUE
-RUN_NEW_LINEAR_MODELS   = TRUE
+RUN_NEW_CUBIC_MODELS  = FALSE
+RUN_NEW_LINEAR_MODELS = FALSE
 
 ################################################################################
 
@@ -95,7 +95,7 @@ orange_blue = c('#D55E00', '#0072B2')
 blue_orange = c('#599BC2', '#E08F6B')
 blue_orange_sat = c('#0072B2', '#D55E00')
 
-fig_1_width = 15;   fig_1_height = 18
+fig_1_width = 17.5;   fig_1_height = 16.5
 
 ```
 
@@ -113,9 +113,11 @@ library(lubridate)   # for date intervals
 library(magrittr)    # for the %<>% operator
 library(ggplot2)     # for visualisation
 library(scales)      # improved labelling in ggplot
+library(ggnewscale)  # allow multiple colour scales in ggplot
 library(directlabels)# to label lines on plots
 library(cowplot)     # combine multiple separate plots in one figure
 library(lcmm)        # latent class models
+library(parallel)    # for parallel computation
 library(huxtable)    # tables that work in Word output
 library(knitr)       # for kable pretty tables
 library(kableExtra)  # extra kable options
@@ -269,7 +271,7 @@ wtar_n = dat %>%
 
 ```
 
-The New Zealand Parkinson's Progression Programme is a longitudinal study of a convenience prevalence sample of idiopathic Parkinson's, largely recruited from the specialist Movement Disorders Clinic at the New Zealand Brain Research Institute. The study commenced in 2007, with recruitment ongoing, and hence covers patients ranging from the recently-diagnosed to those with advanced disease. Inclusion and exclusion criteria have been described previously [@wood2016_DifferentPDMCICriteria]. For this analysis, we selected data only from the `r group_n$n[group_n$group == 'PD']` Parkinson's and `r group_n$n[group_n$group == 'Control']` Control participants who had completed at least two WTARs (range 2 - `r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of measures = `r wtar_n$total_sessions`). The period between successive WTAR assessments was multi-modal, mostly clustering around intervals of one and two years, due to varying follow-up periods over the course of the study. Both patients and controls were classified as having normal cognition, mild cognitive impairment, or dementia on the basis of a comprehensive neuropsychological battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each session, we did not actually use it in the diagnostic classification process: this was done on the basis of test scores falling below 1.5 standard deviations of norms,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria] rather than performance being assessed against an estimated pre-morbid level. Characteristics of the sample are shown in Table \@ref(tab:table-1). All participants were speakers of New Zealand English, and were assessed against the UK/US norms of the WTAR. ***{TODo: Kyla to confirm, and to describe what other factors may have ben applied in deriving the estimated IQ (e.g. age and education).]***
+The New Zealand Parkinson's Progression Programme is a longitudinal study of a convenience prevalence sample of idiopathic Parkinson's, largely recruited from the specialist Movement Disorders Clinic at the New Zealand Brain Research Institute. The study commenced in 2007, with recruitment ongoing, and hence covers patients ranging from the recently-diagnosed to those with advanced disease. Inclusion and exclusion criteria have been described previously [@wood2016_DifferentPDMCICriteria]. For this analysis, we selected data only from the `r group_n$n[group_n$group == 'PD']` Parkinson's and `r group_n$n[group_n$group == 'Control']` Control participants who had completed at least two WTARs (range 2 - `r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of measures = `r wtar_n$total_sessions`). The period between successive WTAR assessments was multi-modal, mostly clustering around intervals of one and two years, due to varying follow-up periods over the course of the study. Both patients and controls were classified as having normal cognition, mild cognitive impairment, or dementia on the basis of a comprehensive neuropsychological battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each session, we did not actually use it in the diagnostic classification process: this was done on the basis of test scores falling below 1.5 standard deviations of norms,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria] rather than performance being assessed against an estimated pre-morbid level. Characteristics of the sample are shown in Table \@ref(tab:table-1). All participants were speakers of New Zealand English, and were assessed against the UK/US norms of the WTAR. ***{TODO: Kyla to confirm, and to describe what other factors may have ben applied in deriving the estimated IQ (e.g. age and education).]***
 
 ## Latent class trajectory modelling
 
@@ -299,10 +301,9 @@ table_df %>%
                           TRUE                ~ name)) %>% 
   rename(' '           = name,
          "Parkinson's" = PD) %>%
-  apa_table()
-  #kable(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.",
-  #      align = 'lrr')#, vline = '')#, booktabs = TRUE) %>% 
-  #kable_styling(position = 'center') %>% 
+  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr') #%>% 
+  # kable(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr') %>% #, vline = '')#, booktabs = TRUE) %>%
+  #kable_styling(position = 'center') %>%
   #row_spec(0, bold = TRUE)
 
 ```
@@ -322,184 +323,105 @@ The code and anonymised dataset extracts sufficient to reproduce the analyses an
 - What other descriptive results might be useful (e.g. mean within-subject standard deviation of WTAR scores? Not great for those with only two scores, though)? Maybe plot within subject SDs of global z vs WTAR (see supplementary material)? 
 
 
-```{r wtar-modelling-cubic, echo=FALSE}
+```{r wtar-modelling-cubic, eval=FALSE, include=FALSE}
+
+# prepare list to hold models with 1-4 classes:
+cubic_models = list()
+max_classes_cubic = 4
 
 if (RUN_NEW_CUBIC_MODELS) {
 
-# currently have to coerce data to a dataframe (done above), as tibbles lead to 
-# a bug with the subject id column not being accepted by lcmm as numeric.
- 
-# run models with 1-5 classes, each with 100 random starts,
-# using the 1-class model to set initial start values:
-cubic_WTAR_1 <- lcmm::hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                       random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE),
-                       subject = 'subject_id_num', ng = 1, 
-                       data = dat)
-saveRDS(cubic_WTAR_1, 'models/cubic_WTAR_1.RDS') # cache to disk
-
-cubic_WTAR_2 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
-             hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  nwg = TRUE, ng = 2, 
-                  mixture = ~ poly(age_std_cubic, degree = 3, raw = TRUE),
-                  subject = 'subject_id_num', data = dat))
-saveRDS(cubic_WTAR_2, 'models/cubic_WTAR_2.RDS')
-
-cubic_WTAR_3 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
-             hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  nwg = TRUE, ng = 3, 
-                  mixture = ~ poly(age_std_cubic, degree = 3, raw = TRUE),
-                  subject = 'subject_id_num', data = dat))
-saveRDS(cubic_WTAR_3, 'models/cubic_WTAR_3.RDS')
-
-cubic_WTAR_4 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = cubic_WTAR_1,
-             hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE), 
-                  nwg = TRUE, ng = 4, 
-                  mixture = ~ poly(age_std_cubic, degree = 3, raw = TRUE),
-                  subject = 'subject_id_num', data = dat))
-saveRDS(cubic_WTAR_4, 'models/cubic_WTAR_4.RDS')
-
-} else { # use previously-computed models:
-# cubic models:
-cubic_WTAR_1 = readRDS('models/cubic_WTAR_1.RDS')
-cubic_WTAR_2 = readRDS('models/cubic_WTAR_2.RDS')
-cubic_WTAR_3 = readRDS('models/cubic_WTAR_3.RDS')
-cubic_WTAR_4 = readRDS('models/cubic_WTAR_4.RDS')
-
+  
+  # make use of parallel computation to speed up working through the large number of 
+  # iterations to be used for each model:
+  num_cores = parallel::detectCores()
+  cl = parallel::makeCluster(num_cores)
+  
+  # currently have to coerce data to a dataframe (done above), as tibbles lead to 
+  # a bug with the subject id column not being accepted by lcmm as numeric.
+  
+  # using the 1-class model to set initial start values:
+  cubic_models[[1]] <- lcmm::hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
+                                  random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE),
+                                  subject = 'subject_id_num', ng = 1, 
+                                  data = dat)
+  saveRDS(cubic_models[[1]], 'models/cubic_WTAR_1.RDS') # cache to disk
+  
+  # for each higher-class model, run with 5000 random starts based on the initial
+  # one-class model, then run the selected one up to 1000 times to (hopeful) convergence:
+  
+  for (class_num in 2:max_classes_cubic) {
+    
+    print(class_num)
+    
+    # need to explicitly pass some variables to the namespace of each process, or the 
+    # gridsearch and hlme functions below will trip up by not "knowing" some of their
+    # parameters:
+    parallel::clusterExport(cl, c('class_num', 'cubic_models'))
+    
+    cubic_models[[class_num]] <-
+      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = cubic_models[[1]], cl = cl,
+                       hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
+                            random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE), 
+                            ng = class_num, nwg = TRUE, maxiter = 1000,
+                            mixture = ~ poly(age_std_cubic, degree = 3, raw = TRUE),
+                            subject = 'subject_id_num', data = dat))
+    
+    saveRDS(cubic_models[[class_num]], paste0('models/cubic_WTAR_', class_num, '.RDS'))
+  }
+  
+  parallel::stopCluster(cl)
+  
+} else { # use previously-computed cubic models:
+  
+  for (class_num in 1:max_classes_cubic) {
+    cubic_models[[class_num]] = readRDS(paste0('models/cubic_WTAR_', class_num, '.RDS'))
+  }
 }
+
+cubic_WTAR_model_table = 
+  summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], cubic_models[[4]],
+               which = c('G', 'conv', 'loglik', 'npm', 'BIC', 'SABIC', 
+                         'entropy', '%class')) %>% 
+  as_tibble()
 
 # create some a vector of ages to predict against, but first:
 # need to calculate this based on the real data (we choose to mean across all
 # sessions rather than across one value per subject):
 mean_age = mean(dat$age) 
-new_data = 
+new_data_cubic = 
   data.frame(age = seq(from = 47.5, to = 87.5, by = 0.5)) %>% 
   mutate(age_std_cubic = (age - mean_age)/10)
 
-pred_cubic_WTAR <- predictY(cubic_WTAR_1, newdata = new_data, 
+pred_cubic_WTAR = predictY(cubic_models[[3]], newdata = new_data_cubic, 
                        var.time = 'age_std_cubic', draws = TRUE)
-pred_cubic_WTAR = cbind(new_data, pred_cubic_WTAR$pred)
-```
-
-```{r wtar-modelling-linear, echo=FALSE}
-if (RUN_NEW_LINEAR_MODELS) {
-
-# currently have to coerce data to a dataframe (done above), as tibbles lead to 
-# a bug with the subject id column not being accepted by lcmm as numeric.
- 
-# run models with 1-5 classes, each with 100 random starts,
-# using the 1-class model to set initial start values:
-linear_WTAR_1 <- lcmm::hlme(WTAR ~ age_std, 
-                       random = ~1 + age_std,
-                       subject = 'subject_id_num', ng = 1, 
-                       data = dat)
-saveRDS(linear_WTAR_1, 'models/linear_WTAR_1.RDS') # cache to disk
-
-linear_WTAR_2 <- 
-  lcmm::gridsearch(rep = 500, maxiter = 15, minit = linear_WTAR_1, cl = 4,
-             hlme(WTAR ~ age_std, 
-                  random = ~1 + age_std, 
-                  nwg = TRUE, ng = 2, 
-                  mixture = ~ age_std, maxiter = 5000,
-                  subject = 'subject_id_num', data = dat))
-saveRDS(linear_WTAR_2, 'models/linear_WTAR_2.RDS')
-
-linear_WTAR_3 <- 
-  lcmm::gridsearch(rep = 50, maxiter = 15, minit = linear_WTAR_1,
-             hlme(WTAR ~ age_std, 
-                  random = ~1 + age_std, 
-                  nwg = TRUE, ng = 3, 
-                  mixture = ~ age_std,
-                  subject = 'subject_id_num', data = dat))
-saveRDS(linear_WTAR_3, 'models/linear_WTAR_3.RDS')
-
-linear_WTAR_4 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = linear_WTAR_1,
-             hlme(WTAR ~ age_std, 
-                  random = ~1 + age_std, 
-                  nwg = TRUE, ng = 4, 
-                  mixture = ~ age_std,
-                  subject = 'subject_id_num', data = dat))
-saveRDS(linear_WTAR_4, 'models/linear_WTAR_4.RDS')
-
-linear_WTAR_5 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = linear_WTAR_1,
-             hlme(WTAR ~ age_std, 
-                  random = ~1 + age_std, 
-                  nwg = TRUE, ng = 5, 
-                  mixture = ~ age_std,
-                  subject = 'subject_id_num', data = dat))
-saveRDS(linear_WTAR_5, 'models/linear_WTAR_5.RDS')
-
-linear_WTAR_6 <- 
-  lcmm::gridsearch(rep = 100, maxiter = 10, minit = linear_WTAR_1,
-             hlme(WTAR ~ age_std, 
-                  random = ~1 + age_std, 
-                  nwg = TRUE, ng = 6, 
-                  mixture = ~ age_std,
-                  subject = 'subject_id_num', data = dat))
-saveRDS(linear_WTAR_6, 'models/linear_WTAR_6.RDS')
-
-} else { # use previously-computed models:
-# cubic models:
-linear_WTAR_1 = readRDS('models/linear_WTAR_1.RDS')
-linear_WTAR_2 = readRDS('models/linear_WTAR_2.RDS')
-linear_WTAR_3 = readRDS('models/linear_WTAR_3.RDS')
-linear_WTAR_4 = readRDS('models/linear_WTAR_4.RDS')
-linear_WTAR_5 = readRDS('models/linear_WTAR_5.RDS')
-linear_WTAR_6 = readRDS('models/linear_WTAR_6.RDS')
-}
-
-linear_WTAR_model_table = 
-  summarytable(linear_WTAR_1, linear_WTAR_2, linear_WTAR_3, linear_WTAR_4, 
-               linear_WTAR_5, linear_WTAR_6,
-               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
-                         'entropy', '%class')) %>% 
-  as.data.frame()
-
-# create some a vector of ages to predict against, but first:
-# need to calculate this based on the real data (we choose to mean across all
-# sessions rather than across one value per subject):
-mean_age = mean(dat$age) 
-new_data_linear = 
-  data.frame(age = seq(from = 50, to = 90, by = 0.5)) %>% 
-  mutate(age_std = (age - mean_age))
-
-pred_linear_WTAR <- predictY(linear_WTAR_2, newdata = new_data_linear, 
-                       var.time = 'age_std', draws = TRUE)
-pred_linear_WTAR = cbind(new_data_linear, pred_linear_WTAR$pred) %>% 
-  # reshape to allow ggplotting:
+pred_cubic_WTAR = cbind(new_data_cubic, pred_cubic_WTAR$pred) %>% 
+   # reshape to allow ggplotting:
   pivot_longer(cols = Ypred_class1:upper.Ypred_class2, 
                names_to = c('line', 'class'), names_sep = '_',
                values_to = 'predicted_WTAR') %>% 
   pivot_wider(names_from = line, values_from = predicted_WTAR) %>% 
   mutate(class = 
            factor(class, 
-                  levels = c('class1', 'class2'),
+                  levels = c('class1', 'class2', 'class3'),
                   labels = c('Class 1',
-                             'Class 2')))
+                             'Class 2', 'Class 3')))
 
-
-figure_linear_2 = pred_linear_WTAR %>% 
-  ggplot(aes(x = age_std, y = Ypred)) +
+figure_cubic_3 = pred_cubic_WTAR %>% 
+  ggplot(aes(x = age, y = Ypred)) +
   geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
                   fill = class), colour = NA, alpha = 0.3) +
   geom_line(aes(colour = class)) +
   geom_dl(aes(label = class),
           method = list('far.from.others.borders', cex = 0.75,
                         dl.trans(x = x + 0.30, y = y + 0.15))) +
-  scale_colour_manual(values = c('red', '#339900')) +
-  scale_fill_manual(values = c('red', '#339900')) +
-  coord_cartesian(ylim = c(0, 30), xlim = c(60, 90), expand = FALSE) +
-  scale_y_continuous(breaks = c(0, 21, 26, 30), minor_breaks = NULL) +
+  scale_colour_manual(values = c('red', 'orange', '#339900')) +
+  scale_fill_manual(values = c('red', 'orange', '#339900')) +
+  #coord_cartesian(ylim = c(0, 30), xlim = c(60, 90), expand = FALSE) +
+ # scale_y_continuous(breaks = c(0, 21, 26, 30), minor_breaks = NULL) +
   scale_x_continuous(minor_breaks = NULL,
                      labels = scales::label_number(suffix = ' yrs')) +
-  labs(title = 'A. Predicted MoCA scores by class',
+  labs(title = 'A. Predicted WTAR scores by class',
        x = NULL, y = NULL) +
   theme_bw() + 
   theme(aspect.ratio = 1,
@@ -513,14 +435,250 @@ figure_linear_2 = pred_linear_WTAR %>%
         panel.spacing.x = unit(10, 'mm'),
         legend.position = 'none')
 
-ggsave('images/2a_combined_predicted_class_trajectories.pdf', plot = figure_2a,
-       width = fig_2_width * 2, height = fig_2_height, units = 'cm')
+ggsave('images/cubic_predicted_class_trajectories.pdf', plot = figure_cubic_3,
+       width = 10, height = 10, units = 'cm')
+
+```
+
+```{r wtar-modelling-linear, echo=FALSE}
+# prepare list to hold models with 1-4 classes:
+linear_models = list()
+max_classes_linear = 4
+
+if (RUN_NEW_LINEAR_MODELS) {
+  
+   # make use of parallel computation to speed up working through the large number of 
+  # iterations to be used for each model:
+  num_cores = parallel::detectCores()
+  cl = parallel::makeCluster(num_cores)
+  
+  # currently have to coerce data to a dataframe (done above), as tibbles lead to 
+  # a bug with the subject id column not being accepted by lcmm as numeric.
+  
+  # using the 1-class model to set initial start values:
+  linear_models[[1]] <- lcmm::hlme(WTAR ~ age_std, 
+                                 random = ~1 + age_std,
+                                 subject = 'subject_id_num', ng = 1, 
+                                 data = dat)
+  saveRDS(linear_models[[1]], 'models/linear_WTAR_1.RDS') # cache to disk
+  
+  # for each higher-class model, run with 5000 random starts based on the initial
+  # one-class model, then run the selected one up to 1000 times to (hopeful) convergence:
+  
+  for (class_num in 2:max_classes_linear) {
+    
+    print(class_num)
+    
+    # need to explicitly pass some variables to the namespace of each process, or the 
+    # gridsearch and hlme functions below will trip up by not "knowing" some of their
+    # parameters:
+    parallel::clusterExport(cl, c('class_num', 'linear_models'))
+    
+    linear_models[[class_num]] <- 
+      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = linear_models[[1]], cl = cl,
+                       hlme(WTAR ~ age_std, 
+                            random = ~1 + age_std, 
+                            ng = class_num, nwg = TRUE, 
+                            mixture = ~ age_std, maxiter = 1000,
+                            subject = 'subject_id_num', data = dat))
+    
+    saveRDS(linear_models[[class_num]], paste0('models/linear_WTAR_', class_num, '.RDS'))
+  }
+  
+  parallel::stopCluster(cl)
+
+} else { # use previously-computed linear models:
+  
+  for (class_num in 1:max_classes_linear) {
+    linear_models[[class_num]] = readRDS(paste0('models/linear_WTAR_', class_num, '.RDS'))
+  }
+  
+}
+
+linear_WTAR_model_table = 
+  summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], linear_models[[4]],
+               which = c('G', 'conv', 'loglik', 'npm', 'BIC', 'SABIC', 
+                         'entropy', '%class')) %>% 
+  as_tibble()
+
+# create some a vector of ages to predict against, but first:
+# need to calculate this based on the real data (we choose to mean across all
+# sessions rather than across one value per subject):
+mean_age = mean(dat$age) 
+new_data_linear = 
+  data.frame(age = seq(from = 43, to = 89, by = 0.5)) %>% 
+  mutate(age_std = (age - mean_age))
+
+pred_linear_WTAR <- predictY(linear_models[[3]], newdata = new_data_linear, 
+                       var.time = 'age_std', draws = TRUE)
+pred_linear_WTAR = cbind(new_data_linear, pred_linear_WTAR$pred) %>% 
+  # reshape to allow ggplotting:
+  pivot_longer(cols = Ypred_class1:upper.Ypred_class3, 
+               names_to = c('line', 'class'), names_sep = '_',
+               values_to = 'predicted_WTAR') %>% 
+  pivot_wider(names_from = line, values_from = predicted_WTAR) %>% 
+  mutate(class = 
+           factor(class, 
+                  levels = c('class3', 'class2', 'class1'),
+                  labels = c('High and stable', 'Gentle decline', 'Outlier')))
+
+# link subjects to their assigned classes:
+dat_with_classes = dat %>% 
+  left_join(linear_models[[3]]$pprob, by = 'subject_id_num') %>% 
+   mutate(class = 
+           factor(class, 
+                  levels = c('3', '2', '1'),
+                  labels = c('High and stable', 'Gentle decline', 'Outlier')))
+
+# add group so it can be used for plotting:
+pred_linear_WTAR_group = 
+  rbind(pred_linear_WTAR, pred_linear_WTAR) %>% 
+  mutate(group = rep(c('Control', 'PD'), each = nrow(pred_linear_WTAR))) %>% 
+  select(group, everything())
+
+# just a plot of the class lines:
+figure_linear_3 = pred_linear_WTAR_group %>% 
+  ggplot(aes(x = age)) +
+  facet_grid(group ~ class) +
+  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
+                  fill = class), colour = NA, alpha = 0.3) +
+  geom_line(aes(y = Ypred, colour = class)) +
+  # geom_dl(aes(label = class),
+  #         method = list('far.from.others.borders', cex = 0.75,
+  #                       dl.trans(x = x + 0.30, y = y + 0.15))) +
+  scale_colour_manual(values = c('red', 'orange', '#339900')) +
+  scale_fill_manual(values = c('red', 'orange', '#339900')) +
+  #coord_cartesian(ylim = c(0, 30), xlim = c(60, 90), expand = FALSE) +
+  scale_y_continuous(breaks = c(80, 100, 120), limits = c(80, 130)) +
+  scale_x_continuous(minor_breaks = NULL,
+                     labels = scales::label_number(suffix = ' yrs')) +
+  labs(title = 'A. Predicted WTAR scores by class',
+       x = NULL, y = NULL) +
+  theme_bw() + 
+  theme(aspect.ratio = 1,
+        plot.title = element_text(face = 'bold', size = 10),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 9),
+        panel.border = element_rect(colour = '#E8E8E8', size = 1.0),
+        strip.background = element_rect(fill = '#E8E8E8',
+                                        colour = '#E8E8E8'),
+        panel.spacing.x = unit(10, 'mm'),
+        legend.position = 'none')
+
+ggsave('images/linear_predicted_class_trajectories.pdf', plot = figure_linear_3,
+       width = 10, height = 10, units = 'cm')
 ```
 
 
-(ref:fig-1-caption) ***(A.)*** Global cognitive z-scores for each participant. The participants are divided into Controls, non-dementing Parkinson's, and people with Parkinson's who went on to develop dementia. While remaining stable over time for many, others show substantial and repaid decline. ***(B.)*** Longitudinal WTAR score trajectories for each individual. WTAR tends to remain stable over time, despite substantial changes in the current cognitive score. The same latent class trajectory (filled ribbon) is shown in each panel, indicating how the single overall pattern of stable scores applied relatively well to all participants.
+(ref:fig-1-caption) ***(A.)*** Longitudinal WTAR score trajectories for all individuals, divided into Controls, Parkinson's participants who remained dementia-free, and those who developed dementia. Also shown are the two predicted latent class trajectories (blue ribbon = _High and stable_, brown ribbon = _Gentle decline_). ***(B.)***  Global cognitive z-scores for the Parkinson's participants in the lower panel of ***(A)*** (those who developed dementia). Overall cognitive performance declined dramatically, in contrast to their relatively stable WTARs scores. This was regardless of their latent class (blue and brown lines). In each panel, current cognitive status is shown as cognitively normal (green circles), mild cognitive impairment (orange triangles), or dementia (red squares). Upon reaching dementia, the WTAR was not assessed again.
 
-```{r figure-1, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.width=fig_1_width/2.54, fig.height=fig_1_height/2.54}
+```{r figure-1, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54}
+
+dat_plotting = dat_with_classes %>% filter(class != 'Outlier') %>% 
+  mutate(group = factor(group, levels = c('Control', 'PD')))
+pred_linear_WTAR_group_plotting = pred_linear_WTAR_group %>% 
+  rename(class_for_lines = class) %>% 
+  filter(class_for_lines != 'Outlier') %>% 
+  mutate(group = factor(group, levels = c('Control', 'PD')))
+
+# upper panel, of WTAR scores by age:
+figure_1_upper = dat_plotting %>% 
+  ggplot(aes(x = age)) +
+  facet_grid(panel_label ~ .) +
+  scale_colour_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') + 
+  scale_fill_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') + 
+  geom_ribbon(dat = pred_linear_WTAR_group_plotting,
+              aes(ymin = lower.Ypred, ymax = upper.Ypred, fill = class_for_lines),
+              colour = NA, alpha = 0.2) +
+  geom_line(dat = pred_linear_WTAR_group_plotting,
+            aes(y = Ypred, colour = class_for_lines), 
+            size = 0.25, linetype = 'dashed') +
+  geom_line(aes(y = WTAR, colour = class, group = subject_id_num), 
+            alpha = 1.0, size = 0.1) +
+  new_scale_color() + new_scale_fill() +
+  scale_colour_manual(values = cog_colours, name = 'Cognitive status') + 
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  # setting stroke = 0.1 gives nice sharp shapes:
+  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
+  geom_point(aes(y = WTAR, fill = cognitive_status,
+                 #colour = cognitive_status, # minimal border stroke
+                 shape = cognitive_status), colour = 'white', size = 1.0, stroke = 0.1) +
+
+  scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
+                     labels = scales::label_number(suffix = ' years')) +
+  scale_y_continuous(limits = c(80, 130)) +
+  labs(title = 'A. Longitudinal WTAR scores by group',
+       subtitle = 'Showing raw scores and the two predicted latent class trajectories',
+       x = NULL, y = NULL) +
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 9),
+        plot.subtitle = element_text(size = 8),
+        axis.text = element_text(size = 7, colour = 'black'),
+        axis.ticks.y = element_line(colour = '#E8E8E8', size = 0.25),
+        axis.ticks.x = element_blank(),
+        panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
+        panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
+                                          linetype = 'dotted'),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(face = 'plain', colour = 'black', size = 8),
+        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
+        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        legend.pos = 'none', #c(0.09, 0.095),
+        legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
+        legend.spacing.y = unit(1, 'mm'), # spacing between title & items
+        legend.key.size = unit(2.5, 'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 6),
+        legend.text = element_text(size = 7))
+
+# lower panel, of z-score trajectories of dementia-converters only:
+figure_1_lower = dat_with_classes %>% 
+  filter(panel_label == 'PD dementia') %>% 
+  ggplot(aes(x = age, y = global_z)) +
+  facet_grid(panel_label ~ .) +
+  geom_line(aes(group = subject_id_num, colour = class), 
+            alpha = 0.6, size = 0.25, show.legend = FALSE) +
+  # setting stroke = 0.1 gives nice sharp shapes:
+  geom_point(aes(fill = cognitive_status,
+                 #colour = cognitive_status, # minimal border stroke
+                 shape = cognitive_status), colour = 'white', size = 1.0, stroke = 0.1) +
+  scale_colour_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') +
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
+  scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
+                     labels = scales::label_number(suffix = ' years')) +
+  labs(title = 'B. Global cognitive z-scores',
+       subtitle = 'Of those PD participants who developed dementia',
+       x = NULL, y = NULL) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 9),
+        plot.subtitle = element_text(size = 8),
+        axis.ticks = element_line(colour = '#E8E8E8', size = 0.25),
+        axis.text = element_text(size = 7, colour = 'black'),
+        panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
+        panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
+                                          linetype = 'dotted'),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(face = 'plain', colour = 'black', size = 8),
+        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
+        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        legend.position = c(0.085, 0.46), # 0.64 puts it in the top panel
+        legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(3.0,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 7),
+        legend.text = element_text(size = 7))
+
+figure_1 = cowplot::plot_grid(figure_1_upper, figure_1_lower, nrow = 2, axis = 'l',
+                              align = 'v', rel_heights = c(1.0, 0.43))
+
+figure_1
+
+ggsave('images/wtar-figure-1.pdf', width = fig_1_width, height = fig_1_height,
+       units = 'cm')
+```
+
+```{r old-figure-1, eval=FALSE, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, include=FALSE}
 
 # z-score trajectories of all PD subjects, incl non-converters:
 figure_1a = dat %>% 
