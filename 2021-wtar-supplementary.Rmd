@@ -36,11 +36,85 @@ dat %>%
 
 ```
 
-(ref:tab-S1-caption) Comparison of hlme models with 1 to `r max_classes_linear` latent trajectory classes.
+```{r fig-A3-class-trajectories, fig.cap='The predcited trajectories of the chosen two-class linear model.', fig.width=10/2.54, fig.height=10/2.54}
+# just a plot of the class lines:
+figure_linear_2 = pred_linear_WTAR_group %>% 
+  ggplot(aes(x = age)) +
+  #facet_grid(group ~ class) +
+  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
+                  fill = class), colour = NA, alpha = 0.3) +
+  geom_line(aes(y = Ypred, colour = class)) +
+  geom_dl(aes(y = Ypred, label = class),
+          method = list('far.from.others.borders', cex = 0.75,
+                        dl.trans(x = x + 0.30, y = y + 0.15))) +
+  scale_colour_manual(values = c('blue', 'brown')) +
+  scale_fill_manual(values = c('blue', 'brown')) +
+  scale_y_continuous(breaks = c(80, 100, 120), limits = c(80, 130)) +
+  scale_x_continuous(minor_breaks = NULL,
+                     labels = scales::label_number(suffix = ' yrs')) +
+  labs(title = 'A. Predicted WTAR scores by class',
+       x = NULL, y = NULL) +
+  theme_bw() + 
+  theme(aspect.ratio = 1,
+        plot.title = element_text(face = 'bold', size = 10),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 9),
+        panel.border = element_rect(colour = '#E8E8E8', size = 1.0),
+        strip.background = element_rect(fill = '#E8E8E8',
+                                        colour = '#E8E8E8'),
+        panel.spacing.x = unit(10, 'mm'),
+        legend.position = 'none')
 
-```{r tab_A1-model-table}
+figure_linear_2
+```
+
+
+(ref:tab-A1-caption) Comparison of hlme models with 1 to `r max_classes_linear` linear latent trajectory classes.
+
+```{r tab_A1-linear-model-table}
 
 linear_WTAR_model_table %>% 
-  apa_table(caption = 'Comparison of hlme models with 1 to 4 latent trajectory classes.')
+  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
 
 ```
+
+(ref:tab-A2-caption) Comparison of hlme models with 1 to `r max_classes_cubic` cubic latent trajectory classes.
+
+```{r tab_A2-cubic-model-table}
+
+cubic_WTAR_model_table %>% 
+  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+
+```
+
+```{r include=FALSE}
+# need to run this in its own chunk, with output silenced,
+pp = postprob(chosen_linear_model)
+
+```
+
+(ref:tab-A3-caption) Number within each class in the selected model.
+
+```{r tab_A3}
+
+pp[[1]]%>% 
+  apa_table(caption = '(ref:tab-A3-caption)')
+```
+
+(ref:tab-A4-caption) Confidence of classification to each class within the selected model.
+
+```{r tab_A4}
+pp[[2]]%>% 
+  apa_table(caption = '(ref:tab-A4-caption)')
+```
+
+(ref:tab-A5-caption) Levels of classification confidence for each class within the selected model.
+
+```{r, tab_A5}
+pp[[3]]%>% 
+  apa_table(caption = '(ref:tab-A5-caption)')
+```
+
+
+

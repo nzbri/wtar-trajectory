@@ -87,6 +87,10 @@ RUN_NEW_LINEAR_MODELS = FALSE
 
 ################################################################################
 
+# define the maximum number of classes to run models to:
+max_classes_cubic = 5
+max_classes_linear = 5
+
 # define colour scheme values for normal, MCI, and dementia:
 cog_colours <- c('#339900', '#FF9326', '#D92121')
 
@@ -122,6 +126,7 @@ library(huxtable)    # tables that work in Word output
 library(knitr)       # for kable pretty tables
 library(kableExtra)  # extra kable options
 library(papaja)      # for apa_table
+
 ```
 
 ```{r import-data}
@@ -139,7 +144,13 @@ sessions = chchpd::import_sessions() %>%
   filter(study %in% c('Follow-up', 'PDD Followup')) %>% 
   # but some sessions *were* entered in both studies, so remove any duplicates:
   group_by(session_id) %>% 
-  filter(row_number() == 1)
+  filter(row_number() == 1) %>% 
+  # this person's session seems to have a fictitious WTAR score (none should
+  # have been gathered on that session, no original can be found, 
+  # and the value changes so markedly from the two previous ones that it 
+  # results in a separate class just to fit this one person). Can 
+  # drop this filter step once the value is removed from the database:
+  filter(session_id != '310PDS_2020-03-04')
 
 np = chchpd::import_neuropsyc()
 updrs = chchpd::import_motor_scores()
@@ -196,7 +207,6 @@ dat$age_std_cubic = (dat$age - mean(dat$age))/10
 # for linear models, just subtract the mean, to make the intercept meaningful:
 dat$age_std = dat$age - mean(dat$age)
 
-
 dat = dat %>% 
   arrange(subject_id_num, age) %>% 
   select(subject_id_num, group,	sex, symptom_onset_age,	diagnosis_age,
@@ -235,11 +245,11 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
 
 # Introduction
 
-In 2012, the International Parkinson and Movement Disorder Society published its Taskforce guidelines for the diagnosis of mild cognitive impairment in Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the diagnosis is based on impairment on specific (rather than global) neuropsychological tests, impairment may be determined in three ways: (i) performance significantly below appropriate norms, or (ii) significant decline on serial testing, or (iii) significant decline from estimated premorbid levels. The latter two approaches could be advantageous in resolving the ambiguity that poor current cognitive function might reflect long-standing low cognitive ability, rather than a recent disease-related deterioration. In practice, however, one seldom has reference to prior formal serial testing, and so a valid method of estimating premorbid function is appealing. The Wechsler Test of Adult Reading (WTAR) is proposed in the guidelines as one of the two recommended tests to estimate premorbid functioning (along with the National Adult Reading Test, NART). Both tests are based on being able to recognise and pronounce irregularly-spelled English words. ***[TODO: give some examples]*** This ability has been shown to be preserved in the face of both normal ageing and a number of brain insults[@strauss2006_CompendiumNeuropsychologicalTests] 
+In 2012, the International Parkinson and Movement Disorder Society published its Taskforce guidelines for the diagnosis of mild cognitive impairment in Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the diagnosis is based on specific (rather than global) neuropsychological tests, significant impairment may be determined in three ways: (i) performance below appropriate norms, or (ii) decline on serial testing, or (iii) decline from estimated premorbid levels. The latter two approaches could be advantageous in resolving the ambiguity that poor current cognitive function might reflect long-standing low cognitive ability, rather than a recent disease-related deterioration. In practice, however, one seldom has reference to prior formal serial testing, and so a valid method of estimating premorbid function is appealing. The Wechsler Test of Adult Reading (WTAR) was proposed in the guidelines as one of two recommended tests to estimate premorbid functioning (along with the National Adult Reading Test, NART). Both tests are based on being able to recognise and pronounce irregularly-spelled English words. ***[TODO: give some examples]*** This ability has been shown to be preserved in the face of both normal ageing and a number of brain insults[@strauss2006_CompendiumNeuropsychologicalTests] 
 
-When the test was initially normed, it was tested in Parkinson's as well as a number of other neurological disorders, such as Huntington's, schizophrenia, and traumatic brain injury. Only in Alzheimer's disease were the scores significantly lower than in matched controls.[@strauss2006_CompendiumNeuropsychologicalTests] ***[TODO - read and insert reference to the Wechsler manual]***. That norming was published in 2001, well before current guidelines on PD-MCI[@litvan2012_DiagnosticCriteriaMild] and Parkinson's dementia diagnosis[@dubois2007_DiagnosticProceduresParkinson] were promulgated. It is therefore unclear to what extent those findings are valid in the face of the significant cognitive deterioration that can occur in Parkinson's.
+When the test was initially normed, it was tested in Parkinson's as well as a number of other neurological disorders, such as Huntington's, schizophrenia, and traumatic brain injury. Only in Alzheimer's disease were the scores significantly lower than in matched controls.[@strauss2006_CompendiumNeuropsychologicalTests] ***[TODO - read and insert reference to the Wechsler manual]***. Those results were published in 2001, well before the current guidelines on diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] and Parkinson's dementia[@dubois2007_DiagnosticProceduresParkinson] were promulgated. It is therefore unclear to what extent those original findings are valid in the face of the significant cognitive deterioration that can occur in Parkinson's.
 
-We therefore firstly sought to examine WTAR scores in a cognitively well-characterised sample, spanning the range from normal function through mild cognitive impairment to dementia, assessed according to the current MDS guidelines. Secondly, we restricted the sample to participants who had completed a minimum of two WTARs, so that the stability of the measure within individuals over time could be examined.    
+We therefore firstly sought to examine WTAR scores in a cognitively well-characterised sample, spanning the range from normal function through mild cognitive impairment to dementia. Secondly, we restricted the sample to participants who had completed a minimum of two WTARs, so that the stability of the measure within individuals over time could be examined.    
 
 # Methods
 
@@ -271,11 +281,11 @@ wtar_n = dat %>%
 
 ```
 
-The New Zealand Parkinson's Progression Programme is a longitudinal study of a convenience prevalence sample of idiopathic Parkinson's, largely recruited from the specialist Movement Disorders Clinic at the New Zealand Brain Research Institute. The study commenced in 2007, with recruitment ongoing, and hence covers patients ranging from the recently-diagnosed to those with advanced disease. Inclusion and exclusion criteria have been described previously [@wood2016_DifferentPDMCICriteria]. For this analysis, we selected data only from the `r group_n$n[group_n$group == 'PD']` Parkinson's and `r group_n$n[group_n$group == 'Control']` Control participants who had completed at least two WTARs (range 2 - `r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of measures = `r wtar_n$total_sessions`). The period between successive WTAR assessments was multi-modal, mostly clustering around intervals of one and two years, due to varying follow-up periods over the course of the study. Both patients and controls were classified as having normal cognition, mild cognitive impairment, or dementia on the basis of a comprehensive neuropsychological battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each session, we did not actually use it in the diagnostic classification process: this was done on the basis of test scores falling below 1.5 standard deviations of norms,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria] rather than performance being assessed against an estimated pre-morbid level. Characteristics of the sample are shown in Table \@ref(tab:table-1). All participants were speakers of New Zealand English, and were assessed against the UK/US norms of the WTAR. ***{TODO: Kyla to confirm, and to describe what other factors may have ben applied in deriving the estimated IQ (e.g. age and education).]***
+The New Zealand Parkinson's Progression Programme is a longitudinal study of a convenience prevalence sample of idiopathic Parkinson's, largely recruited from the specialist Movement Disorders Clinic at the New Zealand Brain Research Institute. The study commenced in 2007, with recruitment ongoing, and hence covers patients ranging from the recently-diagnosed to those with advanced disease. Inclusion and exclusion criteria have been described previously [@wood2016_DifferentPDMCICriteria]. For this analysis, we selected data only from the `r group_n$n[group_n$group == 'PD']` Parkinson's and `r group_n$n[group_n$group == 'Control']` Control participants who had completed at least two WTARs (range 2 - `r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of measures = `r wtar_n$total_sessions`). The period between successive WTAR assessments was multi-modal, mostly clustering around intervals of one and two years, due to varying follow-up periods over the course of the study. Both patients and controls were classified as having normal cognition, mild cognitive impairment, or dementia on the basis of a comprehensive neuropsychological battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each session, we did not actually use it in the diagnostic classification process: this was done on the basis of test scores falling below 1.5 standard deviations of norms,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria] rather than being compared to an estimated pre-morbid level. Characteristics of the sample are shown in Table \@ref(tab:table-1). All participants were speakers of New Zealand English, and were assessed against the ***TODO:*** UK? norms of the WTAR, corrected for age, sex, and years of education. ***{TODO: Kyla to confirm UK norms, and any other relevant details.]***
 
 ## Latent class trajectory modelling
 
-We fitted latent class trajectory models using the $hlme$ function from the $lcmm$ package [@proust-lima_estimation_2017] (version 1.9.2), running in the R statistical environment [@R-Core-Team_R_2021] (version 4.0.2). The dependent variable was MoCA score, modelled within each subject as a polynomial (cubic) function of age. The model was unaware of any other variables (such as categorical MCI or dementia diagnoses). We fitted five separate models, with the specified number of latent classes increasing from 1 to 5. The model with just one latent class was used to provide starting values for the subsequent models with multiple classes. For each of the multi-class models, an estimation function was run 100 times using an automatic grid search to estimate the parameters while avoiding local minima ***?or maxima? Check with Daniel & Reza on the phrasing of this process.***. Parameters corresponding to the best log-likelihood were used as initial values for the final estimation of the parameters [@proust-lima_estimation_2017]. Selection of the optimal model was on the basis of selecting the one with the lowest BIC value.
+We fitted latent class trajectory models using the $hlme$ function from the $lcmm$ package [@proust-lima_estimation_2017] (version `r packageVersion('lcmm')`), running in the R statistical environment [@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`). The dependent variable was WTAR estimated IQ, initially modelled within each subject as a polynomial (cubic) function of age, to allow for non-linear trajectories. The resulting trajectories were close to straight lines and thus we simplified the models to be a linear function of age. The models were unaware of any other variables (such as categorical MCI or dementia diagnoses). We fitted five separate models, with the specified number of latent classes increasing from 1 to 5. The model with just one latent class was used to provide starting values for the subsequent models with multiple classes. For each of the multi-class models, an estimation function was run 100 times using an automatic grid search to estimate the parameters while avoiding local minima ***?or maxima? Check with Daniel & Reza on the phrasing of this process.***. Parameters corresponding to the best log-likelihood were used as initial values for the final estimation of the parameters [@proust-lima_estimation_2017]. Selection of the optimal model was on the basis of selecting the one with the lowest BIC value.
 
 ```{r table-1}
 table_df = dat %>% 
@@ -317,21 +327,13 @@ The code and anonymised dataset extracts sufficient to reproduce the analyses an
 
 # Results
 
-- See Figure \@ref(fig:figure-1).
-- Describe the model selection process.
-- Need to describe the form of the single latent class. Currently using a cubic, which isn't great in terms of describing the parameters. Ideally would start with a cubic and then drop back to linear, but that gives odd results we need to discuss (e.g. a 2-class model with a lower BIC but the second class contains only one person).
-- What other descriptive results might be useful (e.g. mean within-subject standard deviation of WTAR scores? Not great for those with only two scores, though)? Maybe plot within subject SDs of global z vs WTAR (see supplementary material)? 
+```{r wtar-modelling-cubic, include=FALSE}
 
-
-```{r wtar-modelling-cubic, eval=FALSE, include=FALSE}
-
-# prepare list to hold models with 1-4 classes:
+# prepare list to hold models with 1 through max_classes_cubic classes:
 cubic_models = list()
-max_classes_cubic = 4
 
 if (RUN_NEW_CUBIC_MODELS) {
 
-  
   # make use of parallel computation to speed up working through the large number of 
   # iterations to be used for each model:
   num_cores = parallel::detectCores()
@@ -340,7 +342,7 @@ if (RUN_NEW_CUBIC_MODELS) {
   # currently have to coerce data to a dataframe (done above), as tibbles lead to 
   # a bug with the subject id column not being accepted by lcmm as numeric.
   
-  # using the 1-class model to set initial start values:
+  # use the 1-class model to set initial start values:
   cubic_models[[1]] <- lcmm::hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
                                   random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE),
                                   subject = 'subject_id_num', ng = 1, 
@@ -380,10 +382,13 @@ if (RUN_NEW_CUBIC_MODELS) {
 }
 
 cubic_WTAR_model_table = 
-  summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], cubic_models[[4]],
-               which = c('G', 'conv', 'loglik', 'npm', 'BIC', 'SABIC', 
+  summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], cubic_models[[4]], cubic_models[[5]],
+               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
                          'entropy', '%class')) %>% 
   as_tibble()
+
+# select model, on the basis of one that converged and had the lowest BIC:
+chosen_cubic_model = cubic_models[[1]]
 
 # create some a vector of ages to predict against, but first:
 # need to calculate this based on the real data (we choose to mean across all
@@ -393,35 +398,24 @@ new_data_cubic =
   data.frame(age = seq(from = 47.5, to = 87.5, by = 0.5)) %>% 
   mutate(age_std_cubic = (age - mean_age)/10)
 
-pred_cubic_WTAR = predictY(cubic_models[[3]], newdata = new_data_cubic, 
+pred_cubic_WTAR = predictY(chosen_cubic_model, newdata = new_data_cubic, 
                        var.time = 'age_std_cubic', draws = TRUE)
 pred_cubic_WTAR = cbind(new_data_cubic, pred_cubic_WTAR$pred) %>% 
    # reshape to allow ggplotting:
-  pivot_longer(cols = Ypred_class1:upper.Ypred_class2, 
-               names_to = c('line', 'class'), names_sep = '_',
+  pivot_longer(cols = Ypred:upper.Ypred, 
+               names_to  = 'line',
                values_to = 'predicted_WTAR') %>% 
-  pivot_wider(names_from = line, values_from = predicted_WTAR) %>% 
-  mutate(class = 
-           factor(class, 
-                  levels = c('class1', 'class2', 'class3'),
-                  labels = c('Class 1',
-                             'Class 2', 'Class 3')))
+  pivot_wider(names_from = line, values_from = predicted_WTAR)
 
 figure_cubic_3 = pred_cubic_WTAR %>% 
   ggplot(aes(x = age, y = Ypred)) +
-  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
-                  fill = class), colour = NA, alpha = 0.3) +
-  geom_line(aes(colour = class)) +
-  geom_dl(aes(label = class),
-          method = list('far.from.others.borders', cex = 0.75,
-                        dl.trans(x = x + 0.30, y = y + 0.15))) +
-  scale_colour_manual(values = c('red', 'orange', '#339900')) +
-  scale_fill_manual(values = c('red', 'orange', '#339900')) +
-  #coord_cartesian(ylim = c(0, 30), xlim = c(60, 90), expand = FALSE) +
- # scale_y_continuous(breaks = c(0, 21, 26, 30), minor_breaks = NULL) +
+  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred), 
+              fill = 'brown', colour = NA, alpha = 0.3) +
+  geom_line(colour = 'brown') +
   scale_x_continuous(minor_breaks = NULL,
                      labels = scales::label_number(suffix = ' yrs')) +
-  labs(title = 'A. Predicted WTAR scores by class',
+  scale_y_continuous(limits = c(80, 130)) +
+  labs(title = 'A. Predicted WTAR scores',
        x = NULL, y = NULL) +
   theme_bw() + 
   theme(aspect.ratio = 1,
@@ -440,10 +434,10 @@ ggsave('images/cubic_predicted_class_trajectories.pdf', plot = figure_cubic_3,
 
 ```
 
-```{r wtar-modelling-linear, echo=FALSE}
-# prepare list to hold models with 1-4 classes:
+```{r wtar-modelling-linear, include=FALSE}
+
+# prepare list to hold models with 1 through max_classes_linear classes:
 linear_models = list()
-max_classes_linear = 4
 
 if (RUN_NEW_LINEAR_MODELS) {
   
@@ -455,7 +449,7 @@ if (RUN_NEW_LINEAR_MODELS) {
   # currently have to coerce data to a dataframe (done above), as tibbles lead to 
   # a bug with the subject id column not being accepted by lcmm as numeric.
   
-  # using the 1-class model to set initial start values:
+  # use the 1-class model to set initial start values:
   linear_models[[1]] <- lcmm::hlme(WTAR ~ age_std, 
                                  random = ~1 + age_std,
                                  subject = 'subject_id_num', ng = 1, 
@@ -486,7 +480,7 @@ if (RUN_NEW_LINEAR_MODELS) {
   }
   
   parallel::stopCluster(cl)
-
+  
 } else { # use previously-computed linear models:
   
   for (class_num in 1:max_classes_linear) {
@@ -496,10 +490,13 @@ if (RUN_NEW_LINEAR_MODELS) {
 }
 
 linear_WTAR_model_table = 
-  summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], linear_models[[4]],
-               which = c('G', 'conv', 'loglik', 'npm', 'BIC', 'SABIC', 
+  summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], linear_models[[4]], linear_models[[5]],
+               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
                          'entropy', '%class')) %>% 
   as_tibble()
+
+# select model, on the basis of one that converged and had the lowest BIC:
+chosen_linear_model = linear_models[[2]]
 
 # create some a vector of ages to predict against, but first:
 # need to calculate this based on the real data (we choose to mean across all
@@ -509,26 +506,18 @@ new_data_linear =
   data.frame(age = seq(from = 43, to = 89, by = 0.5)) %>% 
   mutate(age_std = (age - mean_age))
 
-pred_linear_WTAR <- predictY(linear_models[[3]], newdata = new_data_linear, 
+pred_linear_WTAR <- predictY(chosen_linear_model, newdata = new_data_linear, 
                        var.time = 'age_std', draws = TRUE)
 pred_linear_WTAR = cbind(new_data_linear, pred_linear_WTAR$pred) %>% 
   # reshape to allow ggplotting:
-  pivot_longer(cols = Ypred_class1:upper.Ypred_class3, 
+  pivot_longer(cols = Ypred_class1:upper.Ypred_class2, 
                names_to = c('line', 'class'), names_sep = '_',
                values_to = 'predicted_WTAR') %>% 
   pivot_wider(names_from = line, values_from = predicted_WTAR) %>% 
   mutate(class = 
            factor(class, 
-                  levels = c('class3', 'class2', 'class1'),
-                  labels = c('High and stable', 'Gentle decline', 'Outlier')))
-
-# link subjects to their assigned classes:
-dat_with_classes = dat %>% 
-  left_join(linear_models[[3]]$pprob, by = 'subject_id_num') %>% 
-   mutate(class = 
-           factor(class, 
-                  levels = c('3', '2', '1'),
-                  labels = c('High and stable', 'Gentle decline', 'Outlier')))
+                  levels = c('class2', 'class1'),
+                  labels = c('High and stable', 'Typical')))
 
 # add group so it can be used for plotting:
 pred_linear_WTAR_group = 
@@ -536,50 +525,45 @@ pred_linear_WTAR_group =
   mutate(group = rep(c('Control', 'PD'), each = nrow(pred_linear_WTAR))) %>% 
   select(group, everything())
 
-# just a plot of the class lines:
-figure_linear_3 = pred_linear_WTAR_group %>% 
-  ggplot(aes(x = age)) +
-  facet_grid(group ~ class) +
-  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
-                  fill = class), colour = NA, alpha = 0.3) +
-  geom_line(aes(y = Ypred, colour = class)) +
-  # geom_dl(aes(label = class),
-  #         method = list('far.from.others.borders', cex = 0.75,
-  #                       dl.trans(x = x + 0.30, y = y + 0.15))) +
-  scale_colour_manual(values = c('red', 'orange', '#339900')) +
-  scale_fill_manual(values = c('red', 'orange', '#339900')) +
-  #coord_cartesian(ylim = c(0, 30), xlim = c(60, 90), expand = FALSE) +
-  scale_y_continuous(breaks = c(80, 100, 120), limits = c(80, 130)) +
-  scale_x_continuous(minor_breaks = NULL,
-                     labels = scales::label_number(suffix = ' yrs')) +
-  labs(title = 'A. Predicted WTAR scores by class',
-       x = NULL, y = NULL) +
-  theme_bw() + 
-  theme(aspect.ratio = 1,
-        plot.title = element_text(face = 'bold', size = 10),
-        axis.ticks = element_line(colour = '#E8E8E8'),
-        axis.text = element_text(size = 8),
-        axis.title = element_text(size = 9),
-        panel.border = element_rect(colour = '#E8E8E8', size = 1.0),
-        strip.background = element_rect(fill = '#E8E8E8',
-                                        colour = '#E8E8E8'),
-        panel.spacing.x = unit(10, 'mm'),
-        legend.position = 'none')
+# link subjects to their assigned classes:
+dat_with_classes = dat %>% 
+  left_join(chosen_linear_model$pprob, by = 'subject_id_num') %>% 
+   mutate(class = 
+           factor(class, 
+                  levels = c('2', '1'),
+                  labels = c('High and stable', 'Typical'))) %>% 
+  rowwise() %>% 
+  mutate(class_probability = max(c(prob1, prob2)))
 
-ggsave('images/linear_predicted_class_trajectories.pdf', plot = figure_linear_3,
-       width = 10, height = 10, units = 'cm')
+# get a dataframe with just one row per subject
+individuals = dat_with_classes %>% 
+  group_by(subject_id_num) %>% arrange(age) %>% 
+  slice_tail()
+
+class_proportions = individuals %>% 
+  group_by(group, class) %>% 
+  tally() %>% group_by(group) %>% 
+  mutate(proportion = scales::percent_format(accuracy = 0.1)(n/sum(n)))
+
+class_proportions
+  
+
 ```
 
+- See Figure \@ref(fig:figure-1).
+- Describe the model selection process.
+- Need to describe the form of the single latent class. Currently using a cubic, which isn't great in terms of describing the parameters. Ideally would start with a cubic and then drop back to linear, but that gives odd results we need to discuss (e.g. a 2-class model with a lower BIC but the second class contains only one person).
+- Individuals were assigned to the class for which they had the highest posterior probability of assignment. The mean assigned probability was `r round(mean(dat_with_classes$class_probability), digits = 2)` (`r round(sd(dat_with_classes$class_probability), digits = 2)`), with a value of 0.7 regarded as acceptable model performance.[@lennon_framework_2018] 
+- What other descriptive results might be useful (e.g. mean within-subject standard deviation of WTAR scores? Not great for those with only two scores, though)? Maybe plot within subject SDs of global z vs WTAR (see supplementary material)? 
 
-(ref:fig-1-caption) ***(A.)*** Longitudinal WTAR score trajectories for all individuals, divided into Controls, Parkinson's participants who remained dementia-free, and those who developed dementia. Also shown are the two predicted latent class trajectories (blue ribbon = _High and stable_, brown ribbon = _Gentle decline_). ***(B.)***  Global cognitive z-scores for the Parkinson's participants in the lower panel of ***(A)*** (those who developed dementia). Overall cognitive performance declined dramatically, in contrast to their relatively stable WTARs scores. This was regardless of their latent class (blue and brown lines). In each panel, current cognitive status is shown as cognitively normal (green circles), mild cognitive impairment (orange triangles), or dementia (red squares). Upon reaching dementia, the WTAR was not assessed again.
+(ref:fig-1-caption) ***(A.)*** Longitudinal WTAR score trajectories for all individuals, divided into Controls, Parkinson's participants who remained dementia-free, and those who developed dementia. Also shown are the two predicted latent class trajectories (blue ribbon = _High and stable_, brown ribbon = _Typical_). ***(B.)***  Global cognitive z-scores for the Parkinson's participants in the lower panel of ***(A)*** (those who developed dementia). Overall cognitive performance declined dramatically, in contrast to their relatively stable WTARs scores. This was regardless of their latent class (blue and brown lines). In each panel, current cognitive status is shown as cognitively normal (green circles), mild cognitive impairment (orange triangles), or dementia (red squares). Upon reaching dementia, the WTAR was not assessed again.
 
 ```{r figure-1, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54}
 
-dat_plotting = dat_with_classes %>% filter(class != 'Outlier') %>% 
+dat_plotting = dat_with_classes %>% 
   mutate(group = factor(group, levels = c('Control', 'PD')))
 pred_linear_WTAR_group_plotting = pred_linear_WTAR_group %>% 
   rename(class_for_lines = class) %>% 
-  filter(class_for_lines != 'Outlier') %>% 
   mutate(group = factor(group, levels = c('Control', 'PD')))
 
 # upper panel, of WTAR scores by age:
@@ -682,9 +666,9 @@ ggsave('images/wtar-figure-1.pdf', width = fig_1_width, height = fig_1_height,
 
 Relevance to concept of cognitive reserve. This can lead to circular reasoning if the premorbid measure is not reliable. e.g. If a person with PD-MCI has a low measure of premorbid function, then this supports the concept of a strong cognitive reserve being protective against subsequent decline. But if the disease process reduces performance on that measure, then the inference is no longer valid. Evidence of that reliability is required to strengthen inferences in this area.
 
-The WTAR is outdated in that it was originally normed to estimate WAIS-III scores, and WAIS-V is under development.[@bright2020_ComparisonMethodsEstimating] Third party predictions for the current WAID-IV have been published.[@bright2020_ComparisonMethodsEstimating]
+The WTAR is outdated inasmuch as it was originally devised to estimate WAIS-III scores. Third party predictions for the current WAIS-IV have been published,[@bright2020_ComparisonMethodsEstimating] while WAIS-V is under development
 
-The WTAR (and NART) are also limited in that they are inherently tied to peculiarities of English. Many other languages have no such irregularities in the mappings of graphemes to phonemes. In subsequent revisions of the PD-MCI criteria, if premorbid measures continue to be advocated, more attention should be given to alternative techniques[@franzen1997_MethodsEstimatingPremorbid] that could be valid in a wider international context.
+The WTAR (and NART) are also limited in that they are inherently tied to peculiarities of English. Many other languages have no equivalent irregularities in their mappings of graphemes to phonemes. In subsequent revisions of the PD-MCI criteria, if premorbid measures continue to be advocated, more attention should be given to alternative techniques[@franzen1997_MethodsEstimatingPremorbid] that could be valid in a wider international context.
 
 
 # References
