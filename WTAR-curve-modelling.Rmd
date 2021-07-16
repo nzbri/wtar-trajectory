@@ -201,16 +201,14 @@ dat = dat %>%
 
 # for lcmm we standardise the age to avoid problems with polynomial effects, 
 # as per Proust-Lima et al. (2017). Note that we are using the grand mean age at 
-# assessment, rather than averaging across some landmark age for each subject:
-dat$age_std_cubic = (dat$age - mean(dat$age))/10
-
-# for linear models, just subtract the mean, to make the intercept meaningful:
-dat$age_std = dat$age - mean(dat$age)
+# assessment, rather than averaging across some landmark age for each subject. 
+# We use the same standardisation for the linear models, so we can compare them.
+dat$age_std = (dat$age - mean(dat$age))/10
 
 dat = dat %>% 
   arrange(subject_id_num, age) %>% 
   select(subject_id_num, group,	sex, symptom_onset_age,	diagnosis_age,
-         education, age, age_std, age_std_cubic, wtar_interval, group, cognitive_status, 
+         education, age, age_std, wtar_interval, group, cognitive_status, 
          cognitive_status_lead, ever_demented, WTAR, MoCA, global_z, 
          attention_domain, executive_domain, visuo_domain,
          learning_memory_domain,	language_domain, H_Y,	Part_III)
@@ -343,8 +341,8 @@ if (RUN_NEW_CUBIC_MODELS) {
   # a bug with the subject id column not being accepted by lcmm as numeric.
   
   # use the 1-class model to set initial start values:
-  cubic_models[[1]] <- lcmm::hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                                  random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE),
+  cubic_models[[1]] <- lcmm::hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                                  random = ~1 + poly(age_std, degree = 3, raw = TRUE),
                                   subject = 'subject_id_num', ng = 1, 
                                   data = dat)
   saveRDS(cubic_models[[1]], 'models/cubic_WTAR_1.RDS') # cache to disk
@@ -363,10 +361,10 @@ if (RUN_NEW_CUBIC_MODELS) {
     
     cubic_models[[class_num]] <-
       lcmm::gridsearch(rep = 5000, maxiter = 100, minit = cubic_models[[1]], cl = cl,
-                       hlme(WTAR ~ poly(age_std_cubic, degree = 3, raw = TRUE), 
-                            random = ~1 + poly(age_std_cubic, degree = 3, raw = TRUE), 
+                       hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+                            random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
                             ng = class_num, nwg = TRUE, maxiter = 1000,
-                            mixture = ~ poly(age_std_cubic, degree = 3, raw = TRUE),
+                            mixture = ~ poly(age_std, degree = 3, raw = TRUE),
                             subject = 'subject_id_num', data = dat))
     
     saveRDS(cubic_models[[class_num]], paste0('models/cubic_WTAR_', class_num, '.RDS'))
@@ -396,10 +394,10 @@ chosen_cubic_model = cubic_models[[1]]
 mean_age = mean(dat$age) 
 new_data_cubic = 
   data.frame(age = seq(from = 47.5, to = 87.5, by = 0.5)) %>% 
-  mutate(age_std_cubic = (age - mean_age)/10)
+  mutate(age_std = (age - mean_age)/10)
 
 pred_cubic_WTAR = predictY(chosen_cubic_model, newdata = new_data_cubic, 
-                       var.time = 'age_std_cubic', draws = TRUE)
+                       var.time = 'age_std', draws = TRUE)
 pred_cubic_WTAR = cbind(new_data_cubic, pred_cubic_WTAR$pred) %>% 
    # reshape to allow ggplotting:
   pivot_longer(cols = Ypred:upper.Ypred, 
