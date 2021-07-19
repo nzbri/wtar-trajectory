@@ -1,4 +1,19 @@
-# WTAR Trajectory Supplementary Material 
+# WTAR Trajectory Supplementary Material
+
+Here we report against the following checklist for reporting latent class trajectory analyses:
+
+van de Schoot, R., Sijbrandij, M., Winter, S. D., Depaoli, S., & Vermunt, J. K. (2017). The GRoLTS-checklist: Guidelines for reporting on latent trajectory studies. _Structural Equation Modeling: A Multidisciplinary Journal,_ ***24,*** 451–467. https://doi.org/10.1080/10705511.2016.1247646
+
+
+## 1. Is the metric of time used in the statistical model reported?
+
+We used age as the time metric (in years to one decimal place). This was to allow for direct comparison against controls (which would not be possible with disease duration). Follow-up time within the study was also not considered, as participants can enter the study at arbitrary points (in both age and the disease status).
+
+To avoid instabilities in the cubic models, age was standardised by subtracting the global mean age at assessment and dividing by ten. For comparability, this was also done for the linear models. In the visualisations, predictions were projected back into untransformed age in years.
+
+## 2. Is information presented about the mean and variance of time within a wave?
+
+The metric was age rather than intended study time points. The overall goal in the study was to follow-up participants two-yearly, however, the interval between follow-up times was multi-modal and varied both within and across participants (see Figure \@ref(fig:fig-A1-wtar-interval-histogram)). This variability was due to both changing study demands (such as recruiting participants for sub-studies) and participant health and availability.
 
 ```{r fig-A1-wtar-interval-histogram, fig.cap='Frequencies of the interval between successive WTAR assessments.', fig.width = 12/2.54, fig.height = 10/2.54}
 dat %>%  
@@ -17,34 +32,143 @@ dat %>%
 
 ```
 
-```{r fig-A2-wtar-sd-vs-z-sd, fig.cap='Within-subject SDs of WTAR vs global z.', fig.width = 12/2.54, fig.height = 10/2.54}
+## 3a. Is the missing data mechanism reported?
+
+Data was not missing at random: participants are more likely to drop out of the study due to increasing disease severity, other health issues, and old age. As shown in Figure \@ref(fig:figure-1), however, many remained in the study until the end point of WTAR collection (the onset of dementia). Those participants did not show a decline on WTAR performance relative to other participants. Due to the findings of this study (that the WTAR is relatively stable throughout the disease course), differential drop-out is unlikely to affect the results.
+
+## 3b. Is a description provided of what variables are related to attrition/missing data?
+
+They are speculated upon in _3a_ above.
+
+## 3c. Is a description provided of how missing data in the analyses were dealt with?
+
+As noted in _3a_ above, missing data was not thought to be problematic in this analysis and was not included explicitly in the modeling process.
+
+## 4. Is information about the distribution of the observed variables included?
+
+In Figure \@ref(fig:fig-A2-wtar-score-histogram) below, we show the distribution of the WTAR-estimated IQ scores for each group and for the current cognitive status at each observation.
+
+```{r fig-A2-wtar-score-histogram, fig.cap='Distribution of the WTAR-estimated IQ scores by group and cognitive status.', fig.width = 12/2.54, fig.height = 10/2.54}
 dat %>%  
-  group_by(group, subject_id_num) %>% 
-  summarise(wtar_sd = sd(WTAR),
-            z_sd = sd(global_z)) %>% 
-  ggplot(aes(x = z_sd, y = wtar_sd)) +
-  labs(title = 'Variability in WTAR vs Global Z-score',
-       subtitle = 'Within-subject standard deviations',
-       x = 'SD Global cognitive z-score', y = 'SD WTAR') +
-  geom_smooth(method = 'lm') +
-  geom_point(aes(fill = group), shape = 21, stroke = 0.2) + 
-  theme_bw() +
+  ggplot(aes(x = WTAR, fill = cognitive_status)) +
+  facet_grid(group ~ .) +
+  geom_histogram(binwidth = 1, size = 0.25, colour = 'white') + 
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  labs(title = 'Distribution of WTAR-estimated IQ scores',
+       x = NULL, y = NULL) +  theme_bw() +
   theme(plot.title = element_text(face = 'bold', size = 10),
-        plot.subtitle = element_text(size = 9),
+        axis.text = element_text(colour = 'black', size = 8),
         axis.ticks = element_line(colour = '#E8E8E8'),
-        panel.border = element_blank())
+        legend.position = c(0.12, 0.72), # 0.64 puts it in the top panel
+        legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(3.0,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 8),
+        legend.text = element_text(size = 8),
+        strip.background = element_rect(colour = '#E8E8E8', fill = '#E8E8E8'),
+        panel.border = element_rect(colour = '#E8E8E8'))
 
 ```
 
-```{r fig-A3-class-trajectories, fig.cap='The predcited trajectories of the chosen two-class linear model.', fig.width=10/2.54, fig.height=10/2.54}
+## 5. Is the software mentioned?
+
+See the Method section.
+
+## 6a. Are alternative specifications of within-class heterogeneity considered (e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+
+***[TODO: question for Reza/Daniel.]***
+
+## 6b. Are alternative specifications of the between-class differences in variance–covariance matrix structure considered and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+
+***[TODO: question for Reza/Daniel.]***
+
+## 7. Are alternative shape/functional forms of the trajectories described?
+
+We initially modeled the trajectories using a cubic function, to allow for the depiction of any curvilinear decline in performance. The resulting trajectory in the one-class cubic model (which had the lowest BIC) was effectively flat, and hence we moved to linear modelling for the ease of interpretation of the model coefficients.
+
+## 8. If covariates have been used, can analyses still be replicated?
+
+Not applicable: age was the only predictor in the models.
+
+## 9. Is information reported about the number of random start values and final iterations included?
+
+The `gridsearch()` function of the `lcmm` package was used to run 5000 departures from random initial values for each multi-class model, using the one-class model to generate those startiogn values from. The maximum number of iterations within the `hlme()` function was set at 1000.
+
+## 10. Are the model comparison (and selection) tools described from a statistical perspective?
+
+We selected the two-class linear model on the basis of it having the lowest BIC value.
+
+## 11. Are the total number of fitted models reported, including a one-class solution?
+
+For both linear and cubic trajectories, models were fitted with one through five classes. See the model comparison tables in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
+
+(ref:tab-A1-caption) Comparison of hlme models with 1 to `r max_classes_linear` linear latent trajectory classes.
+
+```{r tab-A1-linear-model-table}
+
+linear_WTAR_model_table %>% 
+  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+
+```
+
+(ref:tab-A2-caption) Comparison of hlme models with 1 to `r max_classes_cubic` cubic latent trajectory classes.
+
+```{r tab-A2-cubic-model-table}
+
+cubic_WTAR_model_table %>% 
+  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+
+```
+
+## 12. Are the number of cases per class reported for each model (absolute sample size, or proportion)?
+
+```{r include=FALSE}
+# need to run this in its own chunk, with output silenced,
+pp = postprob(chosen_linear_model)
+
+```
+
+(ref:tab-A3-caption) Number within each class in the selected model.
+
+```{r tab-A3}
+
+pp[[1]]%>% 
+  apa_table(caption = '(ref:tab-A3-caption)')
+```
+
+The number of cases within each class of the selected model is shown in Table \@ref(tab:tab-A3). See Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table) for the percentage of cases within each class in all candidate models.
+
+## 13. If classification of cases in a trajectory is the goal, is entropy reported?
+
+Classification of cases was not a goal of the analysis. However, entropy-related measures are shown in Tables \@ref(tab:tab-A4) and \@ref(tab:tab-A5).
+
+(ref:tab-A4-caption) Confidence of assignment to each class within the selected model.
+
+```{r tab-A4}
+pp[[2]]%>% 
+  apa_table(caption = '(ref:tab-A4-caption)')
+```
+
+(ref:tab-A5-caption) Levels of classification confidence for each class within the selected model.
+
+```{r, tab-A5}
+pp[[3]]%>% 
+  apa_table(caption = '(ref:tab-A5-caption)')
+```
+
+## 14a. Is a plot included with the estimated mean trajectories of the final solution?
+
+The trajectories are depicted within Figure \@ref(fig:figure-1) of the accompanying manuscript, and in isolation in Figure \@ref(fig:fig-A3-class-trajectories).
+
+```{r fig-A3-class-trajectories, fig.cap='The predicted trajectories of the chosen two-class linear model.', fig.height=10/2.54, fig.width=10/2.54}
 # just a plot of the class lines:
-figure_linear_2 = pred_linear_WTAR_group %>% 
+figure_linear_2 = chosen_linear_predictions %>% 
+  filter(ng == 2) %>% 
   ggplot(aes(x = age)) +
-  #facet_grid(group ~ class) +
   geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
-                  fill = class), colour = NA, alpha = 0.3) +
-  geom_line(aes(y = Ypred, colour = class)) +
-  geom_dl(aes(y = Ypred, label = class),
+                  fill = class_for_lines), colour = NA, alpha = 0.3) +
+  geom_line(aes(y = Ypred, colour = class_for_lines)) +
+  geom_dl(aes(y = Ypred, label = class_for_lines),
           method = list('far.from.others.borders', cex = 0.75,
                         dl.trans(x = x + 0.30, y = y + 0.15))) +
   scale_colour_manual(values = c('blue', 'brown')) +
@@ -69,52 +193,84 @@ figure_linear_2 = pred_linear_WTAR_group %>%
 figure_linear_2
 ```
 
+## 14b. Are plots included with the estimated mean trajectories for each model?
 
-(ref:tab-A1-caption) Comparison of hlme models with 1 to `r max_classes_linear` linear latent trajectory classes.
+Figure \@ref(fig:fig-A4-all-class-trajectories) shows the predicted trajectories of all 5 candidate linear and cubic models, as tabulated in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
 
-```{r tab_A1-linear-model-table}
+(ref:fig-A4-all-class-trajectories) The predicted trajectories of all candidate latent trajectory models (the selected one was the two-class linear model). The numbers assigned to each class can be found in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
 
-linear_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+```{r fig-A4-all-class-trajectories, fig.cap='(ref:fig-A4-all-class-trajectories)', fig.height=20/2.54, fig.width=17.5/2.54}
+# just a plot of the class lines:
+figure_linear_all = linear_predictions %>% 
+  ggplot(aes(x = age)) +
+  facet_grid(ng ~ .) +
+  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
+                  fill = class), colour = NA, alpha = 0.3) +
+  geom_line(aes(y = Ypred, colour = class)) +
+  geom_dl(aes(y = Ypred, label = class), method = list('last.bumpup', cex = 0.65)) +
+  scale_y_continuous(breaks = c(80, 100, 120), limits = c(80, 130)) +
+  scale_x_continuous(limits = c(40, 90), breaks = c(50, 60, 70, 80, 90), 
+                     expand = expansion(add = c(0, 7)), minor_breaks = NULL) +
+  scale_colour_manual(values = c('brown', 'blue', '#AAAB2A', 'orange', 'purple'), name = 'Class', guide = 'none') + 
+  scale_fill_manual(values = c('brown', 'blue', '#AAAB2A', 'orange', 'purple'), name = 'Class', guide = 'none') + 
+  labs(title = 'Class trajectories for each candidate \nlinear model',
+       subtitle = 'Ranging from 1 to 5 classes',
+       x = 'Age', y = 'WTAR score') +
+  theme_bw() + 
+  theme(aspect.ratio = 0.5,
+        plot.title = element_text(face = 'bold', size = 10),
+        plot.subtitle = element_text(size = 9),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 9),
+        panel.border = element_rect(colour = '#E8E8E8', size = 1.0),
+        strip.background = element_rect(fill = '#E8E8E8',
+                                        colour = '#E8E8E8'),
+        panel.spacing.x = unit(10, 'mm'),
+        legend.position = 'none')
 
+figure_cubic_all = cubic_predictions %>% 
+  ggplot(aes(x = age)) +
+  facet_grid(ng ~ .) +
+  geom_ribbon(aes(ymin = lower.Ypred, ymax = upper.Ypred, 
+                  fill = class), colour = NA, alpha = 0.3) +
+  geom_line(aes(y = Ypred, colour = class)) +
+  geom_dl(aes(y = Ypred, label = class), method = list('last.bumpup', cex = 0.65)) +
+  scale_y_continuous(breaks = c(80, 100, 120), limits = c(80, 130)) +
+  scale_x_continuous(limits = c(40, 90), breaks = c(50, 60, 70, 80, 90), 
+                     expand = expansion(add = c(0, 7)), minor_breaks = NULL) +
+  scale_colour_manual(values = c('brown', 'blue', '#AAAB2A', 'orange', 'purple'), name = 'Class', guide = 'none') + 
+  scale_fill_manual(values = c('brown', 'blue', '#AAAB2A', 'orange', 'purple'), name = 'Class', guide = 'none') + 
+  labs(title = 'Class trajectories for each candidate \ncubic model',
+       subtitle = 'Ranging from 1 to 5 classes',
+       x = 'Age', y = 'WTAR score') +
+  theme_bw() + 
+  theme(aspect.ratio = 0.5,
+        plot.title = element_text(face = 'bold', size = 10),
+        plot.subtitle = element_text(size = 9),
+        axis.ticks = element_line(colour = '#E8E8E8'),
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 9),
+        panel.border = element_rect(colour = '#E8E8E8', size = 1.0),
+        strip.background = element_rect(fill = '#E8E8E8',
+                                        colour = '#E8E8E8'),
+        panel.spacing.x = unit(10, 'mm'),
+        legend.position = 'none')
+
+figure_A4 = cowplot::plot_grid(figure_linear_all, figure_cubic_all, ncol = 2,
+                              align = 'h')
+figure_A4
 ```
 
-(ref:tab-A2-caption) Comparison of hlme models with 1 to `r max_classes_cubic` cubic latent trajectory classes.
+## 14c. Is a plot included of the combination of estimated means of the final model and the observed individual trajectories split out for each latent class?
 
-```{r tab_A2-cubic-model-table}
+This is shown in Figure \@ref(fig:figure-1) of the accompanying manuscript.
 
-cubic_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+## 15.Are characteristics of the final class solution numerically described (i.e., means, SD/SE, n, CI, etc.)?
 
-```
+## 16. Are the syntax files available (either in the appendix, supplementary materials, or from the authors)?
 
-```{r include=FALSE}
-# need to run this in its own chunk, with output silenced,
-pp = postprob(chosen_linear_model)
-
-```
-
-(ref:tab-A3-caption) Number within each class in the selected model.
-
-```{r tab_A3}
-
-pp[[1]]%>% 
-  apa_table(caption = '(ref:tab-A3-caption)')
-```
-
-(ref:tab-A4-caption) Confidence of classification to each class within the selected model.
-
-```{r tab_A4}
-pp[[2]]%>% 
-  apa_table(caption = '(ref:tab-A4-caption)')
-```
-
-(ref:tab-A5-caption) Levels of classification confidence for each class within the selected model.
-
-```{r, tab_A5}
-pp[[3]]%>% 
-  apa_table(caption = '(ref:tab-A5-caption)')
-```
+Yes, they are publicly available at [github.com/nzbri/wtar-trajectory](https://github.com/nzbri/wtar-trajectory).
 
 
 
