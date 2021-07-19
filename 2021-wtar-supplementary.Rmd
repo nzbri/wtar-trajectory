@@ -7,7 +7,7 @@ van de Schoot, R., Sijbrandij, M., Winter, S. D., Depaoli, S., & Vermunt, J. K. 
 
 ## 1. Is the metric of time used in the statistical model reported?
 
-We used age as the time metric (in years to one decimal place). This was to allow for direct comparison against controls (which would not be possible with disease duration). Follow-up time within the study was also not considered, as participants can enter the study at arbitrary points (in both age and the disease status).
+We used age as the time metric (in years to one decimal place). This was to allow for direct comparison against controls (which would not be possible with disease duration). Follow-up time within the study was also not considered, as participants can enter the study at arbitrary points (in terms of both age and disease duration).
 
 To avoid instabilities in the cubic models, age was standardised by subtracting the global mean age at assessment and dividing by ten. For comparability, this was also done for the linear models. In the visualisations, predictions were projected back into untransformed age in years.
 
