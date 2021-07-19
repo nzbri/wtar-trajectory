@@ -92,7 +92,7 @@ Not applicable: age was the only predictor in the models.
 
 ## 9. Is information reported about the number of random start values and final iterations included?
 
-The `gridsearch()` function of the `lcmm` package was used to run 5000 departures from random initial values for each multi-class model, using the one-class model to generate those startiogn values from. The maximum number of iterations within the `hlme()` function was set at 1000.
+The `gridsearch()` function of the `lcmm` package was used to run 5000 departures from random initial values for each multi-class model, using the one-class model to generate those starting values from. The maximum number of iterations within the `hlme()` function was set at 1000.
 
 ## 10. Are the model comparison (and selection) tools described from a statistical perspective?
 
