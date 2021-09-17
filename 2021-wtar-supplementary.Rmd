@@ -74,13 +74,22 @@ dat %>%
 
 See the Method section.
 
-## 6a. Are alternative specifications of within-class heterogeneity considered (e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+## 6a. Are alternative specifications of within-class heterogeneity considered 
+(e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient 
+justification provided as to eliminate certain specifications from consideration?
 
-***[TODO: question for Reza/Daniel.]***
+An LGMM which includes a varying intercept and slope by participant was used in 
+this analysis and, given the nature of the within-subject variance in the data, 
+is more appropriate than an LGCA.
 
-## 6b. Are alternative specifications of the between-class differences in variance–covariance matrix structure considered and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+## 6b. Are alternative specifications of the between-class differences in 
+variance–covariance matrix structure considered and clearly documented? If not, 
+was sufficient justification provided as to eliminate certain specifications 
+from consideration?
 
-***[TODO: question for Reza/Daniel.]***
+The variance-covariance matrix was allowed to vary by a class-specific 
+proportional parameter. The more restrictive case of restricting all classes to 
+a common variance-covariance matrix structure was not considered.
 
 ## 7. Are alternative shape/functional forms of the trajectories described?
 

@@ -46,16 +46,17 @@ affiliation:
   institution: School of Psychology, Speech, and Hearing, University of Canterbury,
     Christchurch, New Zealand
 abstract: Background. A measure of premorbid cognitive function 
-  such as the WechslerTest of Adult Reading (WTAR) is recommended to be 
+  such as the Wechsler Test of Adult Reading (WTAR) is recommended to be 
   considered when determining the current cognitive status of people with 
   Parkinson's disease. WTAR scores are known to decline in Alzheimer's disease, 
   however, and it has not been formally demonstrated that they remain stable in 
-  spite of the cognitive deterioration that occurs in Parkinson's. 
+  spite of the cognitive deterioration that can occur in Parkinson's. 
   Objectives. Assess long-term trajectories of WTAR scores in people with 
   Parkinson's as a function of age. Methods. From 253 Parkinson's and 57 
   Control participants who had completed at least two WTARs, we analysed scores
-  using latent class trajectory analysis. Results. WTAR was stable in this 
-  sample. Conclusion. The WTAR is a stable measure of premorbid function 
+  using latent class trajectory analysis. Results. WTAR was reasonably stable in 
+  this sample, even for those who progressed to dementia. 
+  Conclusion. The WTAR is a stable measure of premorbid function in Parkinson's 
   despite the substantial cognitive decline exhibited by many of the 
   participants.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
@@ -247,12 +248,12 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
 # Introduction
 
 In 2012, the International Parkinson and Movement Disorder Society published its
-Taskforce guidelines for the diagnosis of mild cognitive impairment in 
+Task Force guidelines for the diagnosis of mild cognitive impairment in 
 Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the 
 diagnosis is based on specific (rather than global) neuropsychological tests, 
 significant impairment may be determined in three ways: (i) performance below 
 appropriate norms, or (ii) decline on serial testing, or (iii) decline from 
-estimated premorbid levels. The former tends to predominate in current practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] The latter two 
+estimated premorbid levels. The former tends to predominate in current research practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] The latter two 
 approaches, however, could be advantageous in resolving the ambiguity that poor 
 current cognitive function might reflect long-standing low cognitive ability, 
 rather than a recent disease-related deterioration. In practice, however, one 
@@ -270,9 +271,9 @@ When the test was initially normed, it was tested in Parkinson's as well as a
 number of other neurological disorders, such as Huntington's, schizophrenia, and
 traumatic brain injury. Only in Alzheimer's disease were the scores 
 significantly lower than in matched 
-controls.[@strauss2006_CompendiumNeuropsychologicalTests] ***[TODO - read and insert reference to the Wechsler manual]***. Those results were published in 2001, well before the 
-current guidelines on diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] and 
-Parkinson's dementia[@dubois2007_DiagnosticProceduresParkinson] were 
+controls.[@strauss2006_CompendiumNeuropsychologicalTests] ***[TODO - read and insert reference to the Wechsler manual]***. Those results were published in 2001, however, well 
+before the current guidelines on diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] 
+and Parkinson's dementia[@dubois2007_DiagnosticProceduresParkinson] were 
 promulgated. It is therefore unclear to what extent those original findings are 
 valid in the face of the significant cognitive deterioration that can occur in 
 Parkinson's.
@@ -664,7 +665,7 @@ Typical trajectory captured `r class_proportions$proportion[class_proportions$cl
 all participants) had an intercept of `r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class2'])`, representing the estimated WTAR of a person at the mean age of 
 assessment (`r sprintf('%.1f', mean_age)` years). The slope of this trajectory 
 indicated a decline of `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class2'])` 
-points per decade (effectively flat). ***[TODO: Reza/Daniel - not sure how to get uncertainty around these estimates]*** The Typical trajectory, by contrast had an intercept of `r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class1'][2])`, ***[TODO: Reza/Daniel - not sure why two coefficients with this name are returned, with one having a value that does not seem related to the actual one ]*** gently declining at a rate of `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade. ***[TODO: So far we haven't separated out the PD and Control groups with respect to latent class membership, as there doesn't seem to be a strong distinction. I guess we could formally test that though?]***
+points per decade (effectively flat). ***[TODO: Reza/Daniel - not sure how to get uncertainty around these estimates]*** The Typical trajectory, by contrast had an intercept of `r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class1'][2])`, ***[TODO: Reza/Daniel - not sure why two coefficients with this name are returned, with one having a value that does not seem related to the actual one ]*** gently declining at a rate of `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade.
 
 What other descriptive results might be useful (e.g. mean within-subject 
 standard deviation, or range of WTAR scores? Not great for those with only two 
@@ -786,9 +787,10 @@ The raw data showed that WTAR scores are relatively stable over time in both
 controls and people with Parkinson's, despite many of the latter participants 
 developing dementia over the course of the study (see Table \@ref(tab:table-1)). 
 Nonetheless, latent class trajectory analysis revealed that people fell into one
-of two longitudinal clusters (Figure \@ref(fig:figure-1)). Those with very high 
-initial WTAR scores remained at near-ceiling performance levels, even once they 
-had developed dementia. The remaining `r class_proportions$proportion[class_proportions$class == 'Typical']` of participants had a wider range of initial scores, but were again 
+of two longitudinal clusters in our particular sample (Figure \@ref(fig:figure-1)).
+Those with very high initial WTAR scores remained at near-ceiling performance 
+levels, even once they had developed dementia. The remaining `r class_proportions$proportion[class_proportions$class == 'Typical']` of 
+participants had a wider range of initial scores, but were again 
 relatively stable, with a mean estimated decline of only `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade.
 
 Relevance to concept of cognitive reserve. This can lead to circular reasoning 
