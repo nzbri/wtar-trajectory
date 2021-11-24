@@ -21,6 +21,7 @@ shorttitle: Parkinson's premorbid function
 output:
   papaja::apa6_word:
   papaja::apa6_pdf:
+    latex_engine: xelatex
 link-citations: yes
 csl: format/sage-vancouver.csl
 bibliography: format/wtar-references.bib
@@ -45,22 +46,22 @@ affiliation:
 - id: '5'
   institution: School of Psychology, Speech, and Hearing, University of Canterbury,
     Christchurch, New Zealand
-abstract: Background. A measure of premorbid cognitive function 
-  such as the Wechsler Test of Adult Reading (WTAR) is recommended to be 
-  considered when determining the current cognitive status of people with 
-  Parkinson's disease. WTAR scores are known to decline in Alzheimer's disease, 
-  however, and it has not been formally demonstrated that they remain stable in 
-  spite of the cognitive deterioration that can occur in Parkinson's. 
-  Objectives. Assess long-term trajectories of WTAR scores in people with 
+abstract: Background. Measures of premorbid cognitive function such as the 
+  Wechsler Test of Adult Reading (WTAR) have been recommended as a means of 
+  assessing current cognitive status in people with Parkinson's disease. 
+  WTAR scores decline in Alzheimer's disease, however, and it has not been 
+  formally demonstrated that they remain stable in spite of the substantial 
+  cognitive deterioration that can occur in Parkinson's. 
+  Objective. To assess long-term trajectories of WTAR scores in people with 
   Parkinson's as a function of age. Methods. From 253 Parkinson's and 57 
   Control participants who had completed at least two WTARs, we analysed scores
-  using latent class trajectory analysis. Results. WTAR was reasonably stable in 
-  this sample, even for those who progressed to dementia. 
-  Conclusion. The WTAR is a stable measure of premorbid function in Parkinson's 
-  despite the substantial cognitive decline exhibited by many of the 
-  participants.
+  using latent class trajectory modelling. Results. WTAR was quite stable within
+  participants, even for those who progressed to dementia. 
+  Conclusion. The WTAR is a stable measure in Parkinson's despite the presence 
+  of substantial cognitive decline. Nonetheless, we contend that its other 
+  properties make it poorly-suited for diagnosing cognitive impairment.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
-wordcount: 'Abstract: up to 150, main body: up to 1700'
+wordcount: 'Abstract: up to 150 (145), main body: up to 1700 (2189: 334+539+420+896)'
 ---
 
 ```{r setup, include=FALSE}
@@ -252,31 +253,33 @@ Task Force guidelines for the diagnosis of mild cognitive impairment in
 Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the 
 diagnosis is based on specific (rather than global) neuropsychological tests, 
 significant impairment may be determined in three ways: (i) performance below 
-appropriate norms, or (ii) decline on serial testing, or (iii) decline from 
-estimated premorbid levels. The former tends to predominate in current research practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] The latter two 
-approaches, however, could be advantageous in resolving the ambiguity that poor 
-current cognitive function might reflect long-standing low cognitive ability, 
-rather than a recent disease-related deterioration. In practice, however, one 
-seldom has reference to prior formal serial testing, and so a valid method of 
-estimating premorbid function is appealing. The Wechsler Test of Adult Reading 
-(WTAR) ***[TODO: ref]*** was proposed in the guidelines as one of two 
-recommended tests to estimate premorbid functioning (along with the National 
-Adult Reading Test, NART).***[TODO: ref]*** Both tests are based on being able 
-to recognise and pronounce irregularly-spelled English words. ***[TODO: give 
-some examples]*** This ability has been shown to be preserved in the face of 
-both normal ageing and a number of brain 
+appropriate norms, (ii) decline on serial testing, or (iii) decline from 
+estimated premorbid levels. The first method tends to predominate in current 
+research practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] The latter 
+two approaches, however, could be advantageous in resolving the ambiguity that 
+poor current cognitive function might reflect long-standing low cognitive 
+ability, rather than a recent disease-related deterioration. In practice, 
+however, one seldom has reference to prior formal serial testing, and so a valid
+method of estimating premorbid function is appealing. The Wechsler Test of Adult
+Reading (WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was proposed in 
+the guidelines as one of two recommended tests to estimate premorbid functioning
+(along with the National Adult Reading Test, 
+NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both tests are based on 
+being able to correctly pronounce phonetically-irregular English words, such as 
+'porpoise' or 'hyperbole'. This ability has been shown to be preserved in the 
+face of both normal ageing and a number of brain 
 insults[@strauss2006_CompendiumNeuropsychologicalTests].
 
 When the test was initially normed, it was tested in Parkinson's as well as a 
 number of other neurological disorders, such as Huntington's, schizophrenia, and
 traumatic brain injury. Only in Alzheimer's disease were the scores 
 significantly lower than in matched 
-controls.[@strauss2006_CompendiumNeuropsychologicalTests] ***[TODO - read and insert reference to the Wechsler manual]***. Those results were published in 2001, however, well 
-before the current guidelines on diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] 
-and Parkinson's dementia[@dubois2007_DiagnosticProceduresParkinson] were 
-promulgated. It is therefore unclear to what extent those original findings are 
-valid in the face of the significant cognitive deterioration that can occur in 
-Parkinson's.
+controls.[@strauss2006_CompendiumNeuropsychologicalTests] Those results 
+were published in 2001, however, well before the current MDS guidelines on 
+diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] and Parkinson's 
+dementia[@dubois2007_DiagnosticProceduresParkinson] were promulgated. It is 
+therefore unclear to what extent those original findings are valid in the face 
+of the significant cognitive deterioration that can occur in Parkinson's.
 
 We therefore firstly sought to examine WTAR scores in a cognitively 
 well-characterised sample, spanning the range from normal function through mild 
@@ -330,14 +333,17 @@ clustering around intervals of one and two years, due to varying follow-up
 periods over the course of the study. Both patients and controls were classified
 as having normal cognition, mild cognitive impairment, or dementia on the basis 
 of a comprehensive neuropsychological 
-battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each 
-session, we did not actually use it in the diagnostic classification process: 
-this was done on the basis of test scores falling below 1.5 standard deviations 
-of norms,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria] rather than being compared to an estimated pre-morbid level. Characteristics of 
+battery[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria], 
+administered in accordance with MDS guidelines[@dubois2007_DiagnosticProceduresParkinson; @litvan2012_DiagnosticCriteriaMild]. Although the WTAR was assessed during each 
+session, we did not actually use it in the cognitive diagnostic classification 
+process: this was done on the basis of test scores falling ≥1.5 standard 
+deviations below norms for PD-MCI and ≥1.5 standard deviations for PD dementia,[@dalrymple-alford2011_CharacterizingMildCognitive; @wood2016_DifferentPDMCICriteria]
+rather than being compared to an estimated pre-morbid level. Characteristics of 
 the sample are shown in Table \@ref(tab:table-1). All participants were speakers
-of New Zealand English, and were assessed against the ***TODO:*** UK? norms of 
-the WTAR, corrected for age, sex, and years of education. 
-***{TODO: Kyla to confirm UK norms, and any other relevant details.]***
+of New Zealand English, and were assessed against the 
+US norms of the WTAR, corrected for age, sex, and years of education (the 
+provided ethnicity classifications were not useful in a New Zealand context and 
+all participants were assessed against norms for "Whites"). 
 
 ## Latent class trajectory modelling
 
@@ -345,7 +351,7 @@ We fitted latent class trajectory models using the $hlme$ function from the
 $lcmm$ package [@proust-lima_estimation_2017] (version `r packageVersion('lcmm')`), 
 running in the R statistical environment [@R-Core-Team_R_2021] 
 (version `r R.version$major`.`r R.version$minor`). The dependent variable was 
-WTAR estimated IQ, initially modelled within each subject as a polynomial 
+WTAR-estimated premorbid IQ, initially modelled within each subject as a polynomial 
 (cubic) function of age, to allow for non-linear trajectories. The resulting
 trajectories were close to straight lines and thus we simplified the models to 
 be a linear function of age. The models were unaware of any other variables 
@@ -647,7 +653,7 @@ class_proportions_by_group = individuals %>%
 The raw data showed that WTAR scores were relatively constant over time (see 
 Figure \@ref(fig:figure-1)A), despite the substantial declines that could occur 
 in overall cognitive function (Figure \@ref(fig:figure-1)B). Initially, however,
-we modeled WTAR scores as a polynomial (cubic) function of age, to allow for the
+we modelled WTAR scores as a polynomial (cubic) function of age, to allow for the
 depiction of any sub-clusters exhibiting curvilinear changes. The optimal cubic 
 model showed a relatively flat trajectory, and we therefore shifted to modelling
 WTAR as a linear function of age, fitting candidate models ranging from one to 
@@ -658,18 +664,30 @@ provided in Supplementary Material.
 We labelled the two resulting trajectory classes 'Typical' and 
 'High performers'. Individuals were assigned to the class for which they had the
 highest posterior classification probability. The mean assigned probability was 
-`r round(mean(individuals$class_probability), digits = 2)` (`r round(sd(individuals$class_probability), digits = 2)`), with a value of 0.7 
+`r round(mean(individuals$class_probability), digits = 2)` 
+(`r round(sd(individuals$class_probability), digits = 2)`), with a value of 0.7 
 being regarded as acceptable model performance.[@lennon_framework_2018] The 
-Typical trajectory captured `r class_proportions$proportion[class_proportions$class == 'Typical']` of all participants (`r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'PD']` of the PD and `r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'Control']` of Control participants). The 
-'High performers' trajectory (capturing the remaining `r class_proportions$proportion[class_proportions$class == 'High performers']` of 
-all participants) had an intercept of `r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class2'])`, representing the estimated WTAR of a person at the mean age of 
-assessment (`r sprintf('%.1f', mean_age)` years). The slope of this trajectory 
-indicated a decline of `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class2'])` 
-points per decade (effectively flat). ***[TODO: Reza/Daniel - not sure how to get uncertainty around these estimates]*** The Typical trajectory, by contrast had an intercept of `r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class1'][2])`, ***[TODO: Reza/Daniel - not sure why two coefficients with this name are returned, with one having a value that does not seem related to the actual one ]*** gently declining at a rate of `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade.
+Typical trajectory captured 
+`r class_proportions$proportion[class_proportions$class == 'Typical']` of all 
+participants (`r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'PD']` of the PD and `r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'Control']` of Control participants). The 
+'High performers' trajectory (capturing the remaining 
+`r class_proportions$proportion[class_proportions$class == 'High performers']` 
+of all participants) had an intercept of 
+`r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class2'])`, representing 
+the estimated WTAR score of a person at the mean age of assessment 
+(`r sprintf('%.1f', mean_age)` years). The slope of this trajectory 
+indicated a decline of 
+`r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class2'])` 
+points per decade (effectively flat). 
+***[TODO: Reza/Daniel - not sure how to get uncertainty around these estimates]*** 
+The Typical trajectory, by contrast had an intercept of 
+`r sprintf('%.1f', coeffs[names(coeffs) == 'intercept class1'][2])`, 
+***[TODO: Reza/Daniel - not sure why two coefficients with this name are returned, with one having a value that does not seem related to the actual one ]*** gently declining at a rate of 
+`r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade.
 
-What other descriptive results might be useful (e.g. mean within-subject 
-standard deviation, or range of WTAR scores? Not great for those with only two 
-scores, though)? 
+***TODO:*** What other descriptive results might be useful (e.g. mean 
+within-subject standard deviation, or range of WTAR scores? Not great for those 
+with only two scores, though)? 
 
 (ref:fig-1-caption) ***(A.)*** Longitudinal WTAR score trajectories for all 
 individuals, divided into Controls, Parkinson's participants who remained 
@@ -783,49 +801,102 @@ ggsave('images/wtar-figure-1.pdf', width = fig_1_width, height = fig_1_height,
 
 # Discussion
 
-The raw data showed that WTAR scores are relatively stable over time in both 
-controls and people with Parkinson's, despite many of the latter participants 
-developing dementia over the course of the study (see Table \@ref(tab:table-1)). 
-Nonetheless, latent class trajectory analysis revealed that people fell into one
-of two longitudinal clusters in our particular sample (Figure \@ref(fig:figure-1)).
-Those with very high initial WTAR scores remained at near-ceiling performance 
-levels, even once they had developed dementia. The remaining `r class_proportions$proportion[class_proportions$class == 'Typical']` of 
+***TODO:*** [@statucka2021_MulticulturalismChallengeCognitive] - shows that 
+MoCA has cross-cultural validity issues even within a country. 
+
+The raw data showed that WTAR scores were relatively stable over time in both 
+controls and people with Parkinson's, despite many of the latter developing 
+dementia over the course of the study (see Table \@ref(tab:table-1)). 
+Nonetheless, latent class trajectory analysis revealed that in our particular 
+sample, people fell into one of two longitudinal clusters (Figure 
+\@ref(fig:figure-1)). Those with very high initial WTAR scores maintained 
+near-ceiling performance levels, even if they subsequently developed dementia. 
+The remaining 
+`r class_proportions$proportion[class_proportions$class == 'Typical']` of 
 participants had a wider range of initial scores, but were again 
-relatively stable, with a mean estimated decline of only `r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per decade.
+relatively stable, with a mean estimated decline of only 
+`r sprintf('%.1f', coeffs[names(coeffs) == 'age_std class1'])` points per 
+decade.
 
-Relevance to concept of cognitive reserve. This can lead to circular reasoning 
-if the premorbid measure is not reliable. e.g. If a person with PD-MCI has a low
-measure of premorbid function, then this supports the concept of a strong 
-cognitive reserve being protective against subsequent decline. But if the 
-disease process reduces performance on that measure, then the inference is no 
-longer valid. The findings shown here help bolster the use of WTAR as a valid 
-measure of cognitive reserve in Parkinson's.
+Measures of pre-morbid function are closely tied to the concept of cognitive 
+reserve.[@stern2012_CognitiveReserveAgeing] For example, if people with
+PD-MCI typically had a low measure of premorbid function, then this would 
+support high cognitive reserve being protective against subsequent decline. This
+can lead to circular reasoning if the premorbid measure is not reliable, however.
+But if the disease process reduces performance on that measure, then the inference 
+would no longer be valid. The findings shown here, of stable scores despite 
+current cognitive impairment, support the use of WTAR as a valid indicator of 
+cognitive reserve in Parkinson's.
 
-The WTAR is outdated inasmuch as it was originally devised to estimate WAIS-III 
-scores. Third party predictions for the current WAIS-IV have been published,[@bright2020_ComparisonMethodsEstimating] although the WAIS-V is under
-development.
+There are reservations about the use of the WTAR, however. It is outdated,
+inasmuch as it was originally devised to estimate IQ scores from the WAIS-III 
+(released in 1997). That has been superseded by the WAIS-IV (2008), and in turn, 
+the WAIS-V is currently under development. The TOPF (Test of Premorbid 
+Function) was designed as a successor to the WTAR and estimates WAIS-IV 
+IQ, but it has had limited uptake.[@bright2020_ComparisonMethodsEstimating] The 
+Flynn effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that IQ
+scores increase substantially over time (by up to 1 standard deviation per 
+generation). Our sample would have been born approximately a generation after 
+their age-matched WAIS III normative sample group and that might explain their
+apparently elevated estimated IQ levels.
 
 The WTAR (and NART) are also limited in that they are inherently tied to 
-peculiarities of English. Many other languages have no equivalent irregularities
-in their mappings of graphemes to phonemes. In subsequent revisions of the 
-PD-MCI criteria, if premorbid measures continue to be advocated, more attention 
-should be given to alternative techniques[@franzen1997_MethodsEstimatingPremorbid] 
-that could be valid in a wider international context.
+peculiarities of written and spoken English. Many other languages have no 
+equivalent irregularities in their mappings of graphemes to phonemes, and hence 
+analogous tests of premorbid function cannot be devised for them. Japanese can 
+be written in a syllabary (Hiragana), in which each of several dozen graphemes 
+corresponds to a single phoneme. Once a reader knows those correspondences, they
+can reliably pronounce words they have never encountered before, purely on the 
+basis of their written representation. Despite that, a Japanese analogue of the 
+NART has nonetheless been attempted[@matsuoka2006_EstimationPremorbidIQ]. The 
+'JART' relies upon irregularities in compound words written using Chinese-style 
+ideographs (Kanji). There are thousands of these characters, each having lexical
+meaning that must be learned individually. The same ideograph may be pronounced 
+differently depending on its context. These irregularities are the basis for the 
+JART but make it much more loaded on semantic than phonemic knowledge. That JART
+scores are preserved in Alzheimer's[@matsuoka2006_EstimationPremorbidIQ] imply 
+that it is not actually a perfect analogue of English-based tests of premorbid 
+function. Even across varieties of English, both between and within countries, 
+the US- and UK-based selection of words can be problematic. For example, the 
+TOPF was found to not reliably predict WAIS IV IQ in New Zealand English 
+speakers of Māori ethnicity.[@dudley2017_TestPremorbidFunctioning] After the 
+commencement of our study, a New Zealand Adult Reading Test (NZART) was 
+created[@starkey2011_DevelopmentNewZealand], with a more culturally relevant 
+selection of words, but will require further development to supplant the 
+established international tests. In subsequent revisions of the PD-MCI criteria, 
+if premorbid measures continue to be advocated, we recommend that more 
+attention should be given to alternative 
+techniques[@franzen1997_MethodsEstimatingPremorbid] that could be valid in a 
+wider international and cross-cultural context.
 
-The PD-MCI guidelines do not formalise how the results of these tests would be 
-used in practice to demonstrate decline from a premorbid level of function.[@marras2014_ToolsTradeState]. We are aware of only one study[@marras2013_MeasuringMildCognitive] ***[TODO - Kyla - is this true?]*** 
-that has compared the norms-based vs premorbid approaches to establishing 
-cognitive impairment. They converted the WTAR-estimated full-scale IQ to a 
-z-score and used that as the reference against which to test each individual 
-neuropsychological test z-score, with a test that was lower by more than 1.5 SD 
-deemed impaired. Of a sample of 139 non-demented people with Parkinson's, the 
-WTAR method classified many more of them as having PD-MCI (79%) than the usual 
-norms-based Level II classification method (33%). Marras _et al._ interpreted 
-this as evidence that most people with Parkinson's have undergone at least some 
-decline relative to their premorbid function. Conversely it might be that the 
-WTAR over-estimates that level of function - for example, in our sample the 
-distribution of estimated IQ values _(mean and SD per group shown in Table \@ref(tab:table-1))_ were well above the supposed population mean of 100 ***(TODO: SD 15? Kyla to comment on expected range.)***. 
+The PD-MCI guidelines do not actually formalise how the results of premorbid 
+function tests should be used in practice to demonstrate decline in cognitive 
+functioning[@marras2014_ToolsTradeState]. We are aware of only one 
+study[@marras2013_MeasuringMildCognitive] that has compared the norms-based vs 
+premorbid estimation approaches to establishing cognitive impairment. They 
+converted the WTAR-estimated full-scale IQ to a z-score and used that as the 
+reference against which to test each individual neuropsychological test z-score, 
+with a test that was lower by more than 1.5 SD deemed impaired. Of a sample of 
+139 non-demented people with Parkinson's, the WTAR method classified many more 
+of them as having PD-MCI (79%) than a norms-based Level II 
+classification method (33%). Marras _et al._ interpreted this as evidence that 
+most people with Parkinson's have undergone at least some decline relative to 
+their premorbid function. Conversely it might be that the WTAR simply 
+over-estimated that level of function - just as in our sample, where the 
+distribution of estimated IQ values were well above the supposed population mean
+of 100.
 
+In summary, WTAR is a measure that is exceptionally stable in Parkinson's, 
+despite substantial deterioration in current cognitive functioning. This can 
+make it a valid research tool to probe cognitive reserve and premorbid 
+function across groups. It appears to overestimate the premorbid IQ however, 
+making it unsuitable to establish a decline in function within individuals. 
+All such measures may suffer from cross-cultural word choice issues even across 
+different varieties of English. Analogous tests are not even meaningful to 
+create in languages that do not exhibit English's substantial 
+grapheme:phoneme irregularities. Hence we recommend that such tests of premorbid
+function no longer be advocated in MDS guidelines as one of the means of 
+formally establishing cognitive decline in Parkinson's.
 
 # References
 
