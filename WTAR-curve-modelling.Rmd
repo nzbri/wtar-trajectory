@@ -825,7 +825,7 @@ support high cognitive reserve being protective against subsequent decline. This
 can lead to circular reasoning if the premorbid measure is not reliable, however.
 But if the disease process reduces performance on that measure, then the inference 
 would no longer be valid. The findings shown here, of stable scores despite 
-current cognitive impairment, support the use of WTAR as a valid indicator of 
+current cognitive impairment, support the use of WTAR as a stable indicator of 
 cognitive reserve in Parkinson's.
 
 There are reservations about the use of the WTAR, however. It is outdated,
