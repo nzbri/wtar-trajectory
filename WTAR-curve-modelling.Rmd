@@ -23,7 +23,7 @@ output:
     latex_engine: xelatex
   papaja::apa6_word:
 link-citations: yes
-csl: format/sage-vancouver.csl
+csl: format/bmj.csl
 bibliography: format/wtar-references.bib
 appendix: 2021-wtar-supplementary.Rmd
 linenumbers: yes
