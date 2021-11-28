@@ -55,13 +55,17 @@ abstract: Background. Measures of premorbid cognitive function such as the
   Objective. To assess long-term trajectories of WTAR scores in people with 
   Parkinson's as a function of age. Methods. From 253 Parkinson's and 57 
   Control participants who had completed at least two WTARs, we analysed scores
-  using latent class trajectory modelling. Results. WTAR was quite stable within
-  participants, even for those who progressed to dementia. 
-  Conclusion. The WTAR is stable in Parkinson's despite substantial cognitive
-  decline. Nonetheless, we contend that its other properties make it 
+  over time using latent class trajectory modelling. This allows for individual 
+  participants to be classsified into data-driven clusters, depending on the 
+  shape of their longitudinal trajectory. Results. WTAR was quite stable within
+  both Controls and parkinson's participants, even for those who progressed to 
+  dementia. In both groups and regardless of cognitive status, scores were much 
+  higher than expected from population norms. Conclusion. The WTAR is stable in
+  Parkinson's even in the presence of substantial cognitive decline. 
+  Nonetheless, its apparent over-estimation of premorbid IQ make it 
   poorly-suited for diagnosing cognitive impairment in this disorder.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
-wordcount: 'Abstract: up to 150 (143), main body: up to 1700 (2007: 336+468+57+245+901)'
+wordcount: 'Abstract: up to 250 (189), main body: up to 3700 (2117: 336+468+57+362+894)'
 ---
 
 ```{r setup, include=FALSE}
@@ -269,7 +273,7 @@ Reading (WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was proposed in
 the guidelines as one of two recommended tests to estimate premorbid functioning
 (along with the National Adult Reading Test, 
 NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both tests are based on 
-being able to correctly pronounce phonetically-irregular English words, such as 
+the ability to correctly pronounce phonetically-irregular English words, such as 
 'porpoise' or 'hyperbole'. This ability has been shown to be preserved in the 
 face of both normal ageing and a number of brain 
 insults[@strauss2006_CompendiumNeuropsychologicalTests].
