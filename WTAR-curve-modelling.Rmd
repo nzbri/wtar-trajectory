@@ -1,6 +1,6 @@
 ---
-title: The Wechsler Test of Adult Reading is a stable measure of premorbid cognitive
-  function in Parkinson's
+title: "The Wechsler Test of Adult Reading: a stable measure of premorbid cognitive
+  function in Parkinson's"
 author:
 - name: Kyla-Louise Horne, PhD
   affiliation: '1'
@@ -19,9 +19,9 @@ author:
   email: michael.macaskill@nzbri.org
 shorttitle: Parkinson's premorbid function
 output:
+  papaja::apa6_word:
   papaja::apa6_pdf:
     latex_engine: xelatex
-  papaja::apa6_word:
 link-citations: yes
 csl: format/bmj.csl
 bibliography: format/wtar-references.bib
@@ -789,11 +789,11 @@ ggsave('images/wtar-figure-1-trajectories.png', width = fig_1_width, height = fi
 
 ```
 
-(ref:fig-2-caption) ***(A.)*** Longitudinal WTAR score trajectories for all 
+(ref:fig-2-caption) ***(A)*** Longitudinal WTAR score trajectories for all 
 individuals, divided into Controls, Parkinson's participants who remained 
 dementia-free, and those who developed dementia. Superimposed are the two 
 predicted latent class trajectories (blue ribbon = _High performers_, orange 
-ribbon = _Typical_). ***(B.)***  Global cognitive z-scores for the Parkinson's 
+ribbon = _Typical_). ***(B)***  Global cognitive z-scores for the Parkinson's 
 participants who developed dementia. Their overall cognitive performance 
 declined dramatically, in contrast to their relatively stable WTARs scores. This
 was regardless of their latent class (blue and orange connecting lines). In each
@@ -994,10 +994,10 @@ function differences across groups. In absolute terms, however, it appears to
 overestimate premorbid IQ, making it unsuitable to establish a decline in 
 function within individuals. All such measures may suffer from cross-cultural 
 word choice issues even across different varieties of English. Analogous tests 
-are not able to be created in languages that do not exhibit English's 
-peculiarities. Hence we recommend that such tests of premorbid function not 
-be advocated as one of the means of formally establishing cognitive decline in 
-Parkinson's in future revisions of MDS guidelines.
+are not able to be created in languages that do not share English's 
+peculiarities. Hence we recommend that in future revisions of MDS guidelines,
+such tests of premorbid function no longer be advocated as one of the means of 
+formally establishing cognitive decline in Parkinson's.
 
 # References
 

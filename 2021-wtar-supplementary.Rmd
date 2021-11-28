@@ -3,9 +3,11 @@ output:
   pdf_document: default
   html_document: default
 ---
-# WTAR Trajectory Supplementary Material
+# Supplementary Material
 
-Here we report against the following checklist for reporting latent class trajectory analyses:
+Horne _et. al._, _The Wechsler Test of Adult Reading is a stable measure of premorbid cognitive function in Parkinson's_
+
+Here we report the analysis of the above paper against the following checklist for reporting latent class trajectory analyses:
 
 van de Schoot, R., Sijbrandij, M., Winter, S. D., Depaoli, S., & Vermunt, J. K. (2017). The GRoLTS-checklist: Guidelines for reporting on latent trajectory studies. _Structural Equation Modeling: A Multidisciplinary Journal,_ ***24,*** 451–467. https://doi.org/10.1080/10705511.2016.1247646
 
