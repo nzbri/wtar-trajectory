@@ -68,9 +68,9 @@ wordcount: 'Abstract: up to 150 (143), main body: up to 1700 (2007: 336+468+57+2
 knitr::opts_chunk$set(
 	echo = FALSE,
 	message = FALSE,
-	warning = FALSE
-)
+	warning = FALSE)
 options(knitr.kable.NA = '')
+
 ```
 
 ```{r define-variables}
@@ -104,7 +104,10 @@ orange_blue = c('#D55E00', '#0072B2')
 blue_orange = c('#599BC2', '#E08F6B')
 blue_orange_sat = c('#0072B2', '#D55E00')
 
-fig_1_width = 17.5;   fig_1_height = 16.5
+border_colour = '#9A1D2B'
+
+fig_1_width = 8.5;  fig_1_height = 10.0
+fig_2_width = 17.5; fig_2_height = 16.5
 
 ```
 
@@ -131,6 +134,7 @@ library(huxtable)    # tables that work in Word output
 library(knitr)       # for kable pretty tables
 library(kableExtra)  # extra kable options
 library(papaja)      # for apa_table
+library(stringr)     # to manipulate apa_table output
 
 ```
 
@@ -392,10 +396,7 @@ table_df %>%
                           TRUE                ~ name)) %>% 
   rename(' '           = name,
          "Parkinson's" = PD) %>%
-  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr') #%>% 
-  # kable(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr') %>% #, vline = '')#, booktabs = TRUE) %>%
-  #kable_styling(position = 'center') %>%
-  #row_spec(0, bold = TRUE)
+  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr')
 
 ```
 
@@ -650,6 +651,16 @@ class_proportions_by_group = individuals %>%
   mutate(proportion = scales::percent_format(accuracy = 1)(n/sum(n)))
 ```
 
+```{r percent-above-100}
+above_100 = dat %>%
+  mutate(above_100 = WTAR >= 100) |> 
+  group_by(group, above_100) %>%
+  tally() %>%
+  pivot_wider(names_from = above_100, values_from = n, names_prefix = 'above_') %>%
+  mutate(proportion = scales::percent_format(accuracy = 0.1)(above_TRUE/(above_FALSE + above_TRUE)))
+```
+
+
 ```{r formatted-text-results, include=FALSE}
 
 # extract coefficients from model summary:
@@ -690,23 +701,33 @@ high_intcpt_intrvl =
 
 ```
 
+## Distribution of scores
+The Parkinson's and Control distributions of all WTAR-estimated IQ scores are 
+shown in Figure \@ref(fig:figure-1-histogram). The mean and SD for each group's
+latest score is given in Table \@ref(tab:table-1), with both well above the 
+expected population norm mean IQ score of 100. The population distribution of IQ
+should be symmetrical about 100, yet in our sample, 
+`r above_100$proportion[above_100$group == 'PD']` of Parkinson's WTAR scores 
+were greater than or equal to 100, as were
+`r above_100$proportion[above_100$group == 'Control']` of Control scores.
 
+## Longitudinal trajectories
 The raw data showed that WTAR scores were relatively constant over time (Figure 
-\@ref(fig:figure-1)A). Initially, however,
-we modelled WTAR scores as a polynomial (cubic) function of age, to allow for 
-sub-clusters that might exhibit curvilinear changes. The optimal cubic 
-model showed relatively flat trajectories, and we therefore shifted to modelling
-WTAR as a linear function of age, fitting candidate models ranging from one to 
-five latent trajectory classes. We selected the two-class model on the basis of 
-it having the lowest BIC value. Full details on the modelling process are 
-provided in Supplementary Material.
+\@ref(fig:figure-2-trajectories)A). Initially, however, we modelled WTAR scores 
+as a polynomial (cubic) function of age, to allow for clusters that might 
+exhibit curvilinear changes. The optimal cubic model showed relatively flat 
+trajectories, and we therefore shifted to modelling WTAR as a linear function of
+age, fitting candidate models ranging from one to five latent trajectory 
+classes. We selected the two-class model on the basis of it having the lowest 
+BIC value. Full details on the modelling process are provided in the 
+supplementary material.
 
 We labelled the two resulting trajectory classes 'Typical' and 
 'High performers'. Individuals were assigned to the class for which they had the
 highest posterior classification probability. The mean assigned probability was 
 `r round(mean(individuals$class_probability), digits = 2)` 
-(SD `r round(sd(individuals$class_probability), digits = 2)`), with a value of 0.7 
-being regarded as acceptable model performance.[@lennon_framework_2018] The 
+(SD `r round(sd(individuals$class_probability), digits = 2)`), with a value of 
+0.7 being regarded as acceptable model performance.[@lennon_framework_2018] The 
 Typical trajectory captured 
 `r class_proportions$proportion[class_proportions$class == 'Typical']` of all 
 participants (`r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'PD']` of the PD and `r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'Control']` of Control participants). The 
@@ -720,26 +741,70 @@ decade (effectively flat). The Typical trajectory, by contrast had an intercept 
 `r typical_intcpt_str` `r typical_intcpt_intrvl`, gently declining at a rate of 
 `r typical_slope_str` `r typical_slope_intrvl` points per decade.
 
-(ref:fig-1-caption) ***(A.)*** Longitudinal WTAR score trajectories for all 
-individuals, divided into Controls, Parkinson's participants who remained 
-dementia-free, and those who developed dementia. Also shown are the two 
-predicted latent class trajectories (blue ribbon = _High performers_, brown 
-ribbon = _Typical_). ***(B.)***  Global cognitive z-scores for the Parkinson's 
-participants in the lower panel of (A) (those who developed dementia). Overall 
-cognitive performance declined dramatically, in contrast to their relatively 
-stable WTARs scores. This was regardless of their latent class (blue and brown 
-connecting lines). In each panel, current cognitive status is shown as cognitively normal 
-(green circles), mild cognitive impairment (orange triangles), or dementia (red 
-squares). Upon reaching dementia, the WTAR was not assessed again.
+(ref:fig-1-caption) The distribution of the WTAR-estimated IQ scores across all 
+participants, with multiple observations from each. Observations are 
+colour-coded by their cognitive status at each session. Regardless of cognitive 
+status, WTAR scores span the full range. The distributions are skewed well above
+the population norm mean of 100. 
 
-```{r figure-1, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
+```{r figure-1-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
+figure_1 = dat %>%  
+  ggplot(aes(x = WTAR, fill = cognitive_status)) +
+  facet_grid(group ~ .) +
+  geom_histogram(binwidth = 1, size = 0.25, colour = 'white') + 
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_y_continuous(limits = c(0, 60), expand = expansion(add = 0),
+                     breaks = c(0, 20, 40, 60)) +
+  labs(title = 'Distribution of WTAR-estimated IQ scores',
+       x = NULL, y = NULL) +  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        axis.text = element_text(colour = 'black', size = 8),
+        legend.position = c(0.18, 0.395),
+        legend.margin = margin(c(0, 1, 0, 1), unit = 'mm'),
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(3.0,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 8),
+        legend.text = element_text(size = 8),
+        panel.spacing = unit(4, 'mm'),
+        axis.ticks = element_line(colour = border_colour, size = 0.15),
+        panel.grid.major.y = element_line(size = 0.25),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(colour = border_colour, size = 0.25),
+        strip.background = 
+          element_rect(colour = border_colour, fill = border_colour),
+        strip.text = element_text(face = 'bold', colour = 'white', size = 10))
+
+figure_1
+
+ggsave('images/wtar-figure-1-histogram.pdf', width = fig_1_width, height = fig_1_height,
+       units = 'cm')
+ggsave('images/wtar-figure-1-trajectories.png', width = fig_1_width, height = fig_1_height,
+       units = 'cm', dpi = 600)
+
+```
+
+(ref:fig-2-caption) ***(A.)*** Longitudinal WTAR score trajectories for all 
+individuals, divided into Controls, Parkinson's participants who remained 
+dementia-free, and those who developed dementia. Superimposed are the two 
+predicted latent class trajectories (blue ribbon = _High performers_, orange 
+ribbon = _Typical_). ***(B.)***  Global cognitive z-scores for the Parkinson's 
+participants who developed dementia. Their overall cognitive performance 
+declined dramatically, in contrast to their relatively stable WTARs scores. This
+was regardless of their latent class (blue and orange connecting lines). In each
+panel, current cognitive status is shown as cognitively normal (green circles),
+mild cognitive impairment (orange triangles), or dementia (red squares). Upon 
+reaching dementia, the WTAR was not assessed again.
+
+```{r figure-2-trajectories, fig.align='center', fig.cap='(ref:fig-2-caption)', fig.height=fig_2_height/2.54, fig.width=fig_2_width/2.54, warning=FALSE}
 
 # upper panel, of WTAR scores by age:
-figure_1_upper = dat_with_classes %>% 
+figure_2_upper = dat_with_classes %>% 
   ggplot(aes(x = age)) +
   facet_grid(panel_label ~ .) +
-  scale_colour_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') + 
-  scale_fill_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') + 
+  scale_colour_manual(values = blue_orange_sat, name = 'Class', guide = 'none') + 
+  scale_fill_manual(values = blue_orange, name = 'Class', guide = 'none') + 
   geom_ribbon(dat = chosen_linear_predictions,
               aes(ymin = lower.Ypred, ymax = upper.Ypred, fill = class_for_lines),
               colour = NA, alpha = 0.2) +
@@ -759,7 +824,7 @@ figure_1_upper = dat_with_classes %>%
 
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
                      labels = scales::label_number(suffix = ' years')) +
-  scale_y_continuous(limits = c(80, 130)) +
+  scale_y_continuous(limits = c(80, 130), expand = expansion(add = 0)) +
   labs(title = 'A. Longitudinal WTAR scores by group',
        subtitle = 'Showing raw scores and the two predicted latent class trajectories',
        x = NULL, y = NULL) +
@@ -767,34 +832,35 @@ figure_1_upper = dat_with_classes %>%
   theme(plot.title = element_text(face = 'bold', size = 9),
         plot.subtitle = element_text(size = 8),
         axis.text = element_text(size = 7, colour = 'black'),
-        axis.ticks.y = element_line(colour = '#E8E8E8', size = 0.25),
-        axis.ticks.x = element_blank(),
-        panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
-        panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
-                                          linetype = 'dotted'),
-        panel.grid.minor = element_blank(),
-        strip.text = element_text(face = 'plain', colour = 'black', size = 8),
-        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
-        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        axis.ticks = element_line(colour = border_colour, size = 0.15),
+        # panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
+        # panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
+        #                                   linetype = 'dotted'),
+        panel.grid = element_blank(),
         legend.pos = 'none', #c(0.09, 0.095),
         legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
         legend.spacing.y = unit(1, 'mm'), # spacing between title & items
         legend.key.size = unit(2.5, 'mm'), # spacing between items
         legend.title = element_text(face = 'bold', size = 6),
-        legend.text = element_text(size = 7))
+        legend.text = element_text(size = 7),
+        panel.spacing = unit(4, 'mm'),
+        panel.border = element_rect(colour = border_colour, size = 0.25),
+        strip.background = 
+          element_rect(colour = border_colour, fill = border_colour),
+        strip.text = element_text(face = 'bold', colour = 'white', size = 8))
 
 # lower panel, of z-score trajectories of dementia-converters only:
-figure_1_lower = dat_with_classes %>% 
+figure_2_lower = dat_with_classes %>% 
   filter(panel_label == 'PD dementia') %>% 
   ggplot(aes(x = age, y = global_z)) +
   facet_grid(panel_label ~ .) +
   geom_line(aes(group = subject_id_num, colour = class), 
-            alpha = 0.6, size = 0.25, show.legend = FALSE) +
+            alpha = 0.6, size = 0.10, show.legend = FALSE) +
   # setting stroke = 0.1 gives nice sharp shapes:
   geom_point(aes(fill = cognitive_status,
                  #colour = cognitive_status, # minimal border stroke
                  shape = cognitive_status), colour = 'white', size = 1.0, stroke = 0.1) +
-  scale_colour_manual(values = c('blue', 'brown'), name = 'Class', guide = 'none') +
+  scale_colour_manual(values = blue_orange_sat, name = 'Class', guide = 'none') +
   scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
   scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
@@ -805,36 +871,39 @@ figure_1_lower = dat_with_classes %>%
   theme_bw() +
   theme(plot.title = element_text(face = 'bold', size = 9),
         plot.subtitle = element_text(size = 8),
-        axis.ticks = element_line(colour = '#E8E8E8', size = 0.25),
+        axis.ticks = element_line(colour = border_colour, size = 0.15),
         axis.text = element_text(size = 7, colour = 'black'),
-        panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
-        panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
-                                          linetype = 'dotted'),
-        panel.grid.minor = element_blank(),
-        strip.text = element_text(face = 'plain', colour = 'black', size = 8),
-        strip.background = element_rect(colour = '#C0C0C0', fill = '#C0C0C0'),
-        panel.border = element_rect(colour = '#C0C0C0', size = 0.5),
+        # panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
+        # panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
+        #                                   linetype = 'dotted'),
+        panel.grid = element_blank(),
         legend.position = c(0.085, 0.46), # 0.64 puts it in the top panel
         legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
         legend.spacing.y = unit(1,'mm'), # spacing between title & items
         legend.key.size = unit(3.0,'mm'), # spacing between items
         legend.title = element_text(face = 'bold', size = 7),
-        legend.text = element_text(size = 7))
+        legend.text = element_text(size = 7),
+        panel.border = element_rect(colour = border_colour, size = 0.25),
+        strip.background = 
+          element_rect(colour = border_colour, fill = border_colour),
+        strip.text = element_text(face = 'bold', colour = 'white', size = 8))
 
-figure_1 = cowplot::plot_grid(figure_1_upper, figure_1_lower, nrow = 2, axis = 'l',
+figure_2 = cowplot::plot_grid(figure_2_upper, figure_2_lower, nrow = 2, axis = 'l',
                               align = 'v', rel_heights = c(1.0, 0.43))
 
-figure_1
+figure_2
 
-ggsave('images/wtar-figure-1.pdf', width = fig_1_width, height = fig_1_height,
+ggsave('images/wtar-figure-2.pdf', width = fig_2_width, height = fig_2_height,
        units = 'cm')
+ggsave('images/wtar-figure-2.png', width = fig_2_width, height = fig_2_height,
+       units = 'cm', dpi = 600)
 ```
 
 # Discussion
 
 WTAR scores were stable over time in both controls and people with Parkinson's, 
 despite many of the latter developing dementia over the course of the study 
-(Figure \@ref(fig:figure-1)B). Latent class analysis revealed that 
+(Figure \@ref(fig:figure-2-trajectories)B). Latent class analysis revealed that 
 in our particular sample, people fell into one of two trajectory clusters, but 
 these appeared to be largely driven by there being two clusters
 of performance at baseline, rather than trajectories that differed longitudinally.
