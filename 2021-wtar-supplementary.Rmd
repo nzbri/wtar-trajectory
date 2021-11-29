@@ -41,7 +41,7 @@ dat %>%
 
 ## 3a. Is the missing data mechanism reported?
 
-Data was not missing at random: participants are more likely to drop out of the study due to increasing disease severity, other health issues, and old age. As shown in Figure \@ref(fig:figure-2-trajectories), however, many remained in the study until the end point of WTAR collection (the onset of dementia). Those participants did not show a decline on WTAR performance relative to other participants. Due to the findings of this study (that the WTAR is relatively stable throughout the disease course), differential drop-out is unlikely to affect the results.
+Data was not missing at random: participants are more likely to drop out of the study due to increasing disease severity, other health issues, and old age. As shown in Figure \@ref(fig:figure-2-trajectories), however, many remained in the study until the end point of WTAR collection (the onset of dementia). Those participants did not show a decline in WTAR performance relative to other participants. Due to the findings of this study (that the WTAR is relatively stable throughout the disease course), differential drop-out is unlikely to affect the results.
 
 ## 3b. Is a description provided of what variables are related to attrition/missing data?
 
