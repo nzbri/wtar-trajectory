@@ -53,11 +53,11 @@ As noted in _3a_ above, missing data was not thought to be problematic in this a
 
 ## 4. Is information about the distribution of the observed variables included?
 
-In Figure \@ref(fig:figure-1-histogram) in the accompanying manuscript, we show the distribution of the WTAR-estimated IQ scores in each group for the cognitive status at each observation.
+In Figure \@ref(fig:figure-1-histogram) in the accompanying manuscript, we show the distribution of the WTAR-estimated IQ scores in each group, showing the cognitive status at each observation.
 
 ## 5. Is the software mentioned?
 
-See the Method section in the accompanying manuscript.
+See the Methods section in the accompanying manuscript.
 
 ## 6a. Are alternative specifications of within-class heterogeneity considered (e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
 
