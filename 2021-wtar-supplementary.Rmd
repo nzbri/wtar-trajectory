@@ -274,6 +274,8 @@ This is shown in Figure \@ref(fig:figure-2-trajectories) of the accompanying man
 
 ## 15.Are characteristics of the final class solution numerically described (i.e., means, SD/SE, n, CI, etc.)?
 
+Yes, see the Results section of the accompanying manuscript.
+
 ## 16. Are the syntax files available (either in the appendix, supplementary materials, or from the authors)?
 
 Yes, they are publicly available at [github.com/nzbri/wtar-trajectory](https://github.com/nzbri/wtar-trajectory).

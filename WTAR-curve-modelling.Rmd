@@ -47,7 +47,7 @@ affiliation:
   institution: School of Psychology, Speech, and Hearing, University of Canterbury,
     Christchurch, New Zealand
 abstract: Background. Measures of premorbid cognitive function such as the 
-  Wechsler Test of Adult Reading (WTAR) have been recommended as a referance 
+  Wechsler Test of Adult Reading (WTAR) have been recommended as a reference 
   against which to assess current cognitive status in people with Parkinson's 
   disease. WTAR scores decline in Alzheimer's disease, however, and it has not 
   been formally demonstrated that they remain stable in the presence of the 
@@ -64,11 +64,6 @@ abstract: Background. Measures of premorbid cognitive function such as the
   Parkinson's even in the presence of substantial cognitive decline. 
   Nonetheless, its apparent over-estimation of premorbid IQ make it  
   poorly-suited for diagnosing cognitive impairment in this disorder.
-  Wechsler Test of Adult Reading (WTAR) have been recommended as a reference
-  against which to assess current cognitive status in people with Parkinson's 
-  disease. WTAR scores decline in Alzheimer's disease, however, and it has not 
-  been formally demonstrated that they remain stable in the face of the 
-  substantial cognitive deterioration that can occur in Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
 wordcount: 'Abstract: 247 (of 250), main body: 2133 (of 3700)'
 ---
