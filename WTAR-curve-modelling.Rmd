@@ -57,12 +57,12 @@ abstract: Background. Measures of premorbid cognitive function such as the
   Control participants who had completed at least two WTARs, we analysed scores
   over time using latent class trajectory modelling. This allows for individual 
   participants to be classified into data-driven clusters, depending on the 
-  shape of their longitudinal trajectory. Results. WTAR was quite stable within
-  both Controls and Parkinson's participants, even for those who progressed to 
-  dementia. In both groups and regardless of cognitive status, scores were much 
-  higher than expected from population norms. Conclusion. The WTAR is stable in
-  Parkinson's even in the presence of substantial cognitive decline. 
-  Nonetheless, its apparent over-estimation of premorbid IQ makes it  
+  shape of their longitudinal trajectory. Results. WTAR scores were stable 
+  within both Controls and Parkinson's participants, even for those who 
+  progressed to dementia. In both groups and regardless of cognitive status, 
+  scores were much higher than expected from population norms. Conclusion. The 
+  WTAR is stable in Parkinson's even in the presence of substantial cognitive 
+  decline. Nonetheless, its apparent over-estimation of premorbid IQ makes it  
   poorly-suited for diagnosing cognitive impairment in this disorder.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
 wordcount: 'Abstract: 247 (of 250), main body: 2133 (of 3700)'
