@@ -61,11 +61,12 @@ abstract: Background. Measures of premorbid cognitive function such as the
   progressed to dementia. In both groups and regardless of cognitive status, 
   scores were much higher than expected from population norms. Conclusion. The 
   WTAR is stable in Parkinson's even in the presence of substantial cognitive 
-  decline. Nonetheless, its apparent over-estimation of premorbid IQ makes it  
-  poorly-suited for diagnosing cognitive impairment in individuals with
-  Parkinson's
-keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology
-wordcount: 'Abstract: 199 (of 250), main body: 2133 (of 3700)'
+  decline. Nonetheless, its apparent over-estimation of premorbid IQ and 
+  restriction to English speakers makes it  poorly-suited for diagnosing 
+  cognitive impairment in individuals with Parkinson's
+keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
+  premorbid function
+wordcount: 'Abstract: 200 (of 250), main body: 2133 (of 3700)'
 ---
 
 ```{r setup, include=FALSE}
