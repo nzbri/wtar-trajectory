@@ -1,5 +1,5 @@
 ---
-title: "Wechsler Test of Adult Reading in Parkinson's: a stable but unsuited measure of premorbid cognition"
+title: "The Wechsler Test of Adult Reading in Parkinson’s: stable premorbid measure despite cognitive decline"
 author:
 - name: Kyla-Louise Horne, PhD
   affiliation: '1'
@@ -45,25 +45,24 @@ affiliation:
 - id: '5'
   institution: School of Psychology, Speech, and Hearing, University of Canterbury,
     Christchurch, New Zealand
-abstract: Background. Measures of premorbid cognitive function such as the 
-  Wechsler Test of Adult Reading (WTAR) have been recommended as a reference 
-  against which to assess current cognitive status in people with Parkinson's 
-  disease. Over time, WTAR scores decline in Alzheimer's disease, however, and 
-  it has not been formally demonstrated that they remain stable in the presence
-  of the substantial cognitive deterioration that can occur in Parkinson's. 
-  Objective. To assess long-term trajectories of WTAR scores in people with 
-  Parkinson's as a function of age. Methods. From 253 Parkinson's and 57 
-  Control participants who had completed at least two WTARs, we analysed scores
-  over time using latent class trajectory modelling. This allows for individual 
-  participants to be classified into data-driven clusters, depending on the 
-  shape of their longitudinal trajectory. Results. WTAR scores were stable 
-  within both Controls and Parkinson's participants, even for those who 
-  progressed to dementia. In both groups and regardless of cognitive status, 
-  scores were much higher than expected from population norms. Conclusion. The 
-  WTAR is stable in Parkinson's even in the presence of substantial cognitive 
-  decline. Nonetheless, its apparent over-estimation of premorbid IQ and 
-  restriction to English speakers makes it  poorly-suited for diagnosing 
-  cognitive impairment in individuals with Parkinson's
+abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
+  recommended as a  measure of premorbid cognitive function and as a reference
+  against which to assess current cognitive status in people with Parkinson’s 
+  disease. To fulfil either role, however, WTAR scores need to be shown to 
+  remain stable in the presence of the substantial cognitive deterioration that
+  can occur in Parkinson’s. Objective. To assess long-term trajectories of WTAR
+  scores in people with  Parkinson's as a function of age. Methods. From 253
+  Parkinson's and 57 Control participants who had completed at least two WTARs,
+  we analysed scores over time using latent class trajectory modelling. This
+  allows for individual participants to be classified into data-driven clusters,
+  depending on the shape of their longitudinal trajectory. Results. WTAR scores
+  were stable within both Controls and Parkinson's participants, even for those
+  who progressed to dementia. In both groups and regardless of cognitive status,
+  scores were higher than expected from population norms. Conclusion. The WTAR 
+  was stable in Parkinson's even when participants declined from normal 
+  cognitive function to dementia. Nonetheless, its apparent over-estimation of
+  premorbid IQ and restriction to English speakers makes it  poorly-suited for
+  diagnosing cognitive impairment in individuals with Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
 wordcount: 'Abstract: 200 (of 250), main body: 2133 (of 3700)'
@@ -259,8 +258,8 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
 In 2012, the International Parkinson and Movement Disorder Society published its
 Task Force guidelines for the diagnosis of mild cognitive impairment in
 Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the
-diagnosis is based on individual neuropsychological tests (rather than global
-scales), significant impairment may be determined in three ways: (i) current
+diagnosis is based on individual neuropsychological tests, rather than global
+scales, significant impairment may be determined in three ways: (i) current
 performance being below appropriate norms, (ii) decline on serial testing, or
 (iii) decline from estimated premorbid levels. The first method tends to
 predominate in current research
@@ -290,11 +289,11 @@ promulgated. It is therefore unclear to what extent findings from that original
 sample are valid in the face of the significant cognitive deterioration that can
 occur in Parkinson's.
 
-We therefore firstly sought to examine WTAR scores in a cognitively 
-well-characterised sample, spanning the range from normal function through mild 
-cognitive impairment and dementia. Secondly, we restricted the sample to 
-participants who had completed a minimum of two WTARs, so that the trajectory
-of the measure within individuals over time could be examined.    
+We therefore examined WTAR scores in a cognitively well-characterised sample,
+spanning the range from normal function through mild cognitive impairment and
+dementia. SWe restricted the sample to participants who had completed a minimum
+of two WTARs, so that the trajectory of the measure within individuals over time
+could be examined.    
 
 # Methods
 
@@ -348,18 +347,16 @@ comprehensive Level II neuropsychological
 battery,[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] administered in accordance with MDS
 guidelines.[@dubois2007_DiagnosticProceduresParkinson;
-@litvan2012_DiagnosticCriteriaMild] Although the WTAR was assessed during each
-session, we did not actually use it in the cognitive diagnostic classification
-process: this was done on the basis of at least two test scores falling $\geq$ 
-1.5 standard deviations below norms in at least one single cognitive domain for
-PD-MCI and significant impairments ($\geq$ 2.0 standard deviations below 
-normative data) in at least two cognitive domains, as well as evidence of 
-significant impairment in everyday functioning, for PD dementia,
-[@dalrymple-alford2011_CharacterizingMildCognitive;
-@wood2016_DifferentPDMCICriteria] rather than being compared to an estimated
-premorbid level. Characteristics of the sample are shown in Table
-\@ref(tab:table-1). All participants were speakers of New Zealand English, and
-were assessed against the US norms of the WTAR, corrected for age, sex, and
+@litvan2012_DiagnosticCriteriaMild] For PD-MCI, this was on the basis of at 
+least two test scores falling $\geq$ 1.5 standard deviations below norms in at
+least one cognitive domain. For PD dementia, significant impairments ($\geq$ 
+2.0 standard deviations below normative data) in at least two cognitive domains
+were required, as well as evidence of significant impairment in everyday
+functioning.[@dalrymple-alford2011_CharacterizingMildCognitive;
+@wood2016_DifferentPDMCICriteria] The WTAR was not used in the cognitive
+diagnostic classification procedure. Characteristics of the sample are shown in
+Table \@ref(tab:table-1). All participants were speakers of New Zealand English,
+and were assessed against the US norms of the WTAR, corrected for age, sex, and
 years of education (the provided ethnicity classifications were not useful in a
 New Zealand context and all participants were assessed against norms for
 "Whites").
@@ -372,8 +369,8 @@ $lcmm$ package [@proust-lima2017estimation-of-e] (version
 [@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`). The
 dependent variable was WTAR-estimated premorbid IQ, initially modelled within
 each subject as a polynomial (cubic) function of age, to allow for non-linear
-trajectories. The resulting trajectories were close to straight lines and thus
-we simplified the models to be a linear function of age. The models were not
+trajectories. The resulting trajectories were close to straight lines so we
+simplified the models to be a linear function of age. The models were not
 informed by any other variables (such as categorical MCI or dementia diagnoses).
 We fitted five separate models, with the specified number of latent classes
 increasing from 1 to 5. The model with just one latent class was used to provide
@@ -409,12 +406,14 @@ table_df = dat %>%
   pivot_wider(names_from = 'group')
 
 table_df %>% 
-  mutate(name = case_when(name == 'Education' ~ 'Education (years)',
+  mutate(name = case_when(name == 'Age' ~ 'Age (SD)',
+                          name == 'Education' ~ 'Years of education (SD)',
+                          name == 'WTAR' ~ 'WTAR (SD)',
                           name == 'Normal'    ~ 'Normal cognition',
                           TRUE                ~ name)) %>% 
   rename(' '           = name,
          "Parkinson's" = PD) %>%
-  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr')
+  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their last assessment.", align = 'lrr')
 
 ```
 
