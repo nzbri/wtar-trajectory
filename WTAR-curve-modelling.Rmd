@@ -822,6 +822,12 @@ mild cognitive impairment (orange triangles), or dementia (red squares). Upon
 reaching dementia, the WTAR was not assessed again.
 
 ```{r figure-2-trajectories, fig.align='center', fig.cap='(ref:fig-2-caption)', fig.height=fig_2_height/2.54, fig.width=fig_2_width/2.54, warning=FALSE}
+# TODO: make this figure more readable and usable.
+# e.g. highlight a few representative individuals' trajectories.
+# e.g. highlight a person with high initial WTAR who declines to dementia but 
+# retains high WTAR scores. Then highlight the same person's z-score data,
+# showing substantial decline. Do the same for a person from the other 
+# trajectory class, showing a similar pattern.
 
 # upper panel, of WTAR scores by age:
 figure_2_upper = dat_with_classes %>% 
