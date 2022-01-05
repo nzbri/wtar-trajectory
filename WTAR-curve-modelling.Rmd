@@ -722,6 +722,23 @@ above_100 = dat %>%
   mutate(proportion = scales::percent_format(accuracy = 0.1)(above_TRUE/(above_FALSE + above_TRUE)))
 ```
 
+```{r chi-square}
+class_n_by_group = individuals %>% 
+  group_by(group, class) %>% 
+  tally() %>% 
+  pivot_wider(names_from = group, values_from = n)
+
+chi = chisq.test(class_n_by_group[, -1])
+
+chi_n_observed = chi$observed
+chi_n_expected = chi$expected
+chi_p_value = chi$p.value
+chi_statistic = chi$statistic
+chi_df = chi$parameter
+
+```
+
+
 
 ```{r formatted-text-results, include=FALSE}
 
