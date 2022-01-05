@@ -106,6 +106,8 @@ cog_colours <- c('#339900', '#FF9326', '#D92121')
 # colour schemes for two categories:
 blue_orange     = c('#599BC2', '#E08F6B')
 blue_orange_sat = c('#0072B2', '#D55E00')
+blue_brown     = c('#599BC2', '#CD8969')
+blue_brown_sat = c('#0072B2', '#B85628')
 
 border_colour = '#9A1D2B' # Movement Disorders red
 
@@ -233,7 +235,7 @@ dat %>% write_csv(file = 'data/dat_wtar.csv')
 }
 
 # Regardless of whether IMPORT_LIVE_DATA has been set to TRUE, we import from 
-# a cached, static dataset rather to ensure consistency:
+# a cached, static dataset to ensure consistency:
 dat = read_csv(file = 'data/dat_wtar.csv') %>% 
   mutate(cognitive_status = factor(cognitive_status, 
                                    levels = c('Normal', 'MCI', 'Dementia')),
@@ -337,8 +339,8 @@ the New Zealand Brain Research Institute (NZBRI). The study commenced in 2007,
 with recruitment ongoing, and hence covers patients ranging from the
 recently-diagnosed to those with advanced disease. Inclusion and exclusion
 criteria have been described previously.[@wood2016_DifferentPDMCICriteria] For
-this analysis, we selected data from the `r group_n$n[group_n$group ==
-'PD']` Parkinson's and `r group_n$n[group_n$group == 'Control']` Control
+this analysis, we selected data from the `r group_n$n[group_n$group =='PD']` 
+Parkinson's and `r group_n$n[group_n$group == 'Control']` Control
 participants who had completed at least two WTARs (range 2 - 
 `r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of 
 measures = `r wtar_n$total_sessions`). The period between successive WTAR
@@ -366,8 +368,8 @@ New Zealand context and all participants were assessed against norms for
 
 ## Latent class trajectory modelling
 
-We fitted latent class trajectory models using the $hlme$ function from the
-$lcmm$ package [@proust-lima2017estimation-of-e] (version 
+We fitted latent class trajectory models using the `hlme` function from the
+`lcmm` package [@proust-lima2017estimation-of-e] (version 
 `r packageVersion('lcmm')`), running in the R statistical environment
 [@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`). The
 dependent variable was WTAR-estimated premorbid IQ, initially modelled within
@@ -376,18 +378,17 @@ trajectories. The resulting trajectories were close to straight lines so we
 simplified the models to be a linear function of age. The models were not
 informed by any other variables (such as categorical MCI or dementia diagnoses).
 We fitted five separate models, with the specified number of latent classes
-increasing from 1 to 5. The model with just one latent class was used to provide
-starting values for the subsequent models with multiple classes. The
-$gridsearch()$ function of the $lcmm$ package was used to run 5000 departures
-from random initial values for each multi-class model, using the one-class model
-to generate the starting values from. The maximum number of iterations within
-the `hlme()` function was set at 1000. Parameters corresponding to the best
-log-likelihood were used as initial values for the final estimation of the
-parameters[@proust-lima2017estimation-of-e]. The optimal model was selected on
-the basis of it having the lowest BIC value of the five candidates. When
-reporting values from the model, we formed the interval in brackets following
-the maximum likelihood estimate (MLE) by subtracting and adding 1.96 times the
-standard error given by $hlme$ to the MLE.
+increasing from 1 to 5. The `gridsearch()` function of the `lcmm` package was 
+used to run 5000 departures from random initial values for each multi-class 
+model, using the one-class model from which to generate the starting values. The
+maximum number of iterations within the `hlme()` function was set at 1000. 
+Parameters corresponding to the best log-likelihood were used as initial values 
+for the final estimation of the parameters[@proust-lima2017estimation-of-e]. The
+optimal model was selected on the basis of it having the lowest BIC (Bayesian 
+information criterion) value of the five candidates. When reporting values from 
+the model, we formed the interval in brackets following the maximum likelihood 
+estimate (MLE) by subtracting and adding 1.96 times the standard error given by 
+`hlme` to the MLE.
 
 
 ```{r table-1}
@@ -829,43 +830,51 @@ reaching dementia, the WTAR was not assessed again.
 # showing substantial decline. Do the same for a person from the other 
 # trajectory class, showing a similar pattern.
 
+# select two individuals to highlight in the figure:
+dat_with_classes_plus_highlights = dat_with_classes %>%
+  mutate(highlight = case_when(subject_id_num %in% c(63, 111) ~ TRUE,
+                                                         TRUE ~ FALSE)) %>%
+  arrange(highlight, subject_id_num, age)
+  
+
 # upper panel, of WTAR scores by age:
-figure_2_upper = dat_with_classes %>% 
+figure_2_upper = dat_with_classes_plus_highlights %>% 
   ggplot(aes(x = age)) +
   facet_grid(panel_label ~ .) +
-  scale_colour_manual(values = blue_orange_sat, name = 'Class', guide = 'none') + 
-  scale_fill_manual(values = blue_orange, name = 'Class', guide = 'none') + 
+  scale_colour_manual(values = blue_brown_sat, name = 'Class', guide = 'none') + 
+  scale_fill_manual(values = blue_brown, name = 'Class', guide = 'none') + 
+  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
   geom_ribbon(dat = chosen_linear_predictions,
               aes(ymin = lower.Ypred, ymax = upper.Ypred, fill = class_for_lines),
               colour = NA, alpha = 0.2) +
   geom_line(dat = chosen_linear_predictions,
             aes(y = Ypred, colour = class_for_lines), 
             size = 0.25, linetype = 'dashed') +
-  geom_line(aes(y = WTAR, colour = class, group = subject_id_num), 
-            alpha = 1.0, size = 0.1) +
-  new_scale_color() + new_scale_fill() +
-  scale_colour_manual(values = cog_colours, name = 'Cognitive status') + 
+  scale_size_manual(values = c(0.25, 1.5)) +
+  geom_line(aes(y = WTAR, colour = class, group = subject_id_num, 
+                size = highlight), alpha = 1.0) +
+  # via the ggnewscale package, allows us to have independent colour scales for 
+  # the trajectories (2 levels) and the cognitive categories (3 levels):
+  new_scale_color() + new_scale_fill() + new_scale('size') +
+  scale_colour_manual(values = c('white', 'black')) + 
   scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
   # setting stroke = 0.1 gives nice sharp shapes:
-  scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
-  geom_point(aes(y = WTAR, fill = cognitive_status,
-                 #colour = cognitive_status, # minimal border stroke
-                 shape = cognitive_status), colour = 'white', size = 1.0, stroke = 0.1) +
-
+  scale_size_manual(values = c(1.5, 3.0)) +
+  geom_point(aes(y = WTAR, fill = cognitive_status, size = highlight,
+                 #stroke = highlight,
+                 colour = highlight, # minimal border stroke
+                 shape = cognitive_status), stroke = 0.2) +
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
                      labels = scales::label_number(suffix = ' years')) +
-  scale_y_continuous(limits = c(80, 130), expand = expansion(add = 0)) +
+  scale_y_continuous(limits = c(75, 130), expand = expansion(add = 0)) +
   labs(title = 'A. Longitudinal WTAR scores by group',
-       subtitle = 'Showing raw scores and the two predicted latent class trajectories',
+       subtitle = 'Shaded bands indicate the two predicted latent class trajectories',
        x = NULL, y = NULL) +
   theme_bw() +
   theme(plot.title = element_text(face = 'bold', size = 9),
         plot.subtitle = element_text(size = 8),
         axis.text = element_text(size = 7, colour = 'black'),
         axis.ticks = element_line(colour = border_colour, size = 0.15),
-        # panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
-        # panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
-        #                                   linetype = 'dotted'),
         panel.grid = element_blank(),
         legend.pos = 'none', #c(0.09, 0.095),
         legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
@@ -880,19 +889,24 @@ figure_2_upper = dat_with_classes %>%
         strip.text = element_text(face = 'bold', colour = 'white', size = 8))
 
 # lower panel, of z-score trajectories of dementia-converters only:
-figure_2_lower = dat_with_classes %>% 
+figure_2_lower = dat_with_classes_plus_highlights %>% 
   filter(panel_label == 'PD dementia') %>% 
   ggplot(aes(x = age, y = global_z)) +
   facet_grid(panel_label ~ .) +
-  geom_line(aes(group = subject_id_num, colour = class), 
-            alpha = 0.6, size = 0.10, show.legend = FALSE) +
-  # setting stroke = 0.1 gives nice sharp shapes:
-  geom_point(aes(fill = cognitive_status,
-                 #colour = cognitive_status, # minimal border stroke
-                 shape = cognitive_status), colour = 'white', size = 1.0, stroke = 0.1) +
-  scale_colour_manual(values = blue_orange_sat, name = 'Class', guide = 'none') +
+  scale_size_manual(values = c(0.25, 1.5)) +
+  scale_colour_manual(values = blue_brown_sat, name = 'Class', guide = 'none') +
   scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
   scale_shape_manual(values = c(21, 25, 22), name = 'Cognitive status') +
+  geom_line(aes(group = subject_id_num, colour = class, size = highlight),
+            show.legend = FALSE) +
+  # use ggscale to have independent size scales:
+  new_scale_colour() + new_scale('size') +
+  scale_size_manual(values = c(1.5, 3.0), guide = 'none') +
+  scale_colour_manual(values = c('white', 'black'), guide = 'none') +
+  # setting stroke = 0.1 gives nice sharp shapes:
+  geom_point(aes(fill = cognitive_status, size = highlight,
+                 colour = highlight, # minimal border stroke
+                 shape = cognitive_status), stroke = 0.2) +
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
                      labels = scales::label_number(suffix = ' years')) +
   labs(title = 'B. Global cognitive z-scores',
@@ -903,9 +917,6 @@ figure_2_lower = dat_with_classes %>%
         plot.subtitle = element_text(size = 8),
         axis.ticks = element_line(colour = border_colour, size = 0.15),
         axis.text = element_text(size = 7, colour = 'black'),
-        # panel.grid.major.y = element_line(colour = '#E8E8E8', size = 0.25),
-        # panel.grid.major.x = element_line(colour = '#C0C0C0', size = 0.5, 
-        #                                   linetype = 'dotted'),
         panel.grid = element_blank(),
         legend.position = c(0.085, 0.46), # 0.64 puts it in the top panel
         legend.margin = margin(c(1, 1, 1, 1), unit = 'mm'),
@@ -920,11 +931,11 @@ figure_2_lower = dat_with_classes %>%
 
 figure_2 = 
   cowplot::plot_grid(figure_2_upper, figure_2_lower, nrow = 2, 
-                     axis = 'l', align = 'v', rel_heights = c(1.0, 0.43))
+                     axis = 'l', align = 'v', rel_heights = c(1.0, 0.388))
 
 figure_2
 
-ggsave('images/wtar-figure-2.pdf', width = fig_2_width, height = fig_2_height,
+ggsave('images/wtar-figure-2.pdf', width = fig_2_width, height = fig_2_height + 5,
        units = 'cm')
 ggsave('images/wtar-figure-2.png', width = fig_2_width, height = fig_2_height,
        units = 'cm', dpi = 600)
@@ -969,7 +980,7 @@ effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that IQ
 scores increase substantially over time (by up to 1 standard deviation per
 generation). Our sample would have been born approximately a generation after
 their age-matched WAIS III normative sample group and that might explain their
-above-average estimated IQ levels. [***T*ODO:*** Add possibility that by volunteering
+above-average estimated IQ levels. [***TODO:*** Add possibility that by volunteering
 for research, our sample may be non-representative of the population, but (i) 
 this should apply more to the controls than the PD group, which did not seem to 
 be the case, and (ii) this would apply to most other research projects too. The
