@@ -18,9 +18,9 @@ author:
   email: michael.macaskill@nzbri.org
 shorttitle: Parkinson's premorbid function
 output:
-  papaja::apa6_word:
   papaja::apa6_pdf:
     latex_engine: xelatex
+  papaja::apa6_word:
 link-citations: yes
 csl: format/bmj.csl
 bibliography: format/wtar-references.bib
@@ -221,10 +221,10 @@ dat$age_std = (dat$age - mean(dat$age))/10
 
 dat = dat %>% 
   arrange(subject_id_num, age) %>% 
-  select(subject_id_num, group,	sex, symptom_onset_age,	diagnosis_age,
-         education, age, age_std, wtar_interval, group, cognitive_status, 
-         cognitive_status_lead, ever_demented, WTAR, MoCA, global_z, 
-         attention_domain, executive_domain, visuo_domain,
+  select(subject_id_num, group,	sex, ethnicity, symptom_onset_age,
+         diagnosis_age, education, age, age_std, wtar_interval, group, 
+         cognitive_status, cognitive_status_lead, ever_demented, WTAR, MoCA, 
+         global_z, attention_domain, executive_domain, visuo_domain,
          learning_memory_domain,	language_domain, H_Y,	Part_III)
          
 
@@ -305,11 +305,14 @@ rather than assign participants to _a priori_ sub-groupings.
 ## Participants
 
 ```{r descriptives}
-group_n = dat %>% 
+descriptives = dat %>% 
   group_by(subject_id_num) %>% 
   mutate(session_num = row_number(),
          n_sessions = max(session_num)) %>% 
   slice_head() %>% # one row per subject
+  ungroup()
+  
+n_group = descriptives %>%
   group_by(group) %>% 
   summarise(n = n(), 
             min_sessions = min(n_sessions),
@@ -317,18 +320,46 @@ group_n = dat %>%
             sd_sessions = sd(n_sessions),
             max_sessions = max(n_sessions))
 
-wtar_n = dat %>% 
-  group_by(subject_id_num) %>% 
-  mutate(session_num = row_number(),
-         n_sessions = max(session_num)) %>% 
-  slice_head() %>% # one row per subject
-  ungroup() %>% 
+n_wtar = descriptives %>% 
   summarise(n = n(), 
             min_sessions = min(n_sessions),
             mean_sessions = mean(n_sessions),
             sd_sessions = sd(n_sessions),
             max_sessions = max(n_sessions),
             total_sessions = sum(n_sessions))
+
+n_ethnicity = descriptives %>% 
+  group_by(group, ethnicity) %>% 
+  summarise(n = n()) %>% 
+  # remove some (currently 3) missing values, which otherwise cause problems:
+  drop_na() 
+
+n_pd_with_ethnicity = 
+  with(n_ethnicity, sum(n[group == 'PD']))
+
+n_pd_pakeha = 
+  with(n_ethnicity, n[group == 'PD' & ethnicity == 'New Zealand European'])
+
+n_pd_maori = 
+  with(n_ethnicity, n[group == 'PD' & ethnicity == 'Maori'])
+
+n_pd_samoan = 
+  with(n_ethnicity, n[group == 'PD' & ethnicity == 'Samoan'])
+
+n_pd_indian = 
+  with(n_ethnicity, n[group == 'PD' & ethnicity == 'Indian'])
+
+n_pd_other = 
+  with(n_ethnicity, n[group == 'PD' & ethnicity == 'Other'])
+
+n_control_with_ethnicity = 
+  with(n_ethnicity, sum(n[group == 'Control']))
+
+n_control_pakeha = 
+  with(n_ethnicity, n[group == 'Control' & ethnicity == 'New Zealand European'])
+
+n_control_other = 
+  with(n_ethnicity, n[group == 'Control' & ethnicity == 'Other'])
 
 ```
 
@@ -339,16 +370,16 @@ the New Zealand Brain Research Institute (NZBRI). The study commenced in 2007,
 with recruitment ongoing, and hence covers patients ranging from the
 recently-diagnosed to those with advanced disease. Inclusion and exclusion
 criteria have been described previously.[@wood2016_DifferentPDMCICriteria] For
-this analysis, we selected data from the `r group_n$n[group_n$group =='PD']` 
-Parkinson's and `r group_n$n[group_n$group == 'Control']` Control
+this analysis, we selected data from the `r n_group$n[n_group$group =='PD']` 
+Parkinson's and `r n_group$n[n_group$group == 'Control']` Control
 participants who had completed at least two WTARs (range 2 - 
-`r wtar_n$max_sessions`, mean = `r wtar_n$mean_sessions`, total number of 
-measures = `r wtar_n$total_sessions`). The period between successive WTAR
+`r n_wtar$max_sessions`, mean = `r n_wtar$mean_sessions`, total number of 
+measures = `r n_wtar$total_sessions`). The period between successive WTAR
 assessments was multi-modal, mostly clustering around intervals of one and two
-years, due to varying follow-up periods over the course of the study. Both
-Parkinson's participants and Controls were classified as having normal 
-cognition, mild cognitive impairment, or dementia on the basis of a 
-comprehensive Level II neuropsychological 
+years, due to varying follow-up periods over the course of the study (see 
+Supplmentary Material). Both Parkinson's participants and Controls were 
+classified as having normal cognition, mild cognitive impairment, or dementia on
+the basis of a comprehensive Level II neuropsychological 
 battery,[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] administered in accordance with MDS
 guidelines.[@dubois2007_DiagnosticProceduresParkinson;
@@ -360,11 +391,18 @@ were required, as well as evidence of significant impairment in everyday
 functioning.[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] The WTAR was not used in the cognitive
 diagnostic classification procedure. Characteristics of the sample are shown in
-Table \@ref(tab:table-1). All participants were speakers of New Zealand English,
-and were assessed against the US norms of the WTAR, corrected for age, sex, and
-years of education (the provided ethnicity classifications were not useful in a
-New Zealand context and all participants were assessed against norms for
-"Whites"). [***TODO:*** provide ethnicity breakdown of our sample.]
+Table \@ref(tab:table-1). Of the `r n_pd_with_ethnicity` Parkinson's 
+participants with a recorded ethnicity, `r n_pd_pakeha` 
+(`r scales::label_percent(accuracy = 0.1)(n_pd_pakeha/n_pd_with_ethnicity)`) 
+were Pākehā (New Zealand European), `r n_pd_maori` were Māori, `r n_pd_samoan` 
+was Samoan, `r n_pd_indian` Indian, and `r n_pd_other` were 'Other'. Of the 
+Controls, `r n_control_pakeha` 
+(`r scales::label_percent(accuracy = 0.1)(n_control_pakeha/n_control_with_ethnicity)`) 
+were Pākehā and `r n_control_other` was 'Other'. All participants were speakers 
+of New Zealand English, and were assessed against the US norms of the WTAR, 
+corrected for age, sex, and years of education (the provided ethnicity 
+classifications are not useful in a New Zealand context and all participants 
+were assessed against norms for "Whites"). 
 
 ## Latent class trajectory modelling
 
