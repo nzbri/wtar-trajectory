@@ -57,9 +57,9 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   allows for individual participants to be classified into data-driven clusters,
   depending on the shape of their longitudinal trajectory. Results. WTAR scores
   were stable within both Controls and Parkinson's participants, even for those
-  who progressed to dementia. In both groups and regardless of cognitive status,
-  scores were higher than expected from population norms. Conclusion. The WTAR 
-  was stable in Parkinson's even when participants declined from normal 
+  who progressed to dementia. In both groups and regardless of current cognitive
+  status, scores were higher than expected from population norms. Conclusion. 
+  The WTAR was stable in Parkinson's even when participants declined from normal 
   cognitive function to dementia. Nonetheless, its apparent over-estimation of
   premorbid IQ and restriction to English speakers makes it  poorly-suited for
   diagnosing cognitive impairment in individuals with Parkinson's.
@@ -455,7 +455,7 @@ table_df %>%
                           TRUE                ~ name)) %>% 
   rename(' '           = name,
          "Parkinson's" = PD) %>%
-  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their last assessment.", align = 'lrr')
+  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr')
 
 ```
 
@@ -806,9 +806,9 @@ participants.
 
 (ref:fig-1-caption) The distribution of the WTAR-estimated IQ scores across all 
 participants, with multiple observations from each. Observations are 
-colour-coded by their cognitive status at each session. Regardless of cognitive 
-status, WTAR scores span the full range. The distributions are skewed well above
-the population norm mean of 100. 
+colour-coded by their cognitive status at each session. Regardless of current 
+cognitive status, WTAR scores span the full range. For each group, the 
+distribution is skewed well above the population norm mean of 100. 
 
 ```{r figure-1-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
 figure_1 = dat %>%  
@@ -851,30 +851,29 @@ ggsave('images/wtar-figure-1-trajectories.png', width = fig_1_width, height = fi
 (ref:fig-2-caption) ***(A)*** Longitudinal WTAR score trajectories for all 
 individuals, divided into Controls, Parkinson's participants who remained 
 dementia-free, and those who developed dementia. Superimposed are the two 
-predicted latent class trajectories (blue ribbon = _High performers_, orange 
+predicted latent class trajectories (blue ribbon = _High performers_, brown 
 ribbon = _Typical_). ***(B)***  Global cognitive z-scores for the Parkinson's 
 participants who developed dementia. Their overall cognitive performance 
 declined dramatically, in contrast to their relatively stable WTARs scores. This
-was regardless of their latent class (blue and orange connecting lines). In each
+was regardless of their latent class (blue and brown connecting lines). In each
 panel, current cognitive status is shown as cognitively normal (green circles),
 mild cognitive impairment (orange triangles), or dementia (red squares). Upon 
 reaching dementia, the WTAR was not assessed again.
 
 ```{r figure-2-trajectories, fig.align='center', fig.cap='(ref:fig-2-caption)', fig.height=fig_2_height/2.54, fig.width=fig_2_width/2.54, warning=FALSE}
-# TODO: make this figure more readable and usable.
-# e.g. highlight a few representative individuals' trajectories.
-# e.g. highlight a person with high initial WTAR who declines to dementia but 
-# retains high WTAR scores. Then highlight the same person's z-score data,
+
+# select two individuals to highlight in the figure.
+# i.e. a person with high initial WTAR who declines to dementia yet 
+# retains high WTAR scores. Then highlight that person's z-score data,
 # showing substantial decline. Do the same for a person from the other 
 # trajectory class, showing a similar pattern.
-
-# select two individuals to highlight in the figure:
 dat_with_classes_plus_highlights = dat_with_classes %>%
-  mutate(highlight = case_when(subject_id_num %in% c(63, 111) ~ TRUE,
+  # we identified the subject id numbers to highlight by temporarily showing 
+  # text labels of each subject id in the lower panel:
+  mutate(highlight = case_when(subject_id_num %in% c(63, 110) ~ TRUE,
                                                          TRUE ~ FALSE)) %>%
   arrange(highlight, subject_id_num, age)
   
-
 # upper panel, of WTAR scores by age:
 figure_2_upper = dat_with_classes_plus_highlights %>% 
   ggplot(aes(x = age)) +
@@ -945,6 +944,8 @@ figure_2_lower = dat_with_classes_plus_highlights %>%
   geom_point(aes(fill = cognitive_status, size = highlight,
                  colour = highlight, # minimal border stroke
                  shape = cognitive_status), stroke = 0.2) +
+  # temporarily enable this to allow identifying subjects to highlight:
+  #geom_text(aes(label = subject_id_num)) + 
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
                      labels = scales::label_number(suffix = ' years')) +
   labs(title = 'B. Global cognitive z-scores',
