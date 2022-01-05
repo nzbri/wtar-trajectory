@@ -986,11 +986,11 @@ Unlike in Alzheimer's disease, we found that WTAR scores were stable over time
 in Parkinson's, despite many of our participants undergoing substantial
 cognitive decline over the course of the study (Figure
 \@ref(fig:figure-2-trajectories)B). Latent class analysis revealed that in our
-particular sample, people fell into one of two trajectory clusters, but these
-appeared to be largely driven by there being two clusters of performance at
-baseline, rather than trajectories that differed longitudinally. Those with very
-high initial WTAR scores maintained near-ceiling performance levels, even if
-they subsequently developed dementia (Figure
+particular sample, people fell into one of two trajectory classes, but these
+appeared to be largely driven by two clusters of performance at
+baseline, rather than trajectories that meaningfully differed longitudinally. 
+Those with very high initial WTAR scores maintained near-ceiling performance 
+levels, even if they subsequently developed dementia (Figure
 \@ref(fig:figure-2-trajectories)A). The remaining 
 `r class_proportions$proportion[class_proportions$class == 'Typical']` of
 participants had a wider range of initial scores, but were again relatively
@@ -1001,9 +1001,9 @@ Measures of premorbid function are closely tied to the concept of
 cognitive reserve.[@stern2012_CognitiveReserveAgeing] For example, higher NART
 scores have been associated with better neuropsychological test performance in 
 people with Parkinson's,[@koerts2013_InfluenceCognitiveReserve] indicating that
-higher cognitive reserve is protective against subsequent cognitive decline. 
+higher cognitive reserve may be protective against subsequent cognitive decline. 
 This can lead to circular reasoning if the premorbid measure is not reliable,
-however: if the disease process reduces current performance on that measure, 
+however: if the disease process reduced current performance on that measure, 
 then the inference of poorer cognitive reserve would not be valid. Our findings,
 of stable scores despite substantial cognitive decline, support the WTAR as a
 stable indicator of cognitive reserve in Parkinson's.
@@ -1015,18 +1015,20 @@ WAIS-IV (2008), and in turn, the WAIS-V is currently under development. The TOPF
 (Test of Premorbid Function) estimates WAIS-IV IQ and was designed as a
 successor to the WTAR, but has had limited
 uptake.[@bright2020_ComparisonMethodsEstimating] The Flynn
-effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that IQ
-scores increase substantially over time (by up to 1 standard deviation per
+effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that cohort 
+IQ scores increase substantially over time (by up to 1 standard deviation per
 generation). Our sample would have been born approximately a generation after
 their age-matched WAIS III normative sample group and that might explain their
-above-average estimated IQ levels. [***TODO:*** Add possibility that by volunteering
-for research, our sample may be non-representative of the population, but (i) 
-this should apply more to the controls than the PD group, which did not seem to 
-be the case, and (ii) this would apply to most other research projects too. The
-other neuropsychological test scores _do_ decrease below population norms with
-cognitive decline. If the WTAR was used as a reference for those scores, rather
-than a z-score of zero, we would expect to see infalted rates of MCI and PDD 
-diagnosis.]
+above-average estimated IQ levels. Another possibility is that by volunteering
+for research, our sample may inherently be non-representative of the population
+at large. Such a self-selection effect should, however, (i) apply more to the 
+controls than to the Parkinson's group, which did not seem to be the case, and
+(ii) affect most other research projects as well. The other neuropsychological 
+test scores _did_ decrease below population norms with cognitive decline. If the
+WTAR was used as an individualised premorbid reference for those scores, rather 
+than a z-score norm of zero, we would expect to see inflated rates of MCI and 
+PDD. This does indeed seem to occur[@marras2013_MeasuringMildCognitive] (see 
+discussion below).
 
 The WTAR (and NART) are also limited in that they are inherently tied to 
 peculiarities of written and spoken English: many other languages have no 
@@ -1046,7 +1048,7 @@ countries, the US- and UK-based selection of words can be problematic. For
 example, the TOPF was found to not reliably predict WAIS IV IQ in New Zealand 
 English speakers of Māori ethnicity.[@dudley2017_TestPremorbidFunctioning] After
 the commencement of our study, a New Zealand Adult Reading Test (NZART) was 
-created[@starkey2011_DevelopmentNewZealand], with a more culturally relevant 
+created[@starkey2011_DevelopmentNewZealand], with a more culturally-relevant 
 selection of words, but this will require further development to supplant the 
 established international tests. Neuropsychological screening 
 tests developed in the Anglosphere have been shown to have poor cross-cultural 
