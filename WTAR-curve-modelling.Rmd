@@ -207,7 +207,6 @@ dat = dat %>%
            interval(start = lag(session_date), end = session_date)/years(1)) %>% 
   ungroup()
 
-
 # lcmm insists on access to a numeric subject variable:
 dat = dat %>% 
   mutate(subject_id = factor(subject_id)) %>% 
@@ -1010,44 +1009,46 @@ stable indicator of cognitive reserve in Parkinson's.
 
 There are reservations about the use of the WTAR, however. Although still in
 wide use, it is outdated, inasmuch as it was originally devised to estimate IQ
-scores from the WAIS-III (released in 1997). That has been superseded by the
-WAIS-IV (2008), and in turn, the WAIS-V is currently under development. The TOPF
-(Test of Premorbid Function) estimates WAIS-IV IQ and was designed as a
-successor to the WTAR, but has had limited
-uptake.[@bright2020_ComparisonMethodsEstimating] The Flynn
-effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that cohort 
-IQ scores increase substantially over time (by up to 1 standard deviation per
-generation). Our sample would have been born approximately a generation after
-their age-matched WAIS III normative sample group and that might explain their
-above-average estimated IQ levels. Another possibility is that by volunteering
-for research, our sample may inherently be non-representative of the population
-at large. Such a self-selection effect should, however, (i) apply more to the 
-controls than to the Parkinson's group, which did not seem to be the case, and
-(ii) affect most other research projects as well. The other neuropsychological 
-test scores _did_ decrease below population norms with cognitive decline. If the
-WTAR was used as an individualised premorbid reference for those scores, rather 
-than a z-score norm of zero, we would expect to see inflated rates of MCI and 
-PDD. This does indeed seem to occur[@marras2013_MeasuringMildCognitive] (see 
+scores from the WAIS-III (Wechsler Adult Intelligence Scale, released in 1997).
+That has been superseded by the WAIS-IV (2008), and in turn, the WAIS-V is 
+currently under development. The TOPF (Test of Premorbid Function) estimates 
+WAIS-IV IQ and was designed as a successor to the WTAR, but has had limited
+uptake.[@bright2020_ComparisonMethodsEstimating] The age of an IQ-related test 
+is important: the Flynn effect[@flynn1999_SearchingJusticeDiscovery] is the 
+robust finding that cohort IQ scores increase substantially over time (by up to 
+1 standard deviation per generation). Our sample would have been born 
+approximately a generation after their age-matched WAIS-III normative sample 
+group and that might explain their above-average estimated IQ levels. Another 
+possibility is that by virtue of volunteering for research, our sample is 
+simply non-representative of the population at large. Such a self-selection 
+effect should, however, (i) apply more to the controls than to the Parkinson's 
+group, which did not seem to be the case, and (ii) also affect most other 
+research samples. The other neuropsychological test scores _did_ decrease below 
+population norms with cognitive decline. If the WTAR was used as an 
+individualised premorbid reference for those scores, rather than a z-score norm 
+of zero, we would expect to see inflated proportions classified as MCI and PDD. 
+This does indeed seem to occur[@marras2013_MeasuringMildCognitive] (see 
 discussion below).
 
 The WTAR (and NART) are also limited in that they are inherently tied to 
-peculiarities of written and spoken English: many other languages have no 
-equivalent irregularities in their mappings of graphemes to phonemes. For 
-example, Japanese can be written in a syllabary (Hiragana), in which each 
-grapheme corresponds to a single phoneme. A reader can reliably pronounce words 
-they have never heard, purely on the basis of their written representation. 
-Despite that, a Japanese analogue of the NART, the 'JART', has nonetheless been 
-devised[@matsuoka2006_EstimationPremorbidIQ]. The JART relies upon 
-irregularities in compound words written using Chinese-style ideographs (Kanji),
-which may be pronounced differently depending on context. Being based on 
-ideographs makes the JART more loaded on semantic than phonemic knowledge. That 
-JART scores are preserved in Alzheimer's[@matsuoka2006_EstimationPremorbidIQ] 
-implies that it is not actually a perfect analogue of English-based tests of 
-premorbid function. Even across varieties of English, both between and within 
-countries, the US- and UK-based selection of words can be problematic. For 
-example, the TOPF was found to not reliably predict WAIS IV IQ in New Zealand 
-English speakers of Māori ethnicity.[@dudley2017_TestPremorbidFunctioning] After
-the commencement of our study, a New Zealand Adult Reading Test (NZART) was 
+peculiarities of written and spoken English. The orthography (writing system)
+of a language can be described as deep/opaque when it contains many 
+irregularities in its mappings of graphemes to phonemes, or shallow/transparent
+when the mappings are largely regular.[@frost1987_StrategiesVisualWord] In a 
+quantitative analysis of 17 orthographies,[@marjou2021_OTEANNEstimatingTransparency]
+the reading of English words stood out as particularly opaque, while by 
+comparison Arabic, Finnish, Korean, Serbo-Croatian, and Turkish were highly 
+transparent. Attempting to devise analogues of tests like the WTAR for
+speakers of languages with transparent orthographies is unlikely to be fruitful.
+
+Even across varieties of English, both between and within countries, the US- and
+UK-based selection of words can be problematic. For example, the TOPF was found 
+to not reliably predict WAIS-IV IQ in New Zealand English speakers of Māori 
+ethnicity.[@dudley2017_TestPremorbidFunctioning] A word like 'porpoise', ranked 
+as relatively simple (28 out of 70) resulted in more errors than a word like 
+'plethora' (ranked 42 out of 70), likely reflecting different word frequencies 
+between North American and New Zealand English. After the commencement of our 
+study, a New Zealand Adult Reading Test (NZART) was 
 created[@starkey2011_DevelopmentNewZealand], with a more culturally-relevant 
 selection of words, but this will require further development to supplant the 
 established international tests. Neuropsychological screening 
