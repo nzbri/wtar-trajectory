@@ -788,14 +788,16 @@ highest posterior classification probability. The mean assigned probability was
 (SD `r round(sd(individuals$class_probability), digits = 2)`), with a value of 
 0.7 being regarded as acceptable model performance.[@lennon_framework_2018] The 
 Typical trajectory captured 
-`r class_proportions$proportion[class_proportions$class == 'Typical']` of all 
-participants (`r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'PD']` of the PD and `r class_proportions_by_group$proportion[class_proportions_by_group$class == 'Typical' & class_proportions_by_group$group == 'Control']` of Control participants). The intercept of the Typical trajectory, 
-representing the estimated WTAR score of a person at the mean age of assessment 
+`r with(class_proportions, proportion[class == 'Typical'])` of all 
+participants (`r with(class_proportions_by_group, proportion[class == 'Typical' & group == 'PD'])`
+of the PD and `r with(class_proportions_by_group, proportion[class == 'Typical' & group == 'Control'])`
+of Control participants). The intercept of the Typical trajectory, representing
+the estimated WTAR score of a person at the mean age of assessment 
 (`r sprintf('%.1f', mean_age)` years) was
 `r typical_intcpt_str` `r typical_intcpt_intrvl`. Scores then gently declined 
 at a rate of `r typical_slope_str` `r typical_slope_intrvl` points per decade.
 The 'High performers' trajectory (capturing the remaining 
-`r class_proportions$proportion[class_proportions$class == 'High performers']` 
+`r with(class_proportions, proportion[class == 'High performers'])` 
 of all participants) had an intercept of 
 `r high_intcpt_str` `r high_intcpt_intrvl`. This trajectory had a slope of 
 `r high_slope_str` `r high_slope_intrvl` points per decade (effectively flat).
@@ -991,7 +993,7 @@ baseline, rather than trajectories that meaningfully differed longitudinally.
 Those with very high initial WTAR scores maintained near-ceiling performance 
 levels, even if they subsequently developed dementia (Figure
 \@ref(fig:figure-2-trajectories)A). The remaining 
-`r class_proportions$proportion[class_proportions$class == 'Typical']` of
+`r with(class_proportions, proportion[class == 'Typical'])` of
 participants had a wider range of initial scores, but were again relatively
 stable, with an estimated decline of only `r typical_slope_str` points per
 decade.
@@ -1045,7 +1047,7 @@ Even across varieties of English, both between and within countries, the US- and
 UK-based selection of words can be problematic. For example, the TOPF was found 
 to not reliably predict WAIS-IV IQ in New Zealand English speakers of Māori 
 ethnicity.[@dudley2017_TestPremorbidFunctioning] A word like 'porpoise', ranked 
-as relatively simple (28 out of 70) resulted in more errors than a word like 
+as relatively simple (28 out of 70), resulted in more errors than a word like 
 'plethora' (ranked 42 out of 70), likely reflecting different word frequencies 
 between North American and New Zealand English. After the commencement of our 
 study, a New Zealand Adult Reading Test (NZART) was 
