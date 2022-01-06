@@ -65,7 +65,7 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   diagnosing cognitive impairment in individuals with Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
-wordcount: 'Abstract: 200 (of 250), main body: 2133 (of 3700)'
+wordcount: 'Abstract: 197 (of 250), main body: 2371 (of 3700)'
 ---
 
 ```{r setup, include=FALSE}
@@ -112,7 +112,7 @@ blue_brown_sat = c('#0072B2', '#B85628')
 border_colour = '#9A1D2B' # Movement Disorders red
 
 fig_1_width = 8.5;  fig_1_height = 10.0
-fig_2_width = 17.5; fig_2_height = 16.5
+fig_2_width = 17.5; fig_2_height = 21.5
 
 ```
 
@@ -454,7 +454,7 @@ table_df %>%
                           TRUE                ~ name)) %>% 
   rename(' '           = name,
          "Parkinson's" = PD) %>%
-  apa_table(caption = "Demographics of the Parkinson's and Control groups, as at their latest assessment.", align = 'lrr')
+  apa_table(caption = "Demographics of the Parkinson's and Control groups, and cognitive status at their latest assessment.", align = 'lrr')
 
 ```
 
@@ -514,7 +514,8 @@ if (RUN_NEW_CUBIC_MODELS) {
                             mixture = ~ poly(age_std, degree = 3, raw = TRUE),
                             subject = 'subject_id_num', data = dat))
     
-    saveRDS(cubic_models[[class_num]], paste0('models/cubic_WTAR_', class_num, '.RDS'))
+    saveRDS(cubic_models[[class_num]], paste0('models/cubic_WTAR_', 
+                                              class_num, '.RDS'))
   }
   
   parallel::stopCluster(cl)
@@ -522,12 +523,14 @@ if (RUN_NEW_CUBIC_MODELS) {
 } else { # use previously-computed cubic models:
   
   for (class_num in 1:max_classes_cubic) {
-    cubic_models[[class_num]] = readRDS(paste0('models/cubic_WTAR_', class_num, '.RDS'))
+    cubic_models[[class_num]] = readRDS(paste0('models/cubic_WTAR_', 
+                                               class_num, '.RDS'))
   }
 }
 
 cubic_WTAR_model_table = 
-  summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], cubic_models[[4]], cubic_models[[5]],
+  summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], 
+               cubic_models[[4]], cubic_models[[5]],
                which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
                          'entropy', '%class')) %>% 
   as_tibble()
@@ -562,7 +565,7 @@ predictions[[1]] = predictions[[1]] %>% # add a suffix to the variable names
   rename('Ypred_class1' = 'Ypred', 
          'lower.Ypred_class1' = 'lower.Ypred', 
          'upper.Ypred_class1' = 'upper.Ypred') %>% 
-  select(ng, age, age_std, everything()) # set the order for the resulting dataframe
+  select(ng, age, age_std, everything()) # set order for the resulting dataframe
 
 cubic_predictions = bind_rows(predictions[1:5]) %>% 
   # reshape to allow ggplotting:
@@ -611,14 +614,16 @@ if (RUN_NEW_LINEAR_MODELS) {
     parallel::clusterExport(cl, c('class_num', 'linear_models'))
     
     linear_models[[class_num]] <- 
-      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = linear_models[[1]], cl = cl,
+      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = linear_models[[1]], 
+                       cl = cl,
                        hlme(WTAR ~ age_std, 
                             random = ~1 + age_std, 
                             ng = class_num, nwg = TRUE, 
                             mixture = ~ age_std, maxiter = 1000,
                             subject = 'subject_id_num', data = dat))
     
-    saveRDS(linear_models[[class_num]], paste0('models/linear_WTAR_', class_num, '.RDS'))
+    saveRDS(linear_models[[class_num]], paste0('models/linear_WTAR_', 
+                                               class_num, '.RDS'))
   }
   
   parallel::stopCluster(cl)
@@ -626,13 +631,15 @@ if (RUN_NEW_LINEAR_MODELS) {
 } else { # use previously-computed linear models:
   
   for (class_num in 1:max_classes_linear) {
-    linear_models[[class_num]] = readRDS(paste0('models/linear_WTAR_', class_num, '.RDS'))
+    linear_models[[class_num]] = readRDS(paste0('models/linear_WTAR_', 
+                                                class_num, '.RDS'))
   }
   
 }
 
 linear_WTAR_model_table = 
-  summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], linear_models[[4]], linear_models[[5]],
+  summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], 
+               linear_models[[4]], linear_models[[5]],
                which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
                          'entropy', '%class')) %>% 
   as_tibble()
@@ -668,7 +675,7 @@ predictions[[1]] = predictions[[1]] %>% # add a suffix to the variable names
   rename('Ypred_class1' = 'Ypred', 
          'lower.Ypred_class1' = 'lower.Ypred', 
          'upper.Ypred_class1' = 'upper.Ypred') %>% 
-  select(ng, age, age_std, everything()) # set the order for the resulting dataframe
+  select(ng, age, age_std, everything()) # set order for the resulting dataframe
 
 linear_predictions = bind_rows(predictions[1:5]) %>% 
   # reshape to allow ggplotting:
@@ -718,8 +725,10 @@ above_100 = dat %>%
   mutate(above_100 = WTAR >= 100) |> 
   group_by(group, above_100) %>%
   tally() %>%
-  pivot_wider(names_from = above_100, values_from = n, names_prefix = 'above_') %>%
-  mutate(proportion = scales::percent_format(accuracy = 0.1)(above_TRUE/(above_FALSE + above_TRUE)))
+  pivot_wider(names_from = above_100, 
+              values_from = n, names_prefix = 'above_') %>%
+  mutate(proportion = 
+           scales::percent_format(accuracy = 0.1)(above_TRUE/(above_FALSE + above_TRUE)))
 ```
 
 ```{r chi-square}
@@ -818,15 +827,19 @@ The 'High performers' trajectory (capturing the remaining
 of all participants) had an intercept of 
 `r high_intcpt_str` `r high_intcpt_intrvl`. This trajectory had a slope of 
 `r high_slope_str` `r high_slope_intrvl` points per decade (effectively flat).
-That is, the trajectories were both relatively stable over time, and separated 
-primarily due to the initial scores of their respective clusters of 
-participants.
+That is, the trajectories were both relatively stable over time, and were 
+separated primarily due to the initial scores of their respective clusters of 
+participants. We make no strong claims as to the number of classes - for example
+a single trajectory model (see Supplementary Material), somewhat intermediate 
+between the two reported here, would also describe the data relatively well. The
+key findings are that the trajectories are relatively flat, and do not separate 
+between performance between the Parkinson's and Control participants. 
 
 (ref:fig-1-caption) The distribution of the WTAR-estimated IQ scores across all 
-participants, with multiple observations from each. Observations are 
+participants, containing at least two observations from each. Observations are 
 colour-coded by their cognitive status at each session. Regardless of current 
 cognitive status, WTAR scores span the full range. For each group, the 
-distribution is skewed well above the population norm mean of 100. 
+distribution was skewed well above the population norm mean of 100. 
 
 ```{r figure-1-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
 figure_1 = dat %>%  
@@ -859,10 +872,10 @@ figure_1 = dat %>%
 
 figure_1
 
-ggsave('images/wtar-figure-1-histogram.pdf', width = fig_1_width, height = fig_1_height,
-       units = 'cm')
-ggsave('images/wtar-figure-1-trajectories.png', width = fig_1_width, height = fig_1_height,
-       units = 'cm', dpi = 600)
+ggsave('images/wtar-figure-1-histogram.pdf', 
+       width = fig_1_width, height = fig_1_height, units = 'cm')
+ggsave('images/wtar-figure-1-histogram.png', 
+       width = fig_1_width, height = fig_1_height, units = 'cm', dpi = 600)
 
 ```
 
@@ -870,13 +883,16 @@ ggsave('images/wtar-figure-1-trajectories.png', width = fig_1_width, height = fi
 individuals, divided into Controls, Parkinson's participants who remained 
 dementia-free, and those who developed dementia. Superimposed are the two 
 predicted latent class trajectories (blue ribbon = _High performers_, brown 
-ribbon = _Typical_). ***(B)***  Global cognitive z-scores for the Parkinson's 
-participants who developed dementia. Their overall cognitive performance 
-declined dramatically, in contrast to their relatively stable WTARs scores. This
-was regardless of their latent class (blue and brown connecting lines). In each
-panel, current cognitive status is shown as cognitively normal (green circles),
-mild cognitive impairment (orange triangles), or dementia (red squares). Upon 
-reaching dementia, the WTAR was not assessed again.
+ribbon = _Typical_). Blue and brown connecting lines link observations from 
+individuals from each class. ***(B)***  Global cognitive z-scores for the 
+Parkinson's participants who developed dementia. Their overall cognitive 
+performance declined dramatically, in contrast to their relatively stable WTAR 
+scores. To illustrate this, two individuals who progressed to dementia are 
+highlighted (with larger symbols and thicker connecting lines), showing their 
+flat WTAR trajectories but dramatic declines in overall neuropsychological 
+z-score. In each panel, current cognitive status is shown as cognitively normal
+(green circles), mild cognitive impairment (orange triangles), or dementia (red 
+squares). Upon reaching dementia, the WTAR was not assessed again.
 
 ```{r figure-2-trajectories, fig.align='center', fig.cap='(ref:fig-2-caption)', fig.height=fig_2_height/2.54, fig.width=fig_2_width/2.54, warning=FALSE}
 
@@ -992,10 +1008,10 @@ figure_2 =
 
 figure_2
 
-ggsave('images/wtar-figure-2.pdf', width = fig_2_width, height = fig_2_height + 5,
-       units = 'cm')
-ggsave('images/wtar-figure-2.png', width = fig_2_width, height = fig_2_height,
-       units = 'cm', dpi = 600)
+ggsave('images/wtar-figure-2-trajectories.pdf', 
+       width = fig_2_width, height = fig_2_height, units = 'cm')
+ggsave('images/wtar-figure-2-trajectories.png', 
+       width = fig_2_width, height = fig_2_height, units = 'cm', dpi = 600)
 ```
 
 # Discussion
