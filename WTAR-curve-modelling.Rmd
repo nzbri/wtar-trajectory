@@ -24,7 +24,7 @@ output:
 link-citations: yes
 csl: format/bmj.csl
 bibliography: format/wtar-references.bib
-appendix: 2021-wtar-supplementary.Rmd
+appendix: WTAR-supplementary.Rmd
 linenumbers: yes
 mask: no
 draft: no
