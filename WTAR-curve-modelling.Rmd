@@ -51,7 +51,7 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   disease. To fulfil either role, however, WTAR scores need to be shown to 
   remain stable in the presence of the substantial cognitive deterioration that
   can occur in Parkinson’s. Objective. To assess long-term trajectories of WTAR
-  scores in people with  Parkinson's as a function of age. Methods. From 253
+  scores in people with  Parkinson's as a function of age. Methods. From 252
   Parkinson's and 57 Control participants who had completed at least two WTARs,
   we analysed scores over time using latent class trajectory modelling. This
   allows for individual participants to be classified into data-driven clusters,
@@ -79,25 +79,28 @@ options(knitr.kable.NA = '')
 
 ```{r define-variables}
 ################################################################################
-### 1. To save time taken by re-importing live data online everytime this  
-###    document is generated, set the following variable to be FALSE. This will 
-###    instead import static values from a locally-cached file.
-### 2. Eventually, an anonymised cached version of the dataset(s) will be 
-###    distributed publicly with these files, so that external (non-NZBRI) users
-###    can also generate and alter the document, without needing the live data 
-###    import functions provided by the in-house `chchpd` package.
-### 3. We also can choose not to re-compute the latent class models on each run,
-###    and instead use cached model objects to save re-computing them each time.
+### 1. NZBRI users can save the time taken to re-import live data online 
+###    every time this document is generated, by setting the IMPORT_LIVE_DATA 
+###    variable to be FALSE. This will instead import static values from a 
+###    locally-cached .csv data file.
+### 2. That anonymised cached version of the dataset is distributed publicly 
+###    with these files, so that external (non-NZBRI) users can also generate 
+###    and alter the document, without needing the live data import functions 
+###    provided by the in-house `chchpd` package.
+### 3. You should usually choose not to re-compute the latent class models on 
+###    each run, as this is very time-consuming (hours to days). Instead use 
+###    the cached model objects to save re-computing them each time, by setting 
+###    RUN_NEW_CUBIC_MODELS and RUN_NEW_LINEAR_MODELS to FALSE.
 ################################################################################
-IMPORT_LIVE_DATA = FALSE
+IMPORT_LIVE_DATA      = TRUE
 
 RUN_NEW_CUBIC_MODELS  = FALSE
-RUN_NEW_LINEAR_MODELS = FALSE
+RUN_NEW_LINEAR_MODELS = TRUE
 
 ################################################################################
 
 # define the maximum number of classes to run models to:
-max_classes_cubic = 5
+max_classes_cubic  = 5
 max_classes_linear = 5
 
 # define colour scheme values for normal, MCI, and dementia:
@@ -531,8 +534,8 @@ if (RUN_NEW_CUBIC_MODELS) {
 cubic_WTAR_model_table = 
   summarytable(cubic_models[[1]], cubic_models[[2]], cubic_models[[3]], 
                cubic_models[[4]], cubic_models[[5]],
-               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
-                         'entropy', '%class')) %>% 
+               which = c('G', 'loglik', 'conv', 'BIC', 'entropy', 
+                         '%class')) %>% 
   as_tibble()
 
 # select model, on the basis of one that converged and had the lowest BIC:
@@ -595,9 +598,9 @@ if (RUN_NEW_LINEAR_MODELS) {
   
   # use the 1-class model to set initial start values:
   linear_models[[1]] <- lcmm::hlme(WTAR ~ age_std, 
-                                 random = ~1 + age_std,
-                                 subject = 'subject_id_num', ng = 1, 
-                                 data = dat)
+                                   random = ~1 + age_std,
+                                   subject = 'subject_id_num', ng = 1, 
+                                   data = dat)
   saveRDS(linear_models[[1]], 'models/linear_WTAR_1.RDS') # cache to disk
   
   # for each higher-class model, run with 5000 random starts based on the
@@ -640,8 +643,8 @@ if (RUN_NEW_LINEAR_MODELS) {
 linear_WTAR_model_table = 
   summarytable(linear_models[[1]], linear_models[[2]], linear_models[[3]], 
                linear_models[[4]], linear_models[[5]],
-               which = c('G', 'loglik', 'npm', 'BIC', 'SABIC', 
-                         'entropy', '%class')) %>% 
+               which = c('G', 'loglik', 'conv', 'BIC', 'entropy', 
+                         '%class')) %>% 
   as_tibble()
 
 # select model, on the basis of one that converged and had the lowest BIC:
