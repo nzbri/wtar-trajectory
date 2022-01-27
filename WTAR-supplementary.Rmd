@@ -96,9 +96,9 @@ For both linear and cubic trajectories, models were fitted with one through five
 ```{r tab-A1-linear-model-table, results='asis'}
 
 table_a1 = linear_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
+  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
 # only way I could find to suppress NAs (setting options(knitr.kable.NA = '') didn't work):
-cat(gsub('\\bNA\\b', '  ', table_a1), sep='\n')
+cat(gsub('\\bNA\\b', '  ', table_a1), sep = '\n')
 
 ```
 
@@ -107,8 +107,8 @@ cat(gsub('\\bNA\\b', '  ', table_a1), sep='\n')
 ```{r tab-A2-cubic-model-table, results='asis'}
 
 table_a2 = cubic_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,1,2,1,1,1,1,1))
-cat(gsub('\\bNA\\b', '  ', table_a2), sep='\n')
+  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
+cat(gsub('\\bNA\\b', '  ', table_a2), sep = '\n')
 
 ```
 

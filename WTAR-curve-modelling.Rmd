@@ -66,9 +66,18 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
 wordcount: 'Abstract: 197 (of 250), main body: 2371 (of 3700)'
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
+## NB notice the chunk_output_type: console setting in the YAML header above.
+## This was part of addressing an issue where one of the linear models would
+## converge in R, "but kept failing during knitting in Rmarkdown. The problem 
+## seemed to be caused by the parallel package and how it generates random 
+## numbers" also we now "create/destroy a new parallel pool within the 
+## for-loop"- problem and solution identified by Reza. 
+
 knitr::opts_chunk$set(
 	echo = FALSE,
 	message = FALSE,
@@ -92,10 +101,10 @@ options(knitr.kable.NA = '')
 ###    the cached model objects to save re-computing them each time, by setting 
 ###    RUN_NEW_CUBIC_MODELS and RUN_NEW_LINEAR_MODELS to FALSE.
 ################################################################################
-IMPORT_LIVE_DATA      = TRUE
+IMPORT_LIVE_DATA      = FALSE
 
 RUN_NEW_CUBIC_MODELS  = FALSE
-RUN_NEW_LINEAR_MODELS = TRUE
+RUN_NEW_LINEAR_MODELS = FALSE
 
 ################################################################################
 
@@ -481,11 +490,6 @@ cubic_models = list()
 
 if (RUN_NEW_CUBIC_MODELS) {
 
-  # make use of parallel computation to speed up working through the large
-  # number of iterations to be used for each model:
-  num_cores = parallel::detectCores()
-  cl = parallel::makeCluster(num_cores)
-  
   # currently have to coerce data to a dataframe (done above), as tibbles lead
   # to a bug with the subject id column not being accepted by lcmm as numeric.
   
@@ -503,6 +507,13 @@ if (RUN_NEW_CUBIC_MODELS) {
   for (class_num in 2:max_classes_cubic) {
     
     print(class_num)
+
+    # make use of parallel computation to speed up working through the large 
+    # number of iterations to be used for each model. Needs to be done within
+    # the loop to work around an issue when knitting in R Markdown with the
+    # generation of random numbers in the parallel package:
+    num_cores = parallel::detectCores()
+    cl = parallel::makeCluster(num_cores)
     
     # need to explicitly pass some variables to the namespace of each process,
     # or the gridsearch and hlme functions below will trip up by not "knowing"
@@ -510,18 +521,18 @@ if (RUN_NEW_CUBIC_MODELS) {
     parallel::clusterExport(cl, c('class_num', 'cubic_models'))
     
     cubic_models[[class_num]] <-
-      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = cubic_models[[1]], cl = cl,
+      lcmm::gridsearch(rep = 100, maxiter = 50, minit = cubic_models[[1]], cl = cl,
                        hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
                             random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
                             ng = class_num, nwg = TRUE, maxiter = 1000,
                             mixture = ~ poly(age_std, degree = 3, raw = TRUE),
                             subject = 'subject_id_num', data = dat))
     
+    parallel::stopCluster(cl)
+    
     saveRDS(cubic_models[[class_num]], paste0('models/cubic_WTAR_', 
                                               class_num, '.RDS'))
   }
-  
-  parallel::stopCluster(cl)
   
 } else { # use previously-computed cubic models:
   
@@ -538,7 +549,7 @@ cubic_WTAR_model_table =
                          '%class')) %>% 
   as_tibble()
 
-# select model, on the basis of one that converged and had the lowest BIC:
+# manually select model, on the basis of one that converged & had lowest BIC:
 chosen_cubic_classes = 1
 chosen_cubic_model   = cubic_models[[chosen_cubic_classes]]
 
@@ -588,11 +599,6 @@ linear_models = list()
 
 if (RUN_NEW_LINEAR_MODELS) {
   
-  # make use of parallel computation to speed up working through the large 
-  # number of iterations to be used for each model:
-  num_cores = parallel::detectCores()
-  cl = parallel::makeCluster(num_cores)
-  
   # currently have to coerce data to a dataframe (done above), as tibbles lead 
   # to a bug with the subject id column not being accepted by lcmm as numeric.
   
@@ -611,13 +617,20 @@ if (RUN_NEW_LINEAR_MODELS) {
     
     print(class_num)
     
+    # make use of parallel computation to speed up working through the large 
+    # number of iterations to be used for each model. Needs to be done within
+    # the loop to work around an issue when knitting in R Markdown with the
+    # generation of random numbers in the parallel package:
+    num_cores = parallel::detectCores()
+    cl = parallel::makeCluster(num_cores)
+    
     # need to explicitly pass some variables to the namespace of each process, 
     # or the gridsearch and hlme functions below will trip up by not "knowing" 
     # some of their parameters:
     parallel::clusterExport(cl, c('class_num', 'linear_models'))
     
     linear_models[[class_num]] <- 
-      lcmm::gridsearch(rep = 5000, maxiter = 100, minit = linear_models[[1]], 
+      lcmm::gridsearch(rep = 100, maxiter = 50, minit = linear_models[[1]], 
                        cl = cl,
                        hlme(WTAR ~ age_std, 
                             random = ~1 + age_std, 
@@ -625,11 +638,11 @@ if (RUN_NEW_LINEAR_MODELS) {
                             mixture = ~ age_std, maxiter = 1000,
                             subject = 'subject_id_num', data = dat))
     
+    parallel::stopCluster(cl)
+    
     saveRDS(linear_models[[class_num]], paste0('models/linear_WTAR_', 
                                                class_num, '.RDS'))
   }
-  
-  parallel::stopCluster(cl)
   
 } else { # use previously-computed linear models:
   
@@ -647,7 +660,7 @@ linear_WTAR_model_table =
                          '%class')) %>% 
   as_tibble()
 
-# select model, on the basis of one that converged and had the lowest BIC:
+# manually select model, on the basis of one that converged & had lowest BIC:
 chosen_linear_classes = 2
 chosen_linear_model   = linear_models[[chosen_linear_classes]]
 coeffs = coef(chosen_linear_model)
@@ -1129,5 +1142,4 @@ premorbid function like the WTAR no longer be advocated as one of the means of
 formally establishing cognitive decline in Parkinson's.
 
 # References
-
 
