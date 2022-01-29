@@ -7,20 +7,36 @@ output:
 
 Horne _et. al._, _The Wechsler Test of Adult Reading is a stable measure of premorbid cognitive function in Parkinson's_
 
-Here we report the analysis of the above paper against the following checklist for reporting latent class trajectory analyses:
+Here we report the analysis of the above paper against the following checklist 
+for reporting latent class trajectory analyses:
 
-van de Schoot, R., Sijbrandij, M., Winter, S. D., Depaoli, S., & Vermunt, J. K. (2017). The GRoLTS-checklist: Guidelines for reporting on latent trajectory studies. _Structural Equation Modeling: A Multidisciplinary Journal,_ ***24,*** 451–467. https://doi.org/10.1080/10705511.2016.1247646
+van de Schoot, R., Sijbrandij, M., Winter, S. D., Depaoli, S., & Vermunt, J. K. 
+(2017). The GRoLTS-checklist: Guidelines for reporting on latent trajectory 
+studies. _Structural Equation Modeling: A Multidisciplinary Journal,_ ***24,*** 
+451–467. https://doi.org/10.1080/10705511.2016.1247646
 
 
 ## 1. Is the metric of time used in the statistical model reported?
 
-We used age as the time metric (in years to one decimal place). This was to allow for direct comparison against controls (which would not be possible with disease duration). Follow-up time within the study was also not considered, as participants can enter the study at arbitrary points (in terms of both age and disease duration).
+We used age as the time metric (in years to one decimal place). This was to 
+allow for direct comparison against controls (which would not be possible with 
+disease duration). Follow-up time within the study was also not considered, as 
+participants can enter the study at arbitrary points (in terms of both age and 
+disease duration).
 
-To avoid instabilities in the cubic models, age was standardised by subtracting the global mean age at assessment and dividing by ten. For comparability, this was also done for the linear models. In the visualisations, predictions were projected back into untransformed age in years.
+To avoid instabilities in the cubic models, age was standardised by subtracting 
+the global mean age at assessment and dividing by ten. For comparability, this 
+was also done for the linear models. In the visualisations, predictions were 
+projected back into untransformed age in years.
 
 ## 2. Is information presented about the mean and variance of time within a wave?
 
-The metric was age rather than intended study time points. The overall goal in the study was to follow-up participants two-yearly, however, the interval between follow-up times was multi-modal and varied both within and across participants (see Figure \@ref(fig:fig-A1-wtar-interval-histogram)). This variability was due to both changing study demands (such as recruiting participants for sub-studies) and participant health and availability.
+The metric was age rather than intended study time points. The overall goal in 
+the study was to follow-up participants two-yearly, however, the interval 
+between follow-up times was multi-modal and varied both within and across 
+participants (see Figure \@ref(fig:fig-A1-wtar-interval-histogram)). This 
+variability was due to both changing study demands (such as recruiting 
+participants for sub-studies) and participant health and availability.
 
 ```{r fig-A1-wtar-interval-histogram, fig.cap='Frequencies of the interval between successive WTAR assessments.', fig.width = 12/2.54, fig.height = 10/2.54}
 dat %>%  
@@ -41,31 +57,48 @@ dat %>%
 
 ## 3a. Is the missing data mechanism reported?
 
-Data was not missing at random: participants are more likely to drop out of the study due to increasing disease severity, other health issues, and old age. As shown in Figure \@ref(fig:figure-2-trajectories), however, many remained in the study until the end point of WTAR collection (the onset of dementia). Those participants did not show a decline in WTAR performance relative to other participants. Due to the findings of this study (that the WTAR is relatively stable throughout the disease course), differential drop-out is unlikely to affect the results.
+Data was not missing at random: participants are more likely to drop out of the 
+study due to increasing disease severity, other health issues, and old age. As 
+shown in Figure \@ref(fig:figure-2-trajectories), however, many remained in the 
+study until the end point of WTAR collection (the onset of dementia). Those 
+participants did not show a decline in WTAR performance relative to other 
+participants. Due to the findings of this study (that the WTAR is relatively 
+stable throughout the disease course), differential drop-out is unlikely to 
+affect the results.
 
 ## 3b. Is a description provided of what variables are related to attrition/missing data?
 
 They are speculated upon in _3a_ above.
 
-## 3c. Is a description provided of how missing data in the analyses were dealt with?
+## 3c. Is a description provided of how missing data in the analyses were dealt 
+with?
 
-As noted in _3a_ above, missing data was not thought to be problematic in this analysis and was not included explicitly in the modeling process.
+As noted in _3a_ above, missing data was not thought to be problematic in this 
+analysis and was not included explicitly in the modeling process.
 
 ## 4. Is information about the distribution of the observed variables included?
 
-In Figure \@ref(fig:figure-1-histogram) in the accompanying manuscript, we show the distribution of the WTAR-estimated IQ scores in each group, showing the cognitive status at each observation.
+In Figure \@ref(fig:figure-1-histogram) in the accompanying manuscript, we show 
+the distribution of the WTAR-estimated IQ scores in each group, showing the 
+cognitive status at each observation.
 
 ## 5. Is the software mentioned?
 
 See the Methods section in the accompanying manuscript.
 
-## 6a. Are alternative specifications of within-class heterogeneity considered (e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+## 6a. Are alternative specifications of within-class heterogeneity considered 
+(e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient 
+justification provided as to eliminate certain specifications from 
+consideration?
 
 An LGMM which includes a varying intercept and slope by participant was used in 
 this analysis and, given the nature of the within-subject variance in the data, 
 is more appropriate than an LGCA.
 
-## 6b. Are alternative specifications of the between-class differences in variance–covariance matrix structure considered and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
+## 6b. Are alternative specifications of the between-class differences in 
+variance–covariance matrix structure considered and clearly documented? If not, 
+was sufficient justification provided as to eliminate certain specifications 
+from consideration?
 
 The variance-covariance matrix was allowed to vary by a class-specific 
 proportional parameter. The more restrictive case of restricting all classes to 
@@ -73,46 +106,62 @@ a common variance-covariance matrix structure was not considered.
 
 ## 7. Are alternative shape/functional forms of the trajectories described?
 
-We initially modeled the trajectories using a cubic function, to allow for the depiction of any curvilinear decline in performance. The resulting trajectory in the one-class cubic model (which had the lowest BIC) was effectively flat, and hence we moved to linear modelling for the ease of interpretation of the model coefficients.
+We initially modeled the trajectories using a cubic function, to allow for the 
+depiction of any curvilinear decline in performance. The resulting trajectory 
+in the one-class cubic model (which had the lowest BIC) was effectively flat, 
+and hence we moved to linear modelling for the ease of interpretation of the 
+model coefficients.
 
 ## 8. If covariates have been used, can analyses still be replicated?
 
 Not applicable: age was the only predictor in the models.
 
-## 9. Is information reported about the number of random start values and final iterations included?
+## 9. Is information reported about the number of random start values and final 
+iterations included?
 
-The `gridsearch()` function of the `lcmm` package was used to run 5000 departures from random initial values for each multi-class model, using the one-class model to generate those starting values from. The maximum number of iterations within the `hlme()` function was set at 1000.
+The `gridsearch()` function of the `lcmm` package was used to run 500 departures
+from random initial values for each multi-class model, using the one-class model
+to generate those starting values from. The maximum number of iterations within 
+the `hlme()` function was set at 1000.
 
-## 10. Are the model comparison (and selection) tools described from a statistical perspective?
+## 10. Are the model comparison (and selection) tools described from a 
+statistical perspective?
 
-We selected the two-class linear model on the basis of it having the lowest BIC value.
+We selected the two-class linear model on the basis of it converging and having 
+the lowest BIC value.
 
-## 11. Are the total number of fitted models reported, including a one-class solution?
+## 11. Are the total number of fitted models reported, including a one-class 
+solution?
 
-For both linear and cubic trajectories, models were fitted with one through five classes. See the model comparison tables in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
+For both linear and cubic trajectories, models were fitted with one through five
+classes. See the model comparison tables in Tables 
+\@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
 
-(ref:tab-A1-caption) Comparison of hlme models with 1 to `r max_classes_linear` linear latent trajectory classes.
+(ref:tab-A1-caption) Comparison of hlme models with G = 1 to `r max_classes_linear` linear latent trajectory classes.
 
 ```{r tab-A1-linear-model-table, results='asis'}
 
 table_a1 = linear_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A1-caption)', digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
+  apa_table(caption = '(ref:tab-A1-caption)', 
+            digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
 # only way I could find to suppress NAs (setting options(knitr.kable.NA = '') didn't work):
 cat(gsub('\\bNA\\b', '  ', table_a1), sep = '\n')
 
 ```
 
-(ref:tab-A2-caption) Comparison of hlme models with 1 to `r max_classes_cubic` cubic latent trajectory classes.
+(ref:tab-A2-caption) Comparison of hlme models with G = 1 to `r max_classes_cubic` cubic latent trajectory classes.
 
 ```{r tab-A2-cubic-model-table, results='asis'}
 
 table_a2 = cubic_WTAR_model_table %>% 
-  apa_table(caption = '(ref:tab-A2-caption)', digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
+  apa_table(caption = '(ref:tab-A2-caption)', 
+            digits = c(0,1,0,1,2,1,1,1,1,1), align = 'r')
 cat(gsub('\\bNA\\b', '  ', table_a2), sep = '\n')
 
 ```
 
-## 12. Are the number of cases per class reported for each model (absolute sample size, or proportion)?
+## 12. Are the number of cases per class reported for each model (absolute 
+sample size, or proportion)?
 
 ```{r include=FALSE}
 # need to run this in its own chunk, with output silenced,
@@ -132,13 +181,18 @@ pp[[1]] %>%
   cat(., sep = '\n')
 ```
 
-The number of cases within each class of the selected model is shown in Table \@ref(tab:tab-A3). See Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table) for the percentage of cases within each class in all candidate models.
+The number of cases within each class of the selected model is shown in Table 
+\@ref(tab:tab-A3). See Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table) for the percentage of cases within each 
+class in all candidate models.
 
-## 13. If classification of cases in a trajectory is the goal, is entropy reported?
+## 13. If classification of cases in a trajectory is the goal, is entropy 
+reported?
 
-Classification of cases was not a goal of the analysis. However, entropy-related measures are shown in Tables \@ref(tab:tab-A4) and \@ref(tab:tab-A5).
+Classification of cases was not a goal of the analysis. However, entropy-related
+measures are shown in Tables \@ref(tab:tab-A4) and \@ref(tab:tab-A5).
 
-(ref:tab-A4-caption) Confidence of assignment to each class within the selected model.
+(ref:tab-A4-caption) Confidence of assignment to each class within the selected 
+model.
 
 ```{r tab-A4, results='asis'}
 pp[[2]] %>% 
@@ -148,7 +202,8 @@ pp[[2]] %>%
   cat(., sep = '\n')
 ```
 
-(ref:tab-A5-caption) Levels of classification confidence for each class within the selected model.
+(ref:tab-A5-caption) Levels of classification confidence for each class within 
+the selected model.
 
 ```{r tab-A5, results='asis'}
 pp[[3]] %>% 
@@ -158,9 +213,12 @@ pp[[3]] %>%
   cat(., sep = '\n')
 ```
 
-## 14a. Is a plot included with the estimated mean trajectories of the final solution?
+## 14a. Is a plot included with the estimated mean trajectories of the final 
+solution?
 
-The trajectories are depicted within Figure \@ref(fig:figure-2-trajectories) of the accompanying manuscript, and in isolation in Figure \@ref(fig:fig-A3-class-trajectories).
+The trajectories are depicted within Figure \@ref(fig:figure-2-trajectories) of 
+the accompanying manuscript, and in isolation in Figure 
+\@ref(fig:fig-A3-class-trajectories).
 
 ```{r fig-A3-class-trajectories, fig.cap='The predicted trajectories of the chosen two-class linear model.', fig.height=10/2.54, fig.width=10/2.54}
 # just a plot of the class lines:
@@ -197,9 +255,13 @@ figure_linear_2
 
 ## 14b. Are plots included with the estimated mean trajectories for each model?
 
-Figure \@ref(fig:fig-A4-all-class-trajectories) shows the predicted trajectories of all 5 candidate linear and cubic models, as tabulated in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
+Figure \@ref(fig:fig-A4-all-class-trajectories) shows the predicted trajectories
+of all 5 candidate linear and cubic models, as tabulated in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
 
-(ref:fig-A4-all-class-trajectories) The predicted trajectories of all candidate latent trajectory models (the selected one was the two-class linear trajectory model, as shown in Figure \@ref(fig:fig-A3-class-trajectories)). The percentage of participants assigned to each class in each model can be found in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
+(ref:fig-A4-all-class-trajectories) The predicted trajectories of all candidate 
+latent trajectory models (the selected one was the two-class linear trajectory 
+model, as shown in Figure \@ref(fig:fig-A3-class-trajectories)). The percentage 
+of participants assigned to each class in each model can be found in Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table).
 
 ```{r fig-A4-all-class-trajectories, fig.cap='(ref:fig-A4-all-class-trajectories)', fig.height=20/2.54, fig.width=17.5/2.54}
 # just a plot of the class lines:
@@ -268,15 +330,19 @@ figure_A4 = cowplot::plot_grid(figure_linear_all, figure_cubic_all, ncol = 2,
 figure_A4
 ```
 
-## 14c. Is a plot included of the combination of estimated means of the final model and the observed individual trajectories split out for each latent class?
+## 14c. Is a plot included of the combination of estimated means of the final 
+model and the observed individual trajectories split out for each latent class?
 
-This is shown in Figure \@ref(fig:figure-2-trajectories) of the accompanying manuscript.
+This is shown in Figure \@ref(fig:figure-2-trajectories) of the accompanying 
+manuscript.
 
-## 15.Are characteristics of the final class solution numerically described (i.e., means, SD/SE, n, CI, etc.)?
+## 15.Are characteristics of the final class solution numerically described 
+(i.e., means, SD/SE, n, CI, etc.)?
 
 Yes, see the Results section of the accompanying manuscript.
 
-## 16. Are the syntax files available (either in the appendix, supplementary materials, or from the authors)?
+## 16. Are the syntax files available (either in the appendix, supplementary 
+materials, or from the authors)?
 
 Yes, they are publicly available at [github.com/nzbri/wtar-trajectory](https://github.com/nzbri/wtar-trajectory).
 
