@@ -18,9 +18,9 @@ author:
   email: michael.macaskill@nzbri.org
 shorttitle: Parkinson's premorbid function
 output:
+  papaja::apa6_word:
   papaja::apa6_pdf:
     latex_engine: xelatex
-  papaja::apa6_word:
 link-citations: yes
 csl: format/bmj.csl
 bibliography: format/wtar-references.bib
@@ -66,7 +66,7 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
-wordcount: 'Abstract: 197 (of 250), main body: 2371 (of 3700)'
+wordcount: 'Abstract: 199 (of 250), main body: 2472 (of 3700)'
 editor_options: 
   chunk_output_type: console
 ---
@@ -396,8 +396,8 @@ battery,[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] administered in accordance with MDS
 guidelines.[@dubois2007_DiagnosticProceduresParkinson;
 @litvan2012_DiagnosticCriteriaMild] For PD-MCI, this was on the basis of at 
-least two test scores falling $\geq$1.5 standard deviations below norms in at
-least one cognitive domain. For PD dementia, significant impairments ($\geq$2.0
+least two test scores falling $\geq$ 1.5 standard deviations below norms in at
+least one cognitive domain. For PD dementia, significant impairments ($\geq$ 2.0
 standard deviations below normative data) in at least two cognitive domains
 were required, as well as evidence of significant impairment in everyday
 functioning.[@dalrymple-alford2011_CharacterizingMildCognitive;
@@ -422,7 +422,7 @@ We fitted latent class trajectory models using the `hlme` function from the
 `lcmm` package [@proust-lima2017estimation-of-e] (version 
 `r packageVersion('lcmm')`), running in the R statistical environment
 [@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`) and 
-using the `tidyverse` constellation of packages [@wickham2019_WelcomeTidyverse] 
+used the `tidyverse` constellation of packages [@wickham2019_WelcomeTidyverse] 
 for data manipulation and visualisation. The dependent variable was 
 WTAR-estimated premorbid IQ, initially modelled within each subject as a 
 polynomial (cubic) function of age, to allow for non-linear trajectories. The 
