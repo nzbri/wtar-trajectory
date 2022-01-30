@@ -48,7 +48,7 @@ affiliation:
 abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   recommended as a  measure of premorbid cognitive function and as a reference
   against which to assess current cognitive status in people with Parkinson’s 
-  disease. To fulfil either role, however, WTAR scores need to be shown to 
+  disease. To fulfil either role, however, it needs to be shown that WTAR scores
   remain stable in the presence of the substantial cognitive deterioration that
   can occur in Parkinson’s. Objective. To assess long-term trajectories of WTAR
   scores in people with  Parkinson's as a function of age. Methods. From 252
@@ -56,13 +56,14 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   we analysed scores over time using latent class trajectory modelling. This
   allows for individual participants to be classified into data-driven clusters,
   depending on the shape of their longitudinal trajectory. Results. WTAR scores
-  were stable within both Controls and Parkinson's participants, even for those
-  who progressed to dementia. In both groups and regardless of current cognitive
-  status, scores were higher than expected from population norms. Conclusion. 
-  The WTAR was stable in Parkinson's even when participants declined from normal 
-  cognitive function to dementia. Nonetheless, its apparent over-estimation of
-  premorbid IQ and restriction to English speakers makes it  poorly-suited for
-  diagnosing cognitive impairment in individuals with Parkinson's.
+  were reasonably stable within both Controls and Parkinson's participants, even
+  for those who progressed to dementia. In both groups and regardless of current
+  cognitive status, scores were higher than expected from population norms. 
+  Conclusion. The WTAR is stable in Parkinson's even when participants decline
+  from normal cognitive function to dementia. Nonetheless, its apparent 
+  over-estimation of premorbid IQ and restriction to English speakers makes it
+  poorly-suited for diagnosing cognitive impairment in individuals with 
+  Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
 wordcount: 'Abstract: 197 (of 250), main body: 2371 (of 3700)'
@@ -118,8 +119,8 @@ cog_colours <- c('#339900', '#FF9326', '#D92121')
 # colour schemes for two categories:
 blue_orange     = c('#599BC2', '#E08F6B')
 blue_orange_sat = c('#0072B2', '#D55E00')
-blue_brown     = c('#599BC2', '#CD8969')
-blue_brown_sat = c('#0072B2', '#B85628')
+blue_brown      = c('#599BC2', '#CD8969')
+blue_brown_sat  = c('#0072B2', '#B85628')
 
 border_colour = '#9A1D2B' # Movement Disorders red
 
@@ -271,18 +272,18 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
 In 2012, the International Parkinson and Movement Disorder Society published its
 Task Force guidelines for the diagnosis of mild cognitive impairment in
 Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the
-diagnosis is based on individual neuropsychological tests, rather than global
-scales, significant impairment may be determined in three ways: (i) current
-performance being below appropriate norms, (ii) decline on serial testing, or
-(iii) decline from estimated premorbid levels. The first method tends to
-predominate in current research
-practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] The latter two
-approaches, however, could be advantageous in resolving the ambiguity that poor
-current cognitive function in a given individual might reflect long-standing low
-cognitive ability, rather than a recent disease-related deterioration. In 
-practice, however, one seldom has reference to prior formal serial testing, and 
-so a valid method of estimating premorbid function is appealing. The Wechsler 
-Test of Adult Reading (WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was
+diagnosis is based on a comprehensive battery of multiple individual 
+neuropsychological tests, rather than a scale of global cognitive ability, 
+significant impairment may be determined in three ways: (i) current performance 
+being below appropriate norms, (ii) decline on serial testing, or (iii) decline 
+from estimated premorbid levels. The first method tends to predominate in 
+current research practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] 
+The latter two approaches, however, could be advantageous in resolving the 
+ambiguity that poor current cognitive function in a given individual might 
+reflect long-standing low cognitive ability, rather than a recent 
+disease-related deterioration. In practice, however, one seldom has reference to
+prior formal serial testing, and so a valid method of estimating premorbid 
+function is appealing. The Wechsler Test of Adult Reading (WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was
 proposed in the guidelines as one of two recommended tests to estimate premorbid
 functioning (along with the National Adult Reading Test,
 NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both tests are based on
@@ -291,7 +292,7 @@ the ability to correctly pronounce phonetically-irregular English words, such as
 face of both normal ageing and a number of brain
 insults.[@strauss2006_CompendiumNeuropsychologicalTests]
  
-When the test was initially normed, it was tested in Parkinson's as well as a
+When the WTAR was initially normed, it was tested in Parkinson's as well as a
 number of other neurological disorders, such as Huntington's, schizophrenia, and
 traumatic brain injury. Only in Alzheimer's disease were scores significantly
 lower than in matched controls.[@strauss2006_CompendiumNeuropsychologicalTests]
@@ -384,20 +385,20 @@ criteria have been described previously.[@wood2016_DifferentPDMCICriteria] For
 this analysis, we selected data from the `r n_group$n[n_group$group =='PD']` 
 Parkinson's and `r n_group$n[n_group$group == 'Control']` Control
 participants who had completed at least two WTARs (range 2 - 
-`r n_wtar$max_sessions`, mean = `r n_wtar$mean_sessions`, total number of 
-measures = `r n_wtar$total_sessions`). The period between successive WTAR
-assessments was multi-modal, mostly clustering around intervals of one and two
-years, due to varying follow-up periods over the course of the study (see 
-Supplmentary Material). Both Parkinson's participants and Controls were 
-classified as having normal cognition, mild cognitive impairment, or dementia on
-the basis of a comprehensive Level II neuropsychological 
+`r n_wtar$max_sessions`, mean = `r round(n_wtar$mean_sessions, digits = 1)`, 
+total number of measures = `r n_wtar$total_sessions`). The period between 
+successive WTAR assessments was multi-modal, mostly clustering around intervals 
+of one and two years, due to varying follow-up periods over the course of the 
+study (see Supplementary Material). Both Parkinson's participants and Controls 
+were classified as having normal cognition, mild cognitive impairment, or 
+dementia on the basis of a comprehensive Level II neuropsychological 
 battery,[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] administered in accordance with MDS
 guidelines.[@dubois2007_DiagnosticProceduresParkinson;
 @litvan2012_DiagnosticCriteriaMild] For PD-MCI, this was on the basis of at 
-least two test scores falling $\geq$ 1.5 standard deviations below norms in at
-least one cognitive domain. For PD dementia, significant impairments ($\geq$ 
-2.0 standard deviations below normative data) in at least two cognitive domains
+least two test scores falling $\geq$1.5 standard deviations below norms in at
+least one cognitive domain. For PD dementia, significant impairments ($\geq$2.0
+standard deviations below normative data) in at least two cognitive domains
 were required, as well as evidence of significant impairment in everyday
 functioning.[@dalrymple-alford2011_CharacterizingMildCognitive;
 @wood2016_DifferentPDMCICriteria] The WTAR was not used in the cognitive
@@ -423,19 +424,20 @@ We fitted latent class trajectory models using the `hlme` function from the
 [@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`). The
 dependent variable was WTAR-estimated premorbid IQ, initially modelled within
 each subject as a polynomial (cubic) function of age, to allow for non-linear
-trajectories. The resulting trajectories were close to straight lines so we
-simplified the models to be a linear function of age. The models were not
-informed by any other variables (such as categorical MCI or dementia diagnoses).
-We fitted five separate models, with the specified number of latent classes
-increasing from 1 to 5. The `gridsearch()` function of the `lcmm` package was 
-used to run 5000 departures from random initial values for each multi-class 
-model, using the one-class model from which to generate the starting values. The
-maximum number of iterations within the `hlme()` function was set at 1000. 
-Parameters corresponding to the best log-likelihood were used as initial values 
-for the final estimation of the parameters[@proust-lima2017estimation-of-e]. The
-optimal model was selected on the basis of it having the lowest BIC (Bayesian 
-information criterion) value of the five candidates. When reporting values from 
-the model, we formed the interval in brackets following the maximum likelihood 
+trajectories. The resulting trajectories were close to straight lines (see 
+Supplementary Material) so we simplified the models to be a linear function of 
+age. The models were not informed by any other variables (such as categorical 
+MCI or dementia diagnoses). We fitted five separate models, with the specified 
+number of latent classes increasing from 1 to 5. The `gridsearch()` function of 
+the `lcmm` package was used to run 500 departures from random initial values 
+for each multi-class model, using the one-class model from which to generate the
+starting values. The maximum number of iterations within the `hlme()` function 
+was set at 1000. Parameters corresponding to the best log-likelihood were used 
+as initial values for the final estimation of the 
+parameters[@proust-lima2017estimation-of-e]. The optimal model was selected on 
+the basis of it converging and having the lowest BIC (Bayesian information 
+criterion) value of the five candidates. When reporting values from the chosen 
+model, we formed the interval in brackets following the maximum likelihood 
 estimate (MLE) by subtracting and adding 1.96 times the standard error given by 
 `hlme` to the MLE.
 
@@ -494,10 +496,10 @@ if (RUN_NEW_CUBIC_MODELS) {
   # to a bug with the subject id column not being accepted by lcmm as numeric.
   
   # use the 1-class model to set initial start values:
-  cubic_models[[1]] <- lcmm::hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
-                                  random = ~1 + poly(age_std, degree = 3, raw = TRUE),
-                                  subject = 'subject_id_num', ng = 1, 
-                                  data = dat)
+  cubic_models[[1]] <- 
+    lcmm::hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
+               random = ~1 + poly(age_std, degree = 3, raw = TRUE),
+               subject = 'subject_id_num', ng = 1, data = dat)
   saveRDS(cubic_models[[1]], 'models/cubic_WTAR_1.RDS') # cache to disk
   
   # for each higher-class model, run with 5000 random starts based on the
@@ -521,7 +523,7 @@ if (RUN_NEW_CUBIC_MODELS) {
     parallel::clusterExport(cl, c('class_num', 'cubic_models'))
     
     cubic_models[[class_num]] <-
-      lcmm::gridsearch(rep = 100, maxiter = 50, minit = cubic_models[[1]], cl = cl,
+      lcmm::gridsearch(rep = 500, maxiter = 100, minit = cubic_models[[1]], cl = cl,
                        hlme(WTAR ~ poly(age_std, degree = 3, raw = TRUE), 
                             random = ~1 + poly(age_std, degree = 3, raw = TRUE), 
                             ng = class_num, nwg = TRUE, maxiter = 1000,
@@ -547,7 +549,11 @@ cubic_WTAR_model_table =
                cubic_models[[4]], cubic_models[[5]],
                which = c('G', 'loglik', 'conv', 'BIC', 'entropy', 
                          '%class')) %>% 
-  as_tibble()
+  as_tibble() %>% 
+  mutate(conv = factor(conv, levels = c(1, 2, 3, 4, 5),
+                       labels = c('yes', 'no', '', 'optimisation problem', 
+                                  'optimisation problem'))) %>% 
+  rename(converged = conv)
 
 # manually select model, on the basis of one that converged & had lowest BIC:
 chosen_cubic_classes = 1
@@ -603,10 +609,10 @@ if (RUN_NEW_LINEAR_MODELS) {
   # to a bug with the subject id column not being accepted by lcmm as numeric.
   
   # use the 1-class model to set initial start values:
-  linear_models[[1]] <- lcmm::hlme(WTAR ~ age_std, 
-                                   random = ~1 + age_std,
-                                   subject = 'subject_id_num', ng = 1, 
-                                   data = dat)
+  linear_models[[1]] <- 
+    lcmm::hlme(WTAR ~ age_std, 
+               random = ~1 + age_std,
+               subject = 'subject_id_num', ng = 1, data = dat)
   saveRDS(linear_models[[1]], 'models/linear_WTAR_1.RDS') # cache to disk
   
   # for each higher-class model, run with 5000 random starts based on the
@@ -630,7 +636,7 @@ if (RUN_NEW_LINEAR_MODELS) {
     parallel::clusterExport(cl, c('class_num', 'linear_models'))
     
     linear_models[[class_num]] <- 
-      lcmm::gridsearch(rep = 100, maxiter = 50, minit = linear_models[[1]], 
+      lcmm::gridsearch(rep = 500, maxiter = 100, minit = linear_models[[1]], 
                        cl = cl,
                        hlme(WTAR ~ age_std, 
                             random = ~1 + age_std, 
@@ -658,7 +664,11 @@ linear_WTAR_model_table =
                linear_models[[4]], linear_models[[5]],
                which = c('G', 'loglik', 'conv', 'BIC', 'entropy', 
                          '%class')) %>% 
-  as_tibble()
+  as_tibble() %>% 
+  mutate(conv = factor(conv, levels = c(1, 2, 3, 4, 5),
+                       labels = c('yes', 'no', '', 'optimisation problem', 
+                                  'optimisation problem'))) %>% 
+  rename(converged = conv) 
 
 # manually select model, on the basis of one that converged & had lowest BIC:
 chosen_linear_classes = 2
@@ -806,22 +816,25 @@ high_intcpt_intrvl =
 ```
 
 ## Distribution of scores
-The Parkinson's and Control distributions of all WTAR-estimated IQ scores are 
-shown in Figure \@ref(fig:figure-1-histogram). The mean and SD for each group's
-latest score is given in Table \@ref(tab:table-1), with both well above the 
-expected population norm mean IQ score of 100. The population distribution of IQ
-should be symmetrical about 100, yet in our sample, 
-`r above_100$proportion[above_100$group == 'PD']` of Parkinson's WTAR scores 
-were greater than or equal to 100, as were
+The distributions of all WTAR-estimated IQ scores fro the Parkinson's and 
+Control participants are shown in Figure \@ref(fig:figure-1-histogram). The mean
+and SD for each group's latest score is given in Table \@ref(tab:table-1), with
+both well above the expected population norm mean IQ score of 100. The 
+population distribution of IQ should be symmetrical about 100, yet in our 
+sample, `r above_100$proportion[above_100$group == 'PD']` of Parkinson's WTAR 
+scores were greater than or equal to 100, as were
 `r above_100$proportion[above_100$group == 'Control']` of Control scores.
 
 ## Longitudinal trajectories
 The raw data showed that WTAR scores were relatively constant over time (Figure
-\@ref(fig:figure-2-trajectories)A). We modelled WTAR scores as a linear function
-of age, with repeated measures within individuals, fitting candidate models
-ranging from one to five latent trajectory classes. We selected the two-class
-model on the basis of it having the lowest BIC value. Full details on the
-modelling process are provided in the supplementary material.
+\@ref(fig:figure-2-trajectories)A). This was despite the dramatic decline in 
+overall cognitive performance that occurred particularly in those particpants 
+who declined to dementia (Figure \@ref(fig:figure-2-trajectories)B). We modelled
+WTAR scores as a linear function of age, with repeated measures within 
+individuals, fitting candidate models ranging from one to five latent trajectory
+classes. We selected the two-class model on the basis of it having the lowest 
+BIC value. Full details on the modelling process are provided in the 
+Supplementary Material.
 
 We labelled the two resulting trajectory classes 'Typical' and 
 'High performers'. Individuals were assigned to the class for which they had the
@@ -846,10 +859,12 @@ of all participants) had an intercept of
 That is, the trajectories were both relatively stable over time, and were 
 separated primarily due to the initial scores of their respective clusters of 
 participants. We make no strong claims as to the number of classes - for example
-a single trajectory model (see Supplementary Material), somewhat intermediate 
-between the two reported here, would also describe the data relatively well. The
-key findings are that the trajectories are relatively flat, and do not separate 
-between performance between the Parkinson's and Control participants. 
+a single trajectory model, somewhat intermediate between the two reported here, 
+would also describe the data relatively well, and a single trajectory was the 
+optimal model when cubic rather than linear functions were used (see 
+Supplementary Material). The key findings are that the trajectories are 
+relatively flat, and do not separate performance between the Parkinson's and 
+Control participants. 
 
 (ref:fig-1-caption) The distribution of the WTAR-estimated IQ scores across all 
 participants, containing at least two observations from each. Observations are 
@@ -1038,13 +1053,14 @@ cognitive decline over the course of the study (Figure
 \@ref(fig:figure-2-trajectories)B). Latent class analysis revealed that in our
 particular sample, people fell into one of two trajectory classes, but these
 appeared to be largely driven by two clusters of performance at
-baseline, rather than trajectories that meaningfully differed longitudinally. 
-Those with very high initial WTAR scores maintained near-ceiling performance 
-levels, even if they subsequently developed dementia (Figure
-\@ref(fig:figure-2-trajectories)A). The remaining 
-`r with(class_proportions, proportion[class == 'Typical'])` of
-participants had a wider range of initial scores, but were again relatively
-stable, with an estimated decline of only `r typical_slope_str` points per
+baseline, rather than being trajectories that meaningfully differed 
+longitudinally. Those with very high initial WTAR scores (the "High performers" 
+class) maintained near-ceiling performance levels (Figure 
+\@ref(fig:figure-2-trajectories)A), even if they subsequently developed dementia
+(Figure \@ref(fig:figure-2-trajectories)B). The remaining 
+`r with(class_proportions, proportion[class == 'Typical'])` of participants (the
+"Typical" class) had a wider range of initial scores, but were again relatively
+stable, with an estimated decline of only `r typical_slope_str` points per 
 decade.
 
 Measures of premorbid function are closely tied to the concept of 
@@ -1053,7 +1069,7 @@ scores have been associated with better neuropsychological test performance in
 people with Parkinson's,[@koerts2013_InfluenceCognitiveReserve] indicating that
 higher cognitive reserve may be protective against subsequent cognitive decline. 
 This can lead to circular reasoning if the premorbid measure is not reliable,
-however: if the disease process reduced current performance on that measure, 
+however: if the disease process reduces current performance on that measure, 
 then the inference of poorer cognitive reserve would not be valid. Our findings,
 of stable scores despite substantial cognitive decline, support the WTAR as a
 stable indicator of cognitive reserve in Parkinson's.
@@ -1074,8 +1090,8 @@ possibility is that by virtue of volunteering for research, our sample is
 simply non-representative of the population at large. Such a self-selection 
 effect should, however, (i) apply more to the controls than to the Parkinson's 
 group, which did not seem to be the case, and (ii) also affect most other 
-research samples. The other neuropsychological test scores _did_ decrease below 
-population norms with cognitive decline. If the WTAR was used as an 
+research samples. With cognitive decline, the other neuropsychological test 
+scores did decrease below population norms. If the WTAR was used as an 
 individualised premorbid reference for those scores, rather than a z-score norm 
 of zero, we would expect to see inflated proportions classified as MCI and PDD. 
 This does indeed seem to occur[@marras2013_MeasuringMildCognitive] (see 
@@ -1102,13 +1118,14 @@ between North American and New Zealand English. After the commencement of our
 study, a New Zealand Adult Reading Test (NZART) was 
 created[@starkey2011_DevelopmentNewZealand], with a more culturally-relevant 
 selection of words, but this will require further development to supplant the 
-established international tests. Neuropsychological screening 
-tests developed in the Anglosphere have been shown to have poor cross-cultural 
-validity in Parkinson's.[@statucka2021_MulticulturalismChallengeCognitive] This 
+established international tests. Neuropsychological screening tests developed in
+the "Anglosphere" have been shown to have poor cross-cultural validity in Parkinson's.[@statucka2021_MulticulturalismChallengeCognitive] This 
 extends even to visuoperceptual and non-verbal executive tasks previously 
-assumed to be "culture fair".[@statucka2019_OriginsMatterCulture] In subsequent
-revisions of the PD-MCI diagnostic criteria, if premorbid measures continue to 
-be advocated, more consideration could be given to alternative 
+assumed to be "culture fair".[@statucka2019_OriginsMatterCulture] It is perhaps
+therefore not surprising that an inherently linguistic test faces issues with
+cross-cultural applicability. In subsequent revisions of the PD-MCI diagnostic 
+criteria, if premorbid measures continue to be advocated, more consideration 
+could be given to alternative 
 techniques[@franzen1997_MethodsEstimatingPremorbid] that could be valid in a 
 wider international and cross-cultural context.
 
@@ -1121,25 +1138,27 @@ cognitive impairment. They converted the WTAR-estimated full-scale IQ to a
 z-score and used that as the reference against which to test each individual 
 neuropsychological test z-score, with a test that was lower by more than 1.5 SD
 deemed impaired. Of their sample of 139 non-demented people with Parkinson's, 
-the WTAR method classified many more of them as having PD-MCI (79%) than a
-norms-based Level II classification method did (33%). Marras _et al._ 
+the WTAR method classified many more of them as having PD-MCI (79%) than did a
+norms-based Level II classification method (33%). Marras _et al._ 
 interpreted this as evidence that most people with Parkinson's have undergone at
 least some decline relative to their premorbid function. Conversely it might be
-that the WTAR simply over-estimated that level of function - just as in our
-sample, where the distribution of estimated IQ values was well above the 
+that the WTAR simply over-estimated that premorbid level of function - just as 
+in our sample, where the distribution of estimated IQ values was well above the 
 supposed population mean of 100.
 
 In summary, WTAR is a measure that is exceptionally stable in Parkinson's, 
-despite substantial declines in current cognitive functioning. This can 
-make it a valid research tool to probe cognitive reserve and premorbid 
+even in the presence of a substantial decline in current cognitive functioning. 
+This can make it a valid research tool to probe cognitive reserve and premorbid 
 function differences across groups. In absolute terms, however, it appears to 
 overestimate premorbid IQ, making it unsuitable to establish a decline in 
 function within individuals. All such measures may suffer from cross-cultural 
 word choice issues even across different varieties of English. Analogous tests 
-are not able to be created in languages that do not share the peculiarities of 
-English. Hence we recommend that in future revisions of MDS guidelines, tests of
+are not able to be created in languages that do not share the orthigraphic 
+peculiarities of English. Hence in order to be valid in an international 
+context, we recommend that in future revisions of MDS guidelines, tests of 
 premorbid function like the WTAR no longer be advocated as one of the means of 
-formally establishing cognitive decline in Parkinson's.
+formally establishing cognitive decline at an individual level in Parkinson's.
 
 # References
+
 
