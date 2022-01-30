@@ -817,7 +817,7 @@ high_intcpt_intrvl =
 ```
 
 ## Distribution of scores
-The distributions of all WTAR-estimated IQ scores fro the Parkinson's and 
+The distributions of all WTAR-estimated IQ scores for the Parkinson's and 
 Control participants are shown in Figure \@ref(fig:figure-1-histogram). The mean
 and SD for each group's latest score is given in Table \@ref(tab:table-1), with
 both well above the expected population norm mean IQ score of 100. The 
