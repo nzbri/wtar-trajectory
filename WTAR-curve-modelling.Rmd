@@ -421,25 +421,26 @@ were assessed against norms for "Whites").
 We fitted latent class trajectory models using the `hlme` function from the
 `lcmm` package [@proust-lima2017estimation-of-e] (version 
 `r packageVersion('lcmm')`), running in the R statistical environment
-[@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`). The
-dependent variable was WTAR-estimated premorbid IQ, initially modelled within
-each subject as a polynomial (cubic) function of age, to allow for non-linear
-trajectories. The resulting trajectories were close to straight lines (see 
-Supplementary Material) so we simplified the models to be a linear function of 
-age. The models were not informed by any other variables (such as categorical 
-MCI or dementia diagnoses). We fitted five separate models, with the specified 
-number of latent classes increasing from 1 to 5. The `gridsearch()` function of 
-the `lcmm` package was used to run 500 departures from random initial values 
-for each multi-class model, using the one-class model from which to generate the
-starting values. The maximum number of iterations within the `hlme()` function 
-was set at 1000. Parameters corresponding to the best log-likelihood were used 
-as initial values for the final estimation of the 
-parameters[@proust-lima2017estimation-of-e]. The optimal model was selected on 
-the basis of it converging and having the lowest BIC (Bayesian information 
-criterion) value of the five candidates. When reporting values from the chosen 
-model, we formed the interval in brackets following the maximum likelihood 
-estimate (MLE) by subtracting and adding 1.96 times the standard error given by 
-`hlme` to the MLE.
+[@R-Core-Team_R_2021] (version `r R.version$major`.`r R.version$minor`) and 
+using the `tidyverse` constellation of packages [@wickham2019_WelcomeTidyverse] 
+for data manipulation and visualisation. The dependent variable was 
+WTAR-estimated premorbid IQ, initially modelled within each subject as a 
+polynomial (cubic) function of age, to allow for non-linear trajectories. The 
+resulting trajectories were close to straight lines (see Supplementary Material)
+so we simplified the models to be a linear function of age. The models were not 
+informed by any other variables (such as categorical MCI or dementia diagnoses).
+We fitted five separate models, with the specified number of latent classes 
+increasing from 1 to 5. The `gridsearch()` function of the `lcmm` package was 
+used to run 500 departures from random initial values for each multi-class 
+model, using the one-class model from which to generate the starting values. The
+maximum number of iterations within the `hlme()` function was set at 1000. 
+Parameters corresponding to the best log-likelihood were used as initial values 
+for the final estimation of the parameters[@proust-lima2017estimation-of-e]. The
+optimal model was selected on the basis of it converging and having the lowest 
+BIC (Bayesian information criterion) value of the five candidates. When 
+reporting values from the chosen model, we formed the interval in brackets 
+following the maximum likelihood estimate (MLE) by subtracting and adding 
+1.96 times the standard error given by `hlme` to the MLE.
 
 
 ```{r table-1}
@@ -1071,8 +1072,8 @@ higher cognitive reserve may be protective against subsequent cognitive decline.
 This can lead to circular reasoning if the premorbid measure is not reliable,
 however: if the disease process reduces current performance on that measure, 
 then the inference of poorer cognitive reserve would not be valid. Our findings,
-of stable scores despite substantial cognitive decline, support the WTAR as a
-stable indicator of cognitive reserve in Parkinson's.
+of stable scores despite substantial cognitive decline, provide support for the 
+WTAR being a stable indicator of cognitive reserve in Parkinson's.
 
 There are reservations about the use of the WTAR, however. Although still in
 wide use, it is outdated, inasmuch as it was originally devised to estimate IQ
