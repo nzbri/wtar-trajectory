@@ -70,8 +70,7 @@ affect the results.
 
 They are speculated upon in _3a_ above.
 
-## 3c. Is a description provided of how missing data in the analyses were dealt 
-with?
+## 3c. Is a description provided of how missing data in the analyses were dealt with?
 
 As noted in _3a_ above, missing data was not thought to be problematic in this 
 analysis and was not included explicitly in the modeling process.
@@ -86,19 +85,13 @@ cognitive status at each observation.
 
 See the Methods section in the accompanying manuscript.
 
-## 6a. Are alternative specifications of within-class heterogeneity considered 
-(e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient 
-justification provided as to eliminate certain specifications from 
-consideration?
+## 6a. Are alternative specifications of within-class heterogeneity considered (e.g., LGCA vs. LGMM) and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
 
 An LGMM which includes a varying intercept and slope by participant was used in 
 this analysis and, given the nature of the within-subject variance in the data, 
 is more appropriate than an LGCA.
 
-## 6b. Are alternative specifications of the between-class differences in 
-variance–covariance matrix structure considered and clearly documented? If not, 
-was sufficient justification provided as to eliminate certain specifications 
-from consideration?
+## 6b. Are alternative specifications of the between-class differences in variance–covariance matrix structure considered and clearly documented? If not, was sufficient justification provided as to eliminate certain specifications from consideration?
 
 The variance-covariance matrix was allowed to vary by a class-specific 
 proportional parameter. The more restrictive case of restricting all classes to 
@@ -116,22 +109,19 @@ model coefficients.
 
 Not applicable: age was the only predictor in the models.
 
-## 9. Is information reported about the number of random start values and final 
-iterations included?
+## 9. Is information reported about the number of random start values and final iterations included?
 
 The `gridsearch()` function of the `lcmm` package was used to run 500 departures
 from random initial values for each multi-class model, using the one-class model
 to generate those starting values from. The maximum number of iterations within 
 the `hlme()` function was set at 1000.
 
-## 10. Are the model comparison (and selection) tools described from a 
-statistical perspective?
+## 10. Are the model comparison (and selection) tools described from a statistical perspective?
 
 We selected the two-class linear model on the basis of it converging and having 
 the lowest BIC value.
 
-## 11. Are the total number of fitted models reported, including a one-class 
-solution?
+## 11. Are the total number of fitted models reported, including a one-class solution?
 
 For both linear and cubic trajectories, models were fitted with one through five
 classes. See the model comparison tables in Tables 
@@ -160,8 +150,7 @@ cat(gsub('\\bNA\\b', '  ', table_a2), sep = '\n')
 
 ```
 
-## 12. Are the number of cases per class reported for each model (absolute 
-sample size, or proportion)?
+## 12. Are the number of cases per class reported for each model (absolute sample size, or proportion)?
 
 ```{r include=FALSE}
 # need to run this in its own chunk, with output silenced,
@@ -185,8 +174,7 @@ The number of cases within each class of the selected model is shown in Table
 \@ref(tab:tab-A3). See Tables \@ref(tab:tab-A1-linear-model-table) and \@ref(tab:tab-A2-cubic-model-table) for the percentage of cases within each 
 class in all candidate models.
 
-## 13. If classification of cases in a trajectory is the goal, is entropy 
-reported?
+## 13. If classification of cases in a trajectory is the goal, is entropy reported?
 
 Classification of cases was not a goal of the analysis. However, entropy-related
 measures are shown in Tables \@ref(tab:tab-A4) and \@ref(tab:tab-A5).
@@ -213,8 +201,7 @@ pp[[3]] %>%
   cat(., sep = '\n')
 ```
 
-## 14a. Is a plot included with the estimated mean trajectories of the final 
-solution?
+## 14a. Is a plot included with the estimated mean trajectories of the final solution?
 
 The trajectories are depicted within Figure \@ref(fig:figure-2-trajectories) of 
 the accompanying manuscript, and in isolation in Figure 
@@ -330,19 +317,16 @@ figure_A4 = cowplot::plot_grid(figure_linear_all, figure_cubic_all, ncol = 2,
 figure_A4
 ```
 
-## 14c. Is a plot included of the combination of estimated means of the final 
-model and the observed individual trajectories split out for each latent class?
+## 14c. Is a plot included of the combination of estimated means of the final model and the observed individual trajectories split out for each latent class?
 
 This is shown in Figure \@ref(fig:figure-2-trajectories) of the accompanying 
 manuscript.
 
-## 15.Are characteristics of the final class solution numerically described 
-(i.e., means, SD/SE, n, CI, etc.)?
+## 15.Are characteristics of the final class solution numerically described (i.e., means, SD/SE, n, CI, etc.)?
 
 Yes, see the Results section of the accompanying manuscript.
 
-## 16. Are the syntax files available (either in the appendix, supplementary 
-materials, or from the authors)?
+## 16. Are the syntax files available (either in the appendix, supplementary materials, or from the authors)?
 
 Yes, they are publicly available at [github.com/nzbri/wtar-trajectory](https://github.com/nzbri/wtar-trajectory).
 
