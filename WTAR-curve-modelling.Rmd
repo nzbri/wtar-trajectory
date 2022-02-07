@@ -18,9 +18,9 @@ author:
   email: michael.macaskill@nzbri.org
 shorttitle: Parkinson's premorbid function
 output:
-  papaja::apa6_word:
   papaja::apa6_pdf:
     latex_engine: xelatex
+  papaja::apa6_word:
 link-citations: yes
 csl: format/bmj.csl
 bibliography: format/wtar-references.bib
@@ -283,9 +283,10 @@ ambiguity that poor current cognitive function in a given individual might
 reflect long-standing low cognitive ability, rather than a recent 
 disease-related deterioration. In practice, however, one seldom has reference to
 prior formal serial testing, and so a valid method of estimating premorbid 
-function is appealing. The Wechsler Test of Adult Reading (WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was
-proposed in the guidelines as one of two recommended tests for this purpose 
-(along with the National Adult Reading Test, 
+function is appealing. The Wechsler Test of Adult Reading
+(WTAR)[@strauss2006_CompendiumNeuropsychologicalTests] was proposed in the 
+guidelines as one of two recommended tests for this purpose (along with the 
+National Adult Reading Test, 
 NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both tests are based on
 the ability to correctly pronounce phonetically-irregular English words, such as
 'porpoise' or 'hyperbole'. This ability has been shown to be preserved in the
@@ -1134,7 +1135,8 @@ inherently tied to peculiarities of written and spoken English. The orthography
 (writing system) of a language can be described as deep/opaque when it contains 
 many irregularities in its mappings of graphemes to phonemes, or 
 shallow/transparent when the mappings are largely 
-regular.[@frost1987_StrategiesVisualWord] In a quantitative analysis of 17 orthographies,[@marjou2021_OTEANNEstimatingTransparency] the reading of English
+regular.[@frost1987_StrategiesVisualWord] In a quantitative analysis of 17
+orthographies,[@marjou2021_OTEANNEstimatingTransparency] the reading of English
 words stood out as particularly opaque, whereas by comparison Arabic, Finnish, 
 Korean, Serbo-Croatian, and Turkish were highly transparent. Attempting to 
 devise analogues of tests like the WTAR for speakers of languages with 
@@ -1151,7 +1153,8 @@ commencement of our study, a New Zealand Adult Reading Test (NZART) was
 created[@starkey2011_DevelopmentNewZealand], with a more culturally-relevant 
 selection of words, but this will require further development to supplant the 
 established international tests. Neuropsychological screening tests developed in
-the "Anglosphere" have been shown to have poor cross-cultural validity in Parkinson's.[@statucka2021_MulticulturalismChallengeCognitive] This 
+the "Anglosphere" have been shown to have poor cross-cultural validity in
+Parkinson's.[@statucka2021_MulticulturalismChallengeCognitive] This 
 extends even to visuoperceptual and non-verbal executive tasks previously 
 assumed to be "culture fair".[@statucka2019_OriginsMatterCulture] It is perhaps
 therefore not surprising that an inherently language-based test faces issues 
