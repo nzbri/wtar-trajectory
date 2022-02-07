@@ -1,5 +1,5 @@
 ---
-title: "The Wechsler Test of Adult Reading in Parkinson’s: stable premorbid measure despite cognitive decline"
+title: "Wechsler Test of Adult Reading in Parkinson’s: stable premorbid measure despite cognitive decline"
 author:
 - name: Kyla-Louise Horne, PhD
   affiliation: '1'
@@ -923,7 +923,7 @@ ribbon = _Typical_). Blue and brown connecting lines link observations from
 individuals from each class. ***(B)***  Mean z-score from multiple tests in a 
 comprehensive neuropsychological test battery, showing only those Parkinson's 
 participants who developed dementia. Their overall cognitive performance 
-declined dramatically, in contrast to their relatively stable WTAR scores. To 
+declined substantially, in contrast to their relatively stable WTAR scores. To 
 illustrate this, two individuals are highlighted (with larger symbols and 
 thicker connecting lines), showing their flat WTAR trajectories despite dramatic
 declines in overall neuropsychological performance. In each panel, current 
@@ -976,7 +976,7 @@ figure_2_upper = dat_with_classes_plus_highlights %>%
   scale_x_continuous(limits = c(42, 89.9), expand = c(0,0),
                      labels = scales::label_number(suffix = ' years')) +
   scale_y_continuous(limits = c(75, 130), expand = expansion(add = 0)) +
-  labs(title = 'A. Longitudinal WTAR scores by group',
+  labs(title = 'A. Longitudinal WTAR-estimated premorbid IQ',
        subtitle = 'Shaded bands indicate the two predicted latent class trajectories',
        x = NULL, y = NULL) +
   theme_bw() +
