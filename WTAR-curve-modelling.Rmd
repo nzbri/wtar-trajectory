@@ -296,15 +296,22 @@ insults.[@psychologicalcorporation2001_WTARWechslerTest; @strauss2006_Compendium
 When the WTAR was initially normed, it was tested in Parkinson's as well as a
 number of other neurological disorders, such as Huntington's, schizophrenia, and
 traumatic brain injury.[@psychologicalcorporation2001_WTARWechslerTest] Only in 
-Alzheimer's disease were scores significantly lower than in matched controls.[@psychologicalcorporation2001_WTARWechslerTest; @strauss2006_CompendiumNeuropsychologicalTests]
-Those results were, however, published in 2001, well before the formal MDS
+Alzheimer's disease were scores significantly lower than in matched
+controls.[@psychologicalcorporation2001_WTARWechslerTest; @strauss2006_CompendiumNeuropsychologicalTests]
+Those results were, however, published in 2001, well before the formal MDS 
 guidelines on diagnosing PD-MCI[@litvan2012_DiagnosticCriteriaMild] and
 Parkinson's dementia[@dubois2007_DiagnosticProceduresParkinson] were
 promulgated. It is therefore unknown to what extent the findings from that 
 original sample remain valid in the face of the significant cognitive 
-deterioration that often occurs in Parkinson's. The Parkinson's sample comprised
-only 10 participants: given the marked heterogeneity of function in this 
-disorder, that greatly limits the validity of generalising from those findings.
+deterioration that often occurs in Parkinson's. That Parkinson's sample also 
+comprised only 10 participants: given the marked heterogeneity of function in 
+this disorder, that greatly limits the validity of generalising from those 
+findings. In the only study we know of that used the WTAR as a criterion to 
+establish mild cognitive impairment in Parkinson's, the proportion classified as
+PD-MCI was strikingly higher (79%) than when performance was judged by the more 
+conventional method, against norms of current performance (33%). This leads to 
+natural questions about whether the WTAR is a valid measure to be used for
+cognitive classification in Parkinson's
 
 We therefore examined WTAR scores in a cognitively well-characterised sample,
 spanning the range from normal function through mild cognitive impairment and
@@ -319,7 +326,11 @@ individual subjects and places them into clusters depending on similarities in
 their longitudinal trajectories. If the presence of either Parkinson's or 
 cognitive impairment affects longitudinal WTAR scores, this would be reflected 
 by differential membership across groups within the data-driven trajectory 
-clusters.
+clusters. As performance on the WTAR is known to be impacted negatively by 
+Alzheimer's dementia, and the initial claim of stability in Parkinson's was 
+based on very limited evidence[@psychologicalcorporation2001_WTARWechslerTest],
+we saw a need to examine its performance in a large and 
+cognitively-heterogeneous sample.
 
 # Methods
 
@@ -457,7 +468,9 @@ best description of the data. The classes are termed 'latent' as they are not
 known _a priori_, but instead arise from the data. The resulting classes can,
 however, then be compared to known groupings (such as Parkinson's vs Controls).
 This allows us to examine to what extent performance over time might be driven
-by known factors.
+by known factors. For example, if Control and Parkinson's participants perform
+differently over time, they should fall unequally into the various latent 
+classes (for models with more than one class).
 
 We fitted five separate models, with the specified number of latent classes 
 ranging from 1 to 5. The _gridsearch()_ function of the _lcmm_ package was 
@@ -1212,7 +1225,12 @@ are not able to be created in languages that do not share the orthographic
 peculiarities of English. Therefore, in future revisions of the international 
 MDS guidelines, we therefore believe that a test of premorbid function like the 
 WTAR should no longer be recommended as one of the means of formally 
-establishing cognitive decline at an individual level in Parkinson's.
+establishing cognitive decline at an individual level in Parkinson's. Due to its
+remarkable stability in Parkinson's despite substantial current cognitive 
+impairment, this and related measures will remain a valuable research 
+tool in the Anglosphere for testing groups for differences on premorbid 
+functioning. The absolute estimation of premorbid function still needs to be 
+determined in Parkinson's for newer tests such as the TOPF and its successors. 
 
 # References
 
