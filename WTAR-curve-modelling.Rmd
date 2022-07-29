@@ -124,8 +124,7 @@ blue_brown_sat  = c('#0072B2', '#B85628')
 
 border_colour = '#8E2226' # JMD reddish
 
-fig_1_width = 8.5;  fig_1_height = 10.0
-fig_1_mod_height = 20.0
+fig_1_width = 8.5;  fig_1_height = 20.0
 fig_2_width = 17.5; fig_2_height = 21.5
 
 ```
@@ -941,52 +940,7 @@ cognitive status, WTAR scores span the full range. For each group, the
 distribution was skewed well above the population norm mean of 100. Figure 
 available under an open CC-BY licence.[@macaskill2022_DistributionWechslerTest]
 
-```{r figure-1-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
-figure_1 = dat %>%  
-  ggplot(aes(x = WTAR, fill = cognitive_status)) +
-  facet_grid(group ~ .) +
-  geom_histogram(binwidth = 1, size = 0.25, colour = 'white') + 
-  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
-  scale_y_continuous(limits = c(0, 60), expand = expansion(add = 0),
-                     breaks = c(0, 20, 40, 60)) +
-  labs(title = 'Distribution of WTAR-estimated IQ scores',
-       x = NULL, y = NULL) +  theme_bw() +
-  theme(plot.title = element_text(face = 'bold', size = 10),
-        axis.text = element_text(colour = 'black', size = 8),
-        legend.position = c(0.18, 0.395),
-        legend.margin = margin(c(0, 1, 0, 1), unit = 'mm'),
-        legend.spacing.y = unit(1,'mm'), # spacing between title & items
-        legend.key.size = unit(3.0,'mm'), # spacing between items
-        legend.title = element_text(face = 'bold', size = 8),
-        legend.text = element_text(size = 8),
-        panel.spacing = unit(4, 'mm'),
-        axis.ticks = element_line(colour = border_colour, size = 0.15),
-        panel.grid.major.y = element_line(size = 0.25),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.border = element_rect(colour = border_colour, size = 0.25),
-        strip.background = 
-          element_rect(colour = border_colour, fill = border_colour),
-        strip.text = element_text(face = 'bold', colour = 'white', size = 10))
-
-figure_1
-
-ggsave('images/wtar-figure-1-histogram.pdf', 
-       width = fig_1_width, height = fig_1_height, units = 'cm')
-ggsave('images/wtar-figure-1-histogram.png', 
-       width = fig_1_width, height = fig_1_height, units = 'cm', dpi = 600)
-
-```
-
-(ref:fig-1-mod-caption) The distribution of WTAR-estimated IQ scores across all 
-participants, containing at least two observations from each. Observations are 
-colour-coded by their cognitive status at each session. Regardless of current 
-cognitive status, WTAR scores span the full range. For each group, the 
-distribution was skewed well above the population norm mean of 100. Figure 
-available under an open CC-BY licence.[@macaskill2022_DistributionWechslerTest]
-
-```{r figure-1-modified-histogram, fig.align='center', fig.cap='(ref:fig-1-mod-caption)', fig.height=fig_1_mod_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
+```{r figure-1-modified-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
 figure_1_mod = dat %>% 
   ggplot(aes(x = WTAR, fill = cognitive_status)) +
   facet_wrap(~ cognitive_group, ncol = 1) +
@@ -1018,9 +972,9 @@ figure_1_mod = dat %>%
 figure_1_mod
 
 ggsave('images/wtar-figure-1-mod-histogram.pdf', 
-       width = fig_1_width, height = fig_1_mod_height, units = 'cm')
+       width = fig_1_width, height = fig_1_height, units = 'cm')
 ggsave('images/wtar-figure-1-mod-histogram.png', 
-       width = fig_1_width, height = fig_1_mod_height, units = 'cm', dpi = 600)
+       width = fig_1_width, height = fig_1_height, units = 'cm', dpi = 600)
 
 ```
 
@@ -1297,8 +1251,7 @@ determined in Parkinson's for newer tests such as the TOPF and its successors.
 
 # References
 
-
-
+<div id="refs"></div>
 
 \newpage
 
