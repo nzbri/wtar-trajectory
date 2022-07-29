@@ -122,9 +122,10 @@ blue_orange_sat = c('#0072B2', '#D55E00')
 blue_brown      = c('#599BC2', '#CD8969')
 blue_brown_sat  = c('#0072B2', '#B85628')
 
-border_colour = '#9A1D2B' # Movement Disorders red
+border_colour = '#8E2226' # JMD reddish
 
 fig_1_width = 8.5;  fig_1_height = 10.0
+fig_1_mod_height = 20.0
 fig_2_width = 17.5; fig_2_height = 21.5
 
 ```
@@ -249,10 +250,20 @@ dat %>% write_csv(file = 'data/dat_wtar.csv')
 # Regardless of whether IMPORT_LIVE_DATA has been set to TRUE, we import from 
 # a cached, static dataset to ensure consistency:
 dat = read_csv(file = 'data/dat_wtar.csv') %>% 
-  mutate(cognitive_status = factor(cognitive_status, 
-                                   levels = c('Normal', 'MCI', 'Dementia')),
-         cognitive_status_lead = factor(cognitive_status_lead, 
-                                        levels = c('Normal', 'MCI', 'Dementia'))) %>% 
+  mutate(cognitive_status = 
+           factor(cognitive_status, 
+                  levels = c('Normal', 'MCI', 'Dementia')),
+         cognitive_status_lead = 
+           factor(cognitive_status_lead, 
+                  levels = c('Normal', 'MCI', 'Dementia')),
+         cognitive_group = 
+           case_when(group == 'Control' ~ 'Control',
+                     cognitive_status == 'Normal' ~ 'PDN',
+                     cognitive_status == 'MCI' ~ 'PD-MCI',
+                     cognitive_status == 'Dementia' ~ 'PDD'),
+         cognitive_group = 
+           factor(cognitive_group, 
+                  levels = c('Control', 'PDN', 'PD-MCI', 'PDD'))) %>% 
   # divide subjects into three panels in the figure:
   mutate(panel_label = 
            case_when(group == 'Control'     ~ 'Control',
@@ -392,6 +403,13 @@ n_control_pakeha =
 
 n_control_other = 
   with(n_ethnicity, n[group == 'Control' & ethnicity == 'Other'])
+
+WTAR_by_status = dat %>% 
+  group_by(cognitive_group) %>% 
+  summarise(wtar_mean = mean(WTAR),
+            wtar_median = median(WTAR),
+            wtar_sd = sd(WTAR),
+            wtar_n = n())
 
 ```
 
@@ -961,6 +979,51 @@ ggsave('images/wtar-figure-1-histogram.png',
 
 ```
 
+(ref:fig-1-mod-caption) The distribution of WTAR-estimated IQ scores across all 
+participants, containing at least two observations from each. Observations are 
+colour-coded by their cognitive status at each session. Regardless of current 
+cognitive status, WTAR scores span the full range. For each group, the 
+distribution was skewed well above the population norm mean of 100. Figure 
+available under an open CC-BY licence.[@macaskill2022_DistributionWechslerTest]
+
+```{r figure-1-modified-histogram, fig.align='center', fig.cap='(ref:fig-1-mod-caption)', fig.height=fig_1_mod_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
+figure_1_mod = dat %>% 
+  ggplot(aes(x = WTAR, fill = cognitive_status)) +
+  facet_wrap(~ cognitive_group, ncol = 1) +
+  geom_histogram(binwidth = 1, size = 0.25, colour = 'white') + 
+  scale_fill_manual(values = cog_colours, name = 'Cognitive status') +
+  scale_y_continuous(limits = c(0, 35), expand = expansion(add = 0),
+                     breaks = c(0, 10, 20, 30)) +
+  labs(title = 'Frequencies of WTAR-estimated IQ scores',
+       x = NULL, y = NULL) +  theme_bw() +
+  theme(plot.title = element_text(face = 'bold', size = 10),
+        axis.text = element_text(colour = 'black', size = 8),
+        legend.position = c(0.18, 0.90),
+        legend.margin = margin(c(0, 1, 0, 1), unit = 'mm'),
+        legend.spacing.y = unit(1,'mm'), # spacing between title & items
+        legend.key.size = unit(3.0,'mm'), # spacing between items
+        legend.title = element_text(face = 'bold', size = 8),
+        legend.text = element_text(size = 8),
+        panel.spacing = unit(4, 'mm'),
+        axis.ticks = element_line(colour = border_colour, size = 0.15),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(size = 0.25),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(colour = border_colour, size = 0.25),
+        strip.background = 
+          element_rect(colour = border_colour, fill = border_colour),
+        strip.text = element_text(face = 'bold', colour = 'white', size = 10))
+
+figure_1_mod
+
+ggsave('images/wtar-figure-1-mod-histogram.pdf', 
+       width = fig_1_width, height = fig_1_mod_height, units = 'cm')
+ggsave('images/wtar-figure-1-mod-histogram.png', 
+       width = fig_1_width, height = fig_1_mod_height, units = 'cm', dpi = 600)
+
+```
+
 (ref:fig-2-caption) ***(A)*** Longitudinal WTAR score trajectories for all 
 individuals, divided into Controls, Parkinson's participants who remained 
 dementia-free, and those who developed dementia. Superimposed are the two 
@@ -1234,4 +1297,13 @@ determined in Parkinson's for newer tests such as the TOPF and its successors.
 
 # References
 
+
+
+
+\newpage
+
+# (APPENDIX) Appendix {-}
+
+```{r child = "WTAR-supplementary.Rmd"}
+```
 
