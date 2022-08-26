@@ -154,6 +154,12 @@ library(kableExtra)  # extra kable options
 library(papaja)      # for apa_table
 library(stringr)     # to manipulate apa_table output
 
+# Need this to get around some bug in not being able to find fonts. But although
+# the document at least now knits without error, the fonts used in figures show
+# glitches:
+library(showtext)
+showtext.auto()
+
 ```
 
 ```{r import-data}
