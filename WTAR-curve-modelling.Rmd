@@ -944,7 +944,8 @@ participants, containing at least two observations from each. Observations are
 colour-coded by their cognitive status at each session. Regardless of current 
 cognitive status, WTAR scores span the full range. For each group, the 
 distribution was skewed well above the population norm mean of 100. Figure 
-available under an open CC-BY licence.[@macaskill2022_DistributionWechslerTest]
+available under an open CC-BY licence ***NB need to upload this modified version
+to FigShare.*** [@macaskill2022_DistributionWechslerTest]
 
 ```{r figure-1-modified-histogram, fig.align='center', fig.cap='(ref:fig-1-caption)', fig.height=fig_1_height/2.54, fig.width=fig_1_width/2.54, warning=FALSE}
 figure_1_mod = dat %>% 
