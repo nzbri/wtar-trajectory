@@ -159,6 +159,7 @@ library(stringr)     # to manipulate apa_table output
 # glitches:
 library(showtext)
 showtext.auto()
+font_add('Arial Narrow', '~/Library/Fonts/Arial Narrow.ttf')
 
 ```
 
