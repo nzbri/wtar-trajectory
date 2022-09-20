@@ -1,8 +1,11 @@
 ---
-title: "Wechsler Test of Adult Reading in Parkinson’s: a stable yet problematic premorbid measure"
+title: "Wechsler Test of Adult Reading in Parkinson’s: a stable yet problematic measure of premorbid function "
 author:
 - name: Kyla-Louise Horne, PhD
   affiliation: '1'
+  corresponding: yes
+  address: 66 Stewart St, Christchurch 8011, New Zealand
+  email: kyla.horne@nzbri.org
 - name: Reza Shoorangiz, PhD
   affiliation: '1,2,3'
 - name: Daniel J. Myall, PhD
@@ -13,10 +16,7 @@ author:
   affiliation: '1,2,5'
 - name: Michael R. MacAskill, PhD
   affiliation: '1,2'
-  corresponding: yes
-  address: 66 Stewart St, Christchurch 8011, New Zealand
-  email: michael.macaskill@nzbri.org
-shorttitle: Parkinson's premorbid function
+shorttitle: WTAR as premorbid measure in Parkinson's
 output:
   papaja::apa6_pdf:
     latex_engine: xelatex
@@ -66,7 +66,7 @@ abstract: Background. The Wechsler Test of Adult Reading (WTAR) has been
   Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
-wordcount: 'Abstract: 200 (of 250), main body: 2608 (of 3700)'
+wordcount: 'Abstract: 200 (of 250), main body: 2608 (of 4000)'
 editor_options: 
   chunk_output_type: console
 ---
@@ -286,28 +286,55 @@ dat = read_csv(file = 'data/dat_wtar.csv') %>%
 
 # Introduction
 
-In 2012, the International Parkinson and Movement Disorder Society published its
-Task Force guidelines for the diagnosis of mild cognitive impairment in
-Parkinson's disease (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] When the
-diagnosis is based on a comprehensive battery of multiple individual 
-neuropsychological tests, rather than a scale of global cognitive ability, 
-significant impairment may be determined in three ways: (i) current performance 
-being below appropriate norms, (ii) decline on serial testing, or (iii) decline 
-from estimated premorbid levels. The first method tends to predominate in 
-current research practice.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] 
-The latter two approaches, however, could be advantageous in resolving the 
-ambiguity that poor current cognitive function in a given individual might 
-reflect long-standing low cognitive ability, rather than a recent 
-disease-related deterioration. In practice, however, one seldom has reference to
-prior formal serial testing, and so a valid method of estimating premorbid 
-function is appealing. The Wechsler Test of Adult Reading
-(WTAR)[@psychologicalcorporation2001_WTARWechslerTest] was proposed in the 
-guidelines as one of two recommended [***TODO:*** check their exact phrasing.]
-tests for this purpose (along with the National Adult Reading Test, 
-NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both tests are based on
-the ability to correctly pronounce phonetically-irregular English words, such as
-'porpoise' or 'hyperbole'. This ability has been shown to be preserved in the
-face of both normal ageing and a number of brain
+The burden of dementia in Parkinson's is well-established. Also well-accepted is
+the value in detecting the transitional stage of mild cognitive impairment in 
+Parkinson's, in particular because this may provide a therapeutic window for 
+future treatments, before the irreversible pathological processes associated 
+with the dementia state have occurred. As a transitional state, the criteria are
+not self-evident for distinguishing mild cognitive impairment both from the 
+realm of normal cognitive functioning at one end, and dementia at the other. 
+Consequently, to provide for consistent approaches, in 2012, the International
+Parkinson and Movement Disorder Society published its Task Force guidelines for
+the diagnosis of mild cognitive impairment in Parkinson's disease
+(PD-MCI).[@litvan2012_DiagnosticCriteriaMild] 
+
+When the diagnosis is based on a comprehensive battery of multiple individual 
+neuropsychological tests (rather than on a single scale of global cognitive 
+ability), the Task Force guidelines propose that significant impairment may be 
+determined in three ways. Firstly, current performance on a test can be shown to
+be below appropriate norms (this may be established relative to standardised 
+norms for that test, or relative to a locally-gathered control group). This 
+approach has the disadvantage that the cause of poor current performance cannot 
+be distinguished between that due to (a) a recent decline (such as might be 
+caused by the onset of MCI or dementia), or (b) a long-standing poor level of 
+cognitive ability. The distinction between the two is important if the goal is 
+to detect the beginning of a decline due to eventual dementia. To unambiguously
+detect recent decline in cognitive status therefore requires some way of 
+demonstrating a decline in function within an individual over time. To achieve 
+this, the guidelines suggest seeking evidence of either a decline in performance
+on serial testing, or, in the absence of such prior testing, evidence of a 
+decline from an individual's _estimated_ premorbid level of function. For 
+pragmatic reasons, however, methods based upon current norms still tend to 
+predominate in research
+studies.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] In practice, one 
+seldom has reference to prior formal serial testing. Even in a well-resourced
+research setting, even serial testing testing remains ambiguous, as the first 
+available test session may itself be contaminated by early disease-related
+cognitive impairment, producing a falsely low baseline and thereby impeding the 
+ability to detect cogntive decline.
+
+A reliable method of estimating premorbid cognitive function is therefore 
+appealing. Establishing a person's premorbid ability addresses the shortcomings
+of both the current norms approach (by showing whether current poor performance
+is indeed a decline from past status), and the issue with the timing of serial 
+testing (which will usually begin only after disease diagnosis). The Wechsler 
+Test of Adult Reading (WTAR)[@psychologicalcorporation2001_WTARWechslerTest] was
+proposed in the Task Force guidelines as one of two recommended [***TODO:*** 
+check their exact phrasing.] tests for this purpose (along with the National 
+Adult Reading Test, NART).[@strauss2006_CompendiumNeuropsychologicalTests] Both
+tests are based on the ability to correctly pronounce phonetically-irregular 
+English words, such as 'porpoise' or 'hyperbole'. This ability has been shown to
+be preserved in the face of both normal ageing and a number of brain
 insults.[@psychologicalcorporation2001_WTARWechslerTest; @strauss2006_CompendiumNeuropsychologicalTests]
  
 When the WTAR was initially normed, it was tested in Parkinson's as well as a
@@ -420,7 +447,7 @@ WTAR_by_status = dat %>%
 ```
 
 The New Zealand Parkinson's Progression Programme (NZP<sup>3</sup>) 
-[***TODO:*** insewrt citation] is a
+[***TODO:*** insert citation] is a
 longitudinal study of a convenience prevalence sample of idiopathic Parkinson's
 participants, largely recruited from the specialist Movement Disorders Clinic at
 the New Zealand Brain Research Institute (NZBRI). Initial, and periodically 
@@ -1168,7 +1195,8 @@ has had limited uptake in the Parkinson's
 field[@bright2020_ComparisonMethodsEstimating] This perhaps reflects the inertia 
 of influential studies (including our own), which have a natural desire to 
 retain backwards compatibility with measures that they have used over a long 
-period of time. The age of an IQ-related test is important. The Flynn effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that cohort 
+period of time. The age of an IQ-related test is important. The Flynn 
+effect[@flynn1999_SearchingJusticeDiscovery] is the robust finding that cohort
 IQ scores have increased substantially over time (by up to 1 standard deviation 
 per generation). Our sample would (on average) have been born well after their 
 age-matched WAIS-III normative sample group and that might partly explain their 
@@ -1239,23 +1267,25 @@ consideration could be given to alternative
 techniques[@franzen1997_MethodsEstimatingPremorbid] that could have improved 
 validity in a wider international and cross-cultural context.
 
-In summary, the WTAR is a measure that is quite stable in Parkinson's, even in 
-the presence of a substantial decline in current cognitive performance. This
+In summary, the WTAR is a measure that is stable in Parkinson's, even in 
+the presence of a marked decline in current cognitive performance. This
 makes it a valid research tool to probe cognitive reserve and premorbid function
 differences across groups. In absolute terms, however, it appears to 
-overestimate premorbid IQ, making it unsuitable to establish a decline in 
-function within individuals. All such measures likely suffer from cross-cultural
-word choice issues even across different varieties of English. Analogous tests 
-are not able to be created in languages that do not share the orthographic 
-peculiarities of English. Therefore, in future revisions of the international 
-MDS guidelines, we therefore believe that a test of premorbid function like the 
-WTAR should no longer be recommended as one of the means of formally 
-establishing cognitive decline at an individual level in Parkinson's. Due to its
-remarkable stability in Parkinson's despite substantial current cognitive 
-impairment, this and related measures will remain a valuable research 
+overestimate premorbid IQ, making it unsuitable to use as a benchmark to 
+establish a decline in function within individuals. All such measures likely 
+suffer from cross-cultural word choice issues even across different varieties of
+English. Analogous tests are not able to be created in languages that do not 
+share the orthographic peculiarities of English. Therefore, in future revisions 
+of the international MDS guidelines, we believe that a test of premorbid 
+function like the WTAR should no longer be recommended as one of the means of 
+formally establishing cognitive decline at an individual level in Parkinson's. 
+Due to its remarkable stability in Parkinson's despite substantial current 
+cognitive impairment, this and related measures will remain a valuable research 
 tool in the Anglosphere for testing groups for differences on premorbid 
 functioning. The absolute estimation of premorbid function still needs to be 
-determined in Parkinson's for newer tests such as the TOPF and its successors. 
+determined in Parkinson's for newer tests such as the TOPF and its successors.
+
+
 
 # References
 
