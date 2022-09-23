@@ -300,26 +300,26 @@ transitional state, in 2012, the International Parkinson and Movement Disorder
 Society (MDS) published guidelines for the diagnosis of mild cognitive 
 impairment in Parkinson's (PD-MCI).[@litvan2012_DiagnosticCriteriaMild] 
 
-When the diagnosis is based on a comprehensive battery of multiple individual 
-neuropsychological tests (rather than on a single scale of global cognitive 
-ability), the MDS guidelines propose that significant impairment may be 
+When the diagnosis is based on a comprehensive battery of multiple individual
+neuropsychological tests (rather than on a single scale of global cognitive
+ability), the MDS guidelines propose that significant impairment may be
 determined in three ways. Firstly, current performance on a test can be shown to
-be below appropriate norms (which may be established either relative to 
-standardised norms for that test, or relative to a locally-gathered control 
-group). This approach has the disadvantage that the cause of poor current 
-performance cannot be distinguished between that due to a recent decline (such 
-as the onset of MCI or dementia), or a long-standing poor level of cognitive 
-ability. To unambiguously detect recent impairment in cognitive status therefore 
-requires some way of demonstrating a _decline_ in function within an individual 
-over time, rather than simply poor current performance. To achieve this, the 
+be below appropriate norms (which may be established either relative to
+standardised norms for that test, or relative to a locally-gathered control
+group). This approach has the disadvantage that the cause of poor current
+performance cannot be distinguished between that due to a recent decline (such
+as the onset of MCI or dementia), or a long-standing poor level of cognitive
+ability. To unambiguously detect recent impairment in cognitive status therefore
+requires some way of demonstrating a _decline_ in function within an individual
+over time, rather than simply poor current performance. To achieve this, the
 guidelines suggest seeking evidence of either a decline in performance on serial
 testing, or, in the absence of such prior testing, evidence of a decline from an
-individual's _estimated_ premorbid level of function. For pragmatic reasons, 
+individual's _estimated_ premorbid level of function. For pragmatic reasons,
 however, methods based upon current norms still tend to predominate in research
-studies.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] In practice, one 
+studies.[@aarsland2021_ParkinsonDiseaseassociatedCognitive] In practice, one
 seldom has reference to prior formal serial testing. Even in a well-resourced
-research setting, serial testing testing remains somewhat ambiguous, as the 
-first available test session may itself be contaminated by early disease-related
+research setting, serial testing remains somewhat ambiguous, as the first
+available test session may itself be contaminated by early disease-related
 cognitive impairment. This would produce a falsely low baseline and thereby 
 impede the ability to detect cognitive decline.
 
