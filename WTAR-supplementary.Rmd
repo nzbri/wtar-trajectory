@@ -5,7 +5,7 @@ output:
 ---
 # Supplementary Material
 
-Horne _et. al._, _The Wechsler Test of Adult Reading in Parkinson’s: stable premorbid measure despite cognitive decline_
+Horne _et. al._, _"Wechsler Test of Adult Reading in Parkinson’s: a stable yet problematic measure of premorbid cognitive function."_
 
 Here we report the analysis of the above paper against the following checklist 
 for reporting latent class trajectory analyses:
