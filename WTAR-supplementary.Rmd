@@ -102,7 +102,7 @@ a common variance-covariance matrix structure was not considered.
 We initially modeled the trajectories using a cubic function, to allow for the 
 depiction of any curvilinear decline in performance. The resulting trajectory 
 in the one-class cubic model (which had the lowest BIC) was effectively flat, 
-and hence we moved to linear modelling for the ease of interpretation of the 
+and hence we moved to linear modeling for the ease of interpretation of the 
 model coefficients.
 
 ## 8. If covariates have been used, can analyses still be replicated?
