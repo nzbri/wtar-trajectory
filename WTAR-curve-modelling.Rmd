@@ -7,15 +7,15 @@ author:
   address: 66 Stewart St, Christchurch 8011, New Zealand
   email: kyla.horne@nzbri.org
 - name: Reza Shoorangiz, PhD
-  affiliation: '1,2,3'
+  affiliation: '1'
 - name: Daniel J. Myall, PhD
   affiliation: '1'
 - name: Toni L. Pitcher, PhD
   affiliation: '1,2'
 - name: Tim J. Anderson, FRACP, MD
-  affiliation: '1,2,4'
+  affiliation: '1,2,3'
 - name: John C. Dalrymple-Alford, PhD
-  affiliation: '1,2,5'
+  affiliation: '1,2,4'
 - name: Michael R. MacAskill, PhD
   affiliation: '1,2'
 shorttitle: WTAR premorbid measure in Parkinson's
@@ -40,12 +40,9 @@ affiliation:
   institution: Department of Medicine, University of Otago, Christchurch; 
     Christchurch, New Zealand
 - id: '3'
-  institution: Department of Electrical and Computer Engineering, University of
-    Canterbury, Christchurch, New Zealand
-- id: '4'
   institution: Department of Neurology, Christchurch Hospital, Christchurch, New
     Zealand
-- id: '5'
+- id: '4'
   institution: School of Psychology, Speech, and Hearing, University of 
     Canterbury, Christchurch, New Zealand
 abstract: Purpose. To assess long-term trajectories of Wechsler Test of Adult
@@ -73,7 +70,7 @@ abstract: Purpose. To assess long-term trajectories of Wechsler Test of Adult
   with Parkinson's.
 keywords: Parkinson disease, cognitive impairment, dementia, neuropsychology, 
   premorbid function
-wordcount: 'Abstract: 238 (limit 250), main body: 3848 (limit 4000)'
+wordcount: 'Abstract: 239 (limit 250), main body: 3870 (limit 4000)'
 editor_options: 
   chunk_output_type: console
 ---
@@ -386,7 +383,7 @@ performance against norms (79% vs 33%). This naturally leads to questions about
 whether the
 WTAR is in fact a valid measure to be used for cognitive classification in
 Parkinson's. In particular, if using the WTAR leads to most people with
-Parkinson's being classified as having MCI, does that result in a category which
+Parkinson's being classified as having MCI, does that result in a category that
 no longer has any prognostic or discriminative utility?
 
 Performance on the WTAR is known to be impacted negatively by Alzheimer’s
@@ -484,6 +481,25 @@ WTAR_by_status = dat %>%
             wtar_sd = sd(WTAR),
             wtar_n = n())
 
+durations = dat %>%  # 1155 rows
+  filter(group == 'PD') %>% # 902 rows
+  group_by(subject_id_num) %>% 
+  arrange(age) %>%
+  mutate(disease_duration = age - diagnosis_age) %>% 
+  summarise(dur_at_onset = first(disease_duration), # 252 rows
+            dur_at_end   = last(disease_duration),
+            dur_of_followup = dur_at_end - dur_at_onset) %>%
+  summarise(mean_at_onset = 
+              format(round(mean(dur_at_onset), digits = 1), digits = 2, nsmall = 1), # 1 row
+            min_at_onset = round(min(dur_at_onset)),
+            max_at_onset = round(max(dur_at_onset)),
+            mean_followup = 
+               format(round(mean(dur_of_followup), digits = 1), digits = 2, nsmall = 1),
+            min_followup = round(min(dur_of_followup)),
+            max_followup = round(max(dur_of_followup)))
+            
+  
+
 ```
 
 The New Zealand Parkinson's Progression Programme (NZP^3^) is a longitudinal
@@ -497,22 +513,27 @@ those with advanced disease. Inclusion and exclusion criteria have been
 described previously.[@wood2016_DifferentPDMCICriteria] For this analysis, we
 selected data from the `r n_group$n[n_group$group =='PD']` Parkinson's and 
 `r n_group$n[n_group$group == 'Control']` Control participants who had completed
-at least two WTARs (range 2 - `r n_wtar$max_sessions`, mean = 
-`r round(n_wtar$mean_sessions, digits = 1)`, total number of measures = 
-`r n_wtar$total_sessions`). The period between successive WTAR assessments was 
-multi-modal, mostly clustering around intervals of one and two years, due to 
-varying follow-up periods over the course of the study (see Supplementary 
-Material). All participants were classified as having normal cognition, mild 
-cognitive impairment, or dementia via a comprehensive Level II 
-neuropsychological battery,[@dalrymple-alford2011_CharacterizingMildCognitive;
-@wood2016_DifferentPDMCICriteria] administered in accordance with MDS
-guidelines.[@dubois2007_DiagnosticProceduresParkinson;
-@litvan2012_DiagnosticCriteriaMild] A PD-MCI classification was based on at
-least two test scores falling $\geq$ 1.5 standard deviations below norms in at
-least one cognitive domain, without significant impairment in activities of
-daily living. For PD dementia, a significant impairment ($\geq$ 2.0 standard
-deviations below normative data) in at least two cognitive domains was required,
-as well as evidence of significant impairment in activities of daily
+at least two WTARs (range 2 – `r n_wtar$max_sessions`, mean =
+`r round(n_wtar$mean_sessions, digits = 1)`, total number of measures =
+`r n_wtar$total_sessions`). The period between successive WTAR assessments was
+multi-modal, mostly clustering around intervals of one and two years, due to
+varying follow-up periods over the course of the wider study (see Supplementary
+Material). Of the Parkinson's participants, the mean duration since diagnosis
+at the first WTAR assessment was `r durations$mean_at_onset` years (range
+`r durations$min_at_onset` – `r durations$max_at_onset`) and the mean duration
+of follow-up was a further `r durations$mean_followup` years (range
+`r durations$min_followup` – `r durations$max_followup`). All participants were
+classified as having normal cognition, mild cognitive impairment, or dementia
+via a comprehensive Level II neuropsychological
+battery,[@dalrymple-alford2011_CharacterizingMildCognitive;@wood2016_DifferentPDMCICriteria]
+administered in accordance with MDS
+guidelines.[@dubois2007_DiagnosticProceduresParkinson;@litvan2012_DiagnosticCriteriaMild]
+A PD-MCI classification was based on at least two test scores falling $\geq$ 1.5
+standard deviations below norms in at least one cognitive domain, without
+significant impairment in activities of daily living. For PD dementia, a
+significant impairment ($\geq$ 2.0 standard deviations below normative data) in
+at least two cognitive domains was required, as well as evidence of significant
+impairment in activities of daily
 living.[@dalrymple-alford2011_CharacterizingMildCognitive;@wood2016_DifferentPDMCICriteria]
 The WTAR itself was not used in the cognitive diagnostic classification
 procedures. Characteristics of the sample are shown in Table \@ref(tab:table-1).
